@@ -6,11 +6,16 @@ const cookieParser = require("cookie-parser");
 const session = require("express-session");
 const methodOverride = require("method-override");
 const path = require("path");
+const ejsMate = require("ejs-mate");
 
 const app = express();
 
-app.use(express.static(path.join(__dirname, "public")));
 app.set("view engine", "ejs");
+app.set("views", path.join(__dirname, "views"));
+app.use(express.urlencoded({extended : true}));
+app.use(methodOverride("_method"));
+app.engine('ejs', ejsMate);
+app.use(express.static(path.join(__dirname, "/public")));
 
 
 
@@ -19,8 +24,12 @@ app.get("/",(req,res)=>{
 });
 
 app.get("/grid",(req,res)=>{
- res.render("hub/index.ejs")
-})
+ res.render("grid/search.ejs")
+});
+
+app.get("/test",(req,res)=>{
+ res.render("grid/launch.ejs")
+});
 
 
 

@@ -1,0 +1,292 @@
+/* Variables for easy color management */
+:root {
+    --body-bg: #F5F5DD; /* Dark grey/blue for the main body */
+    --sidebar-bg: #2F9C95  ; /* Soft green for the sidebar */
+    --hover-red: #FF6A6B; /* Soft red */
+    --active-green: #2F9C95  ; /* Green, now matches the new sidebar background */
+    --text-white: #FFFFFF;
+    --subtle-accent: #2F9C95 ; /* Soft yellow (optional) */
+    --shadow-grey: #6B7280; /* Muted grey for shadows */
+}
+/* 1F2937
+2F9C95 */
+/* General Body Styling */
+body {
+    margin: 0;
+    display: flex;
+    min-height: 100vh;
+    background-color: var(--body-bg); /* Uses the new dark grey/blue */
+    overflow-x: hidden; /* Prevent horizontal scrollbar */
+}
+
+/* Hamburger Menu Styling */
+.hamburger {
+    display: none; /* Hidden by default, shown on smaller screens */
+    cursor: pointer;
+    padding: 15px;
+    z-index: 1100; /* Above sidebar */
+    position: fixed;
+    top: 20px;
+    left: 20px;
+    background: var(--sidebar-bg); /* Uses the new soft green */
+    border-radius: 5px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+    transition: left 0.4s ease-in-out;
+}
+
+.hamburger.shifted {
+    left: 220px; /* Shift when sidebar is open */
+}
+
+.hamburger div {
+    width: 30px;
+    height: 3px;
+    background-color: var(--text-white);
+    margin: 6px 0;
+    transition: 0.4s;
+}
+
+/* Sidebar Styling */
+.sidebar {
+    width: 200px;
+    height: 100%;
+    position: fixed;
+    top: 0;
+    left: 0;
+    background: var(--sidebar-bg); /* Uses the new soft green */
+    /* Adjusted box-shadow to fit the new green background */
+    box-shadow: inset 9px 9px 18px #2F9C95 ; 
+    color: var(--text-white);
+    padding-top: 60px; /* Space from top */
+    box-sizing: border-box;
+    border-bottom-right-radius: 40px;
+    border-top-right-radius: 40px;
+    transition: all 0.4s ease-in-out; /* Smooth general transitions for sidebar */
+    z-index: 1000;
+}
+
+/* Sidebar hidden state for mobile */
+.sidebar.hidden {
+    left: -200px; /* Hide sidebar off-screen */
+}
+
+.sidebar ul {
+    list-style-type: none;
+    padding: 0;
+    margin-top: 40px;
+}
+
+.sidebar ul li {
+    margin: 20px 0;
+    padding: 15px 0;
+    text-align: center;
+    position: relative;
+    cursor: pointer;
+    overflow: hidden;
+    transition: transform 0.3s ease, background-color 0.4s ease, border-radius 0.4s ease, box-shadow 0.4s ease, opacity 0.4s ease;
+    transform-origin: left center;
+    border-bottom-right-radius: 20px;
+    border-top-right-radius: 20px;
+}
+
+.sidebar ul li a {
+    color: var(--text-white);
+    text-decoration: none;
+    display: block;
+    font-size: 1.1em;
+    font-weight: bold;
+    transition: color 0.3s ease, text-shadow 0.4s ease;
+    position: relative;
+    z-index: 1;
+}
+
+/* Hover Effect for non-active items */
+.sidebar ul li:not(.active):hover {
+    transform: scale(1.05);
+    background-color: var(--hover-red);
+    box-shadow: 5px 0 15px rgba(0, 0, 0, 0.2);
+}
+
+.sidebar ul li:not(.active):hover a {
+    color: var(--text-white);
+}
+
+/* Active Tab Effect */
+.sidebar ul li.active {
+    background-color: var(--body-bg) !important; /* Uses the new dark grey/blue for active tab */
+    transform: scale(1.1);
+    border-bottom-right-radius: 10px;
+    border-top-right-radius: 10px;
+    border-bottom-left-radius: 30px;
+    border-top-left-radius: 30px;
+    padding-left: 10px;
+    box-shadow: none;
+    outline-color: none;
+}
+
+.sidebar ul li.active a {
+    color: #1F2937;
+    
+}
+
+/* Effect for non-active tabs when one is active */
+.sidebar:has(.active) ul li:not(.active) {
+    opacity: 0.7;
+    transform: scale(0.9);
+}
+
+/* Main Content Area */
+.main-content {
+    
+    
+    margin-left: 250px; /* Space for sidebar */
+    transition: margin-left 0.4s ease-in-out;
+ 
+
+    text-align: center;
+}
+
+.main-content.shifted {
+    margin-left: 0; /* No margin when sidebar is hidden on small screens */
+}
+/* Media Queries for Responsiveness */
+@media (max-width: 768px) {
+    .hamburger {
+        display: block; /* Show hamburger on small screens */
+    }
+
+    .sidebar {
+        left: -200px; /* Hide sidebar by default on small screens */
+    }
+
+    .sidebar.show {
+        left: 0; /* Show sidebar when toggled */
+    }
+
+    .main-content {
+        margin-left: 0; /* Main content takes full width */
+    }
+
+    .main-content.shifted {
+        margin-left: 200px; /* Shift content when sidebar is open */
+    }
+}
+
+.container{
+    flex: 1;
+}
+
+ul{
+    list-style-type: none;
+}
+
+.search-card{
+    width: 30%;
+    height: 300px;
+    border-radius: 36px;
+    background: var(--sidebar-bg); /* Changed to use the new sidebar background color */
+    /* Adjusted box-shadow to fit the new green background */
+    box-shadow: 21px 21px 42px #0fa875, -21px -21px 42px #11ca8d;
+}
+
+.card {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 320px;
+    border-radius: 24px;
+    line-height: 1.6;
+    transition: all 0.48s cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+.content {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 24px;
+    padding: 26px;
+    border-radius: 22px;
+    color: var(--text-white); /* Kept text white for contrast on the card's blue background */
+    overflow: hidden;
+    background: #0a3cff; /* Original blue for the card */
+    transition: all 0.48s cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+.content::before {
+    position: absolute;
+    content: "";
+    top: -4%;
+    left: 50%;
+    width: 90%;
+    height: 90%;
+    transform: translate(-50%);
+    background: #ced8ff; /* Original lighter blue */
+    z-index: -1;
+    transform-origin: bottom;
+
+    border-radius: inherit;
+    transition: all 0.48s cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+.content::after {
+    position: absolute;
+    content: "";
+    top: -8%;
+    left: 50%;
+    width: 80%;
+    height: 80%;
+    transform: translate(-50%);
+    background: #e7ecff; /* Original lightest blue */
+    z-index: -2;
+    transform-origin: bottom;
+    border-radius: inherit;
+    transition: all 0.48s cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+.content img{
+    width: 100%;
+    height: 150px;
+}
+
+.content .para {
+    z-index: 1;
+    opacity: 1;
+    font-size: 18px;
+    transition: all 0.48s cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+.content .link {
+    z-index: 1;
+    color: #fea000; /* Original link color */
+    text-decoration: none;
+    font-family: inherit;
+    font-size: 16px;
+    transition: all 0.48s cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+.content .link:hover {
+    text-decoration: underline;
+}
+
+.card:hover {
+    transform: translate(0px, -16px);
+}
+
+.card:hover .content::before {
+    rotate: -8deg;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    /* On hover, transition to the new body background color */
+    background: var(--body-bg); 
+}
+
+.card:hover .content::after {
+    rotate: 8deg;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    /* On hover, transition to the new body background color */
+    background: var(--body-bg);
+}
