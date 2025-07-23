@@ -1,23 +1,5 @@
-/* Variables for easy color management */
-:root {
-    --body-bg: #F5F5DD; /* Dark grey/blue for the main body */
-    --sidebar-bg: #2F9C95  ; /* Soft green for the sidebar */
-    --hover-red: #FF6A6B; /* Soft red */
-    --active-green: #2F9C95  ; /* Green, now matches the new sidebar background */
-    --text-white: #FFFFFF;
-    --subtle-accent: #2F9C95 ; /* Soft yellow (optional) */
-    --shadow-grey: #6B7280; /* Muted grey for shadows */
-}
-/* 1F2937
-2F9C95 */
-/* General Body Styling */
-body {
-    margin: 0;
-    display: flex;
-    min-height: 100vh;
-    background-color: var(--body-bg); /* Uses the new dark grey/blue */
-    overflow-x: hidden; /* Prevent horizontal scrollbar */
-}
+Variables for easy color management
+
 
 /* Hamburger Menu Styling */
 .hamburger {
@@ -48,7 +30,7 @@ body {
 
 /* Sidebar Styling */
 .sidebar {
-    width: 200px;
+    width: 180px;
     height: 100%;
     position: fixed;
     top: 0;

@@ -31,6 +31,11 @@ app.get("/test",(req,res)=>{
  res.render("grid/launch.ejs")
 });
 
+app.get("/testt",(req,res)=>{
+ res.render("grid/grid.ejs")
+});
+
+
 
 
 

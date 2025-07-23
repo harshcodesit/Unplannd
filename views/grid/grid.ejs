@@ -1,11 +1,303 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-</head>
-<body>
+<% layout("/layouts/boilerplate") %>
+  <style>
+    :root {
+      --primary: #2F9C95;
+      --primary-dark: #1E655F;
+      --bg-light: #F5DEB3;
+      --text-dark: #1F2937;
+      --white: #ffffff;
+      --shadow: rgba(0, 0, 0, 0.1);
+    }
+
+body {
+            margin: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--primary-bg);
+            color: var(--text-color);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        
+}
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: var(--bg-light);
+      color: var(--text-dark);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem;
+      min-height: 100vh;
+    }
+
+    main {
+      background: var(--white);
+      border: 2px solid var(--primary);
+      border-radius: 1em;
+      box-shadow: 0 10px 20px var(--shadow);
+      max-width: 675px;
+      width: 100%;
+      overflow: hidden;
+      position: relative;
+      transition: box-shadow 0.3s ease;
+    }
+
+    .highlight-bar {
+      height: 4.5em;
+      background: var(--primary);
+      width: 100%;
+      transition: transform 0.4s ease, height 0.4s ease;
+      position: absolute;
+      top: 0;
+      left: 0;
+      z-index: 0;
     
+    }
+
+    .white-filter {
+      position: absolute;
+      top: 0;
+      right: 0;
+      width: 3em;
+      height: 3em;
+      background: var(--white);
+      box-shadow: -5px 5px 15px rgba(0,0,0,0.2);
+      border-bottom-left-radius: 50%;
+      z-index: 2;
+    }
+
+    form {
+      position: relative;
+      padding: 2em;
+      display: flex;
+      flex-direction: column;
+      gap: 1.2em;
+      z-index: 1;
+    }
+
+    .form-header {
+      text-align: center;
+    }
+
+    .form-header h2 {
+      color: var(--white);
+      margin-bottom: 0.3em;
+      font-size: 1.6em;
+    }
+
+    .form-header span {
+      font-size: 0.85em;
+      font-weight: 600;
+      opacity: 0.8;
+      display: block;
+      margin-top: 0.5em;
+      color: var(--primary);
+    }
+
+    label {
+      font-weight: bold;
+      font-size: 0.9em;
+      margin-bottom: 0.4em;
+      display: block;
+    }
+
+    input[type="text"],
+    input[type="date"],
+    input[type="time"],
+    textarea {
+      width: 100%;
+      padding: 0.6em;
+      font-size: 0.9em;
+      border: 2px solid var(--primary);
+      border-radius: 0.5em;
+      background: var(--white);
+      color: var(--text-dark);
+      transition: 0.3s;
+    }
+
+    input:focus,
+    textarea:focus {
+      outline: none;
+      border-color: var(--primary-dark);
+      background-color: #f0fefc;
+    }
+
+    textarea {
+      resize: vertical;
+      min-height: 5em;
+      max-height: 10em;
+    }
+
+    .date-time-group {
+      display: flex;
+      gap: 2em;
+      flex-wrap: wrap;
+    }
+
+    .file-upload {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5em;
+    }
+
+    .file-upload input[type="file"] {
+      display: none;
+    }
+
+    .file-upload label {
+      background-color: var(--primary);
+      color: var(--white);
+      padding: 0.5em 1em;
+      border-radius: 0.5em;
+      cursor: pointer;
+      font-size: 0.85em;
+      text-align: center;
+      transition: background-color 0.3s ease;
+      display: inline-block;
+    }
+
+    .file-upload label:hover {
+      background-color: var(--primary-dark);
+    }
+
+    .file-count {
+      font-size: 0.85em;
+      color: var(--primary);
+    }
+
+    .submit-button {
+      background: var(--primary);
+      color: var(--white);
+      border: none;
+      padding: 0.75em;
+      border-radius: 0.5em;
+      font-weight: bold;
+      font-size: 1em;
+      cursor: pointer;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.15);
+      transition: background-color 0.3s ease;
+    }
+
+    .submit-button:hover {
+      background-color: var(--primary-dark);
+    }
+
+    .submit-button:active {
+      transform: scale(0.98);
+    }
+
+    .footer-help {
+      text-align: center;
+      font-size: 0.8em;
+      color: var(--primary);
+    }
+
+    .footer-help a {
+      font-weight: bold;
+      color: var(--primary-dark);
+      text-decoration: none;
+    }
+
+    .social-icons {
+      display: flex;
+      justify-content: center;
+      gap: 1em;
+      margin-top: 1em;
+    }
+
+    .social-icons i {
+      color: var(--primary);
+      font-size: 1.3em;
+      transition: transform 0.3s ease;
+      cursor: pointer;
+    }
+
+    .social-icons i:hover {
+      transform: scale(1.2);
+    }
+
+    @media (max-width: 480px) {
+      .date-time-group {
+        flex-direction: column;
+      }
+
+      form {
+        padding: 1.5em;
+      }
+
+      .submit-button {
+        font-size: 0.95em;
+      }
+    }
+  </style>
+
+<body>
+<div class="main-content" id="main-content"  >
+     <div class="toggle">
+           <label for="filter" class="switch" aria-label="Toggle Filter">
+  <input type="checkbox" id="filter" />
+  <span>Find Glimmer</span>
+  <span>Launch Glimmer</span>
+</label>
+
+        </div>
+<main>
+  <div class="highlight-bar" id="highlightBar"></div>
+  <div class="white-filter"></div>
+
+  <form id="eventForm" aria-label="Host an Event Form">
+    <div class="form-header">
+      <h2>HOST AN EVENT</h2>
+      <span>Share your amazing event!</span>
+    </div>
+
+    <section class="highlight-section">
+      <label for="title">Title of Event</label>
+      <input type="text" id="title" name="title" placeholder="Enter event title" required>
+    </section>
+
+    <section class="highlight-section">
+      <label for="description">Description</label>
+      <textarea id="description" name="description" placeholder="Describe your event" required></textarea>
+    </section>
+
+    <section class="file-upload highlight-section">
+      <label for="images">Upload Images</label>
+      
+      <input type="file" id="images" name="images" multiple>
+      <span class="file-count">No files chosen</span>
+    </section>
+
+    <section class="date-time-group highlight-section">
+      <div>
+        <label for="date">Date</label>
+        <input type="date" id="date" name="date" required>
+      </div>
+      <div>
+        <label for="time">Time</label>
+        <input type="time" id="time" name="time" required>
+      </div>
+    </section>
+
+    <button type="submit" class="submit-button">CREATE EVENT</button>
+
+    <div class="footer-help">
+      Need help? <a href="#">Contact Support</a>
+    </div>
+
+    <div class="social-icons">
+      <i class="fab fa-facebook-f" aria-label="Facebook"></i>
+      <i class="fab fa-instagram" aria-label="Instagram"></i>
+      <i class="fab fa-linkedin-in" aria-label="LinkedIn"></i>
+    </div>
+  </form>
+</main>
+</div>
 </body>
-</html>
+
