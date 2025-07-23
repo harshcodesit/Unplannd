@@ -31,8 +31,19 @@ app.get("/test",(req,res)=>{
  res.render("includes/navbar.ejs")
 });
 
-app.get("/testt",(req,res)=>{
- res.render("grid/grid.ejs")
+app.get("/hub",(req,res)=>{
+   const user = {
+        name: "Aarya Patel",
+        title: "Full Stack Developer",
+        bio: "Turning coffee into scalable code. Crafting seamless web experiences one pixel at a time.",
+        profilePhoto: "https://randomuser.me/api/portraits/women/44.jpg",
+        twitter: "https://twitter.com/aaryadev",
+        linkedin: "https://linkedin.com/in/aaryapatel",
+        github: "https://github.com/aaryadev",
+        isOnline: true
+    };
+
+    res.render('aura/aura.ejs', { user }); // profile.ejs in /views folder
 });
 
 
