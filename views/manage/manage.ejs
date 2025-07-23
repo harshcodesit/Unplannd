@@ -1,0 +1,617 @@
+<% layout("/layouts/boilerplate") %>
+<style>
+    /* --- Root Variables for Theme Consistency --- */
+    :root {
+        --retro-bg: wheat; /* Main background and outer box */
+        --retro-text: #1F2937; /* Dark text for contrast */
+        --retro-accent-red: #d1451e; /* From box shadow, button hover */
+        --retro-accent-yellow: #FFD93D; /* From previous accent, price underline */
+        --retro-primary-teal: #2F9C95; /* From your card background */
+        --retro-secondary-light: #fff; /* From box shadow white */
+        --retro-shadow-dark: #000; /* From box shadow black */
+        --retro-shadow-light: rgba(0, 0, 0, 0.2); /* For softer elements, box-shadow opacity */
+
+        /* Fonts */
+        --font-primary: "Inter", sans-serif;
+        --font-heading-retro: 'Press Start 2P', cursive; /* For titles and buttons */
+
+        /* Transitions */
+        --transition-fast: 0.2s ease;
+        --transition-medium: 0.3s ease;
+        --transition-slow: 0.6s ease;
+    }
+
+    /* --- General Body Styling --- */
+    body {
+        background-color: var(--retro-bg);
+        font-family: var(--font-primary);
+        color: var(--retro-text);
+        margin: 0;
+        padding: 0;
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-start;
+        align-items: center;
+        box-sizing: border-box;
+    }
+
+    /* Pixelated image rendering for that retro feel */
+    img {
+        image-rendering: pixelated;
+        image-rendering: -moz-crisp-edges;
+        image-rendering: -o-crisp-edges;
+        image-rendering: -webkit-optimize-contrast;
+        -ms-interpolation-mode: nearest-neighbor;
+    }
+
+    /* --- Page Container --- */
+    .event-management-page-container {
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-start;
+        align-items: center;
+        padding: 2rem;
+        background-color: var(--retro-bg);
+        font-family: var(--font-primary);
+        color: var(--retro-text);
+        min-height: 100vh;
+        width: 100%;
+        box-sizing: border-box;
+    }
+
+    /* --- Event Details Section --- */
+    .event-details-section {
+        width: 100%;
+        max-width: 900px; /* Wider for details */
+        background-color: var(--retro-primary-teal);
+        padding: 2em;
+        border-radius: 15px;
+        box-shadow:
+            0 0 0 0.15em var(--retro-shadow-dark),
+            0 0 0 0.3em var(--retro-secondary-light),
+            0 0 0 0.45em var(--retro-shadow-dark),
+            0 0.6em 0 0 var(--retro-accent-red),
+            0 0.6em 0 0.15em var(--retro-shadow-dark);
+        margin-bottom: 2.5em; /* Space below event details */
+        text-align: center;
+        animation: fadeIn 0.8s ease-out;
+        box-sizing: border-box;
+        text-shadow: 1px 1px 0 rgba(0, 0, 0, 0.3);
+    }
+
+    @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(20px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Revised Title Layout */
+    .event-details-section h1 {
+        font-family: var(--font-heading-retro);
+        font-size: 2.5em; /* Slightly larger for main title */
+        color: var(--retro-text);
+        margin: 0.5em 0 1em 0; /* Adjusted top and bottom margin for more space */
+        padding-bottom: 0.3em; /* Small padding at the bottom */
+        text-shadow: 4px 4px 0 rgba(0, 0, 0, 0.6); /* More prominent shadow */
+        line-height: 1.1;
+        position: relative; /* For the pseudo-element underline */
+        display: inline-block; /* To make pseudo-element width match text */
+    }
+
+    .event-details-section h1::after {
+        content: '';
+        position: absolute;
+        left: 0;
+        right: 0;
+        bottom: -5px; /* Position below text */
+        height: 4px; /* Thickness of the underline */
+        background: var(--retro-accent-yellow); /* Yellow highlight */
+        transform: skewX(-15deg); /* Retro skew effect */
+        box-shadow: 2px 2px 0 rgba(0, 0, 0, 0.2); /* Small shadow for the underline */
+    }
+
+    /* Revised Date & Time Text */
+    .event-details-section .detail-item {
+        font-family: var(--font-heading-retro); /* Use retro font for these as well */
+        font-size: 1.1em; /* Slightly larger */
+        margin: 0.6em 0; /* Adjusted margin */
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.8em;
+        color: var(--retro-text); /* Darker text for more contrast */
+        text-shadow: 2px 2px 0 rgba(0, 0, 0, 0.3); /* Add shadow for retro feel */
+        border-bottom: 2px dashed rgba(0, 0, 0, 0.2); /* Dashed underline */
+        padding-bottom: 0.4em;
+    }
+
+    .event-details-section .detail-item:last-of-type {
+        border-bottom: none; /* No border for the last item */
+    }
+
+    .event-details-section .detail-item svg {
+        width: 1.3em; /* Slightly larger icons */
+        height: 1.3em;
+        fill: var(--retro-text); /* Icon color matches text */
+        flex-shrink: 0;
+    }
+
+    /* Revised Description Text */
+    .event-description-box {
+        background-color: var(--retro-bg); /* Wheat background for description */
+        border: 2px solid var(--retro-shadow-dark);
+        border-radius: 8px;
+        padding: 1.5em 2em; /* Increased padding */
+        margin: 2em auto 0; /* More space from date/time */
+        text-align: justify; /* Justify text for a blockier look */
+        box-shadow: 0.35em 0.35em 0 rgba(0, 0, 0, 0.3); /* Stronger shadow */
+        color: var(--retro-text);
+        font-family: var(--font-primary);
+        font-size: 1em; /* Slightly larger font size for readability */
+        line-height: 1.8; /* Increased line height */
+        max-width: 700px;
+        box-sizing: border-box;
+    }
+
+    /* --- Requests Section --- */
+    .requests-section {
+        width: 100%;
+        max-width: 900px; /* Consistent width with event details */
+        background-color: var(--retro-primary-teal);
+        padding: 1.8em;
+        border-radius: 15px;
+        box-shadow:
+            0 0 0 0.15em var(--retro-shadow-dark),
+            0 0 0 0.3em var(--retro-secondary-light),
+            0 0 0 0.45em var(--retro-shadow-dark),
+            0 0.5em 0 0 var(--retro-accent-red),
+            0 0.5em 0 0.15em var(--retro-shadow-dark);
+        animation: fadeIn 0.8s ease-out 0.2s backwards; /* Staggered entry */
+        box-sizing: border-box;
+        text-shadow: 1px 1px 0 rgba(0, 0, 0, 0.3);
+    }
+
+    .requests-section h2 {
+        font-family: var(--font-heading-retro);
+        font-size: 1.8em;
+        color: var(--retro-text);
+        text-align: center;
+        margin-bottom: 1.5em;
+        padding-bottom: 0.5em;
+        border-bottom: 3px dashed var(--retro-accent-yellow);
+        text-shadow: 2px 2px 0 rgba(0, 0, 0, 0.4);
+    }
+
+    .requests-list {
+        display: flex;
+        flex-direction: column; /* Stack requests vertically */
+        gap: 1.2em; /* Space between request cards */
+    }
+
+    /* --- Individual Request Card --- */
+    .request-card {
+        display: flex;
+        align-items: center;
+        background: var(--retro-secondary-light);
+        border: 2px solid var(--retro-shadow-dark);
+        border-radius: 10px;
+        padding: 1em;
+        box-shadow: 0.25em 0.25em 0 rgba(0, 0, 0, 0.2);
+        transition: all var(--transition-medium);
+        position: relative;
+        overflow: hidden;
+        animation: slideInLeft 0.5s ease-out backwards; /* Entry animation for requests */
+    }
+
+    .request-card:nth-child(odd) { animation-delay: 0.3s; }
+    .request-card:nth-child(even) { animation-delay: 0.4s; }
+
+    @keyframes slideInLeft {
+        from { opacity: 0; transform: translateX(-30px); }
+        to { opacity: 1; transform: translateX(0); }
+    }
+
+    .request-card:hover {
+        transform: translateY(-3px) translateX(3px);
+        box-shadow: 0.4em 0.4em 0 rgba(0, 0, 0, 0.3);
+    }
+
+    .request-card .pfp-container {
+        flex-shrink: 0;
+        width: 60px;
+        height: 60px;
+        border-radius: 50%;
+        overflow: hidden;
+        border: 2px solid var(--retro-accent-yellow);
+        box-shadow: 0 2px 5px var(--retro-shadow-light);
+        margin-right: 1em;
+    }
+
+    .request-card .pfp-container img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        display: block;
+    }
+
+    .request-card .requester-info {
+        flex-grow: 1; /* Allow info to take space */
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        margin-right: 1em; /* Space before buttons */
+        color: var(--retro-text);
+    }
+
+    .request-card .requester-info .name {
+        font-family: var(--font-heading-retro);
+        font-size: 1em;
+        font-weight: 700;
+        margin: 0;
+        text-shadow: 1px 1px 0 rgba(0, 0, 0, 0.2);
+        word-break: break-word;
+    }
+
+    .request-card .request-actions {
+        flex-shrink: 0;
+        display: flex;
+        gap: 0.6em; /* Space between buttons */
+        align-items: center;
+    }
+
+    /* --- Action Buttons (Symbol-only for Accept/Reject) --- */
+    .action-button {
+        position: relative;
+        font-family: var(--font-heading-retro);
+        font-size: 0.7em; /* Smallest font for actions */
+        font-weight: 700;
+        padding: 0.5em 0.8em;
+        border: 2px solid var(--retro-shadow-dark);
+        border-radius: 0.3em;
+        box-shadow: 0.2em 0.2em 0 var(--retro-shadow-dark);
+        cursor: pointer;
+        transition: all var(--transition-fast);
+        overflow: hidden;
+        text-transform: uppercase;
+        letter-spacing: 0.03em;
+        text-shadow: 1px 1px 0 rgba(0, 0, 0, 0.3);
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        min-width: 30px; /* Ensure icons have space */
+        min-height: 30px;
+    }
+
+    .action-button svg {
+        width: 1.2em; /* Slightly larger icon */
+        height: 1.2em;
+        fill: currentColor; /* Use current text color */
+        margin: 0; /* No margin for symbol-only buttons */
+    }
+
+    .action-button span { /* Hidden text for accessibility, visually hidden */
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        padding: 0;
+        margin: -1px;
+        overflow: hidden;
+        clip: rect(0, 0, 0, 0);
+        white-space: nowrap;
+        border: 0;
+    }
+
+    .action-button.view-profile {
+        background-color: var(--retro-accent-yellow);
+        color: var(--retro-text);
+    }
+    .action-button.accept {
+        background-color: #10b981; /* Green for accept */
+        color: var(--retro-secondary-light);
+    }
+    .action-button.reject {
+        background-color: var(--retro-accent-red); /* Red for reject */
+        color: var(--retro-secondary-light);
+    }
+
+    .action-button:hover {
+        transform: translateY(-0.1em) translateX(0.1em);
+        box-shadow: 0.3em 0.3em 0 var(--retro-shadow-dark);
+    }
+
+    .action-button.view-profile:hover {
+        background-color: var(--retro-primary-teal);
+        color: var(--retro-secondary-light);
+        text-shadow: 1px 1px 0 rgba(0, 0, 0, 0.4);
+    }
+    .action-button.accept:hover {
+        background-color: #0d8a5e; /* Darker green */
+    }
+    .action-button.reject:hover {
+        background-color: #a73614; /* Darker red */
+    }
+
+    .action-button:active {
+        transform: translate(0.1em, 0.1em);
+        box-shadow: 0.1em 0.1em 0 var(--retro-shadow-dark);
+    }
+
+    .no-requests-message {
+        color: var(--retro-text);
+        text-align: center;
+        padding: 2rem;
+        font-style: italic;
+        font-family: var(--font-primary);
+        font-size: 1.1em;
+        text-shadow: none;
+        width: 100%;
+        max-width: 600px;
+        background-color: var(--retro-secondary-light);
+        border: 2px dashed var(--retro-shadow-dark);
+        border-radius: 10px;
+        box-shadow: 0.2em 0.2em 0 rgba(0, 0, 0, 0.2);
+        margin-top: 2em; /* Space from heading */
+    }
+
+    /* --- Responsive Adjustments --- */
+    @media (max-width: 992px) {
+        .event-details-section,
+        .requests-section {
+            padding: 1.5em;
+            width: 95%; /* Take more width */
+            max-width: 700px; /* Limit overall max width */
+        }
+        .event-details-section h1 {
+            font-size: 2em;
+            margin: 0.5em 0 0.8em 0; /* Adjusted margins for smaller screens */
+        }
+        .event-details-section .detail-item {
+            font-size: 1em;
+            gap: 0.6em;
+            padding-bottom: 0.3em;
+        }
+        .event-details-section .detail-item svg {
+            width: 1.1em;
+            height: 1.1em;
+        }
+        .event-description-box {
+            font-size: 0.9em;
+            padding: 1.2em 1.5em;
+            margin-top: 1.5em;
+        }
+        .requests-section h2 {
+            font-size: 1.5em;
+        }
+        .request-card {
+            flex-wrap: wrap; /* Allow wrapping on smaller screens */
+            justify-content: center; /* Center items when wrapped */
+            text-align: center;
+        }
+        .request-card .pfp-container {
+            margin: 0 auto 0.8em auto; /* Center PFP and add bottom margin */
+        }
+        .request-card .requester-info {
+            flex-basis: 100%; /* Make name full width */
+            margin-right: 0;
+            margin-bottom: 0.8em; /* Space before buttons */
+        }
+        .request-card .requester-info .name {
+            font-size: 0.95em;
+        }
+        .request-card .request-actions {
+            flex-basis: 100%; /* Make buttons full width */
+            justify-content: center; /* Center buttons horizontally */
+        }
+        .action-button {
+            font-size: 0.65em;
+            padding: 0.4em 0.7em;
+            min-width: unset; /* Remove min-width to allow content to dictate */
+        }
+        .action-button svg {
+            margin: 0; /* Ensure no margin for icons */
+        }
+    }
+
+    @media (max-width: 480px) {
+        .event-management-page-container {
+            padding: 1rem 0.5rem;
+        }
+        .event-details-section {
+            padding: 1em;
+            margin-bottom: 2em;
+        }
+        .event-details-section h1 {
+            font-size: 1.8em;
+            text-shadow: 2px 2px 0 rgba(0, 0, 0, 0.6);
+            margin: 0.5em 0 0.6em 0; /* Further adjusted for smaller screens */
+        }
+        .event-details-section .detail-item {
+            font-size: 0.9em;
+            gap: 0.5em;
+            padding-bottom: 0.2em;
+        }
+        .event-details-section .detail-item svg {
+            width: 1em;
+            height: 1em;
+        }
+        .event-description-box {
+            font-size: 0.85em;
+            margin-top: 1em;
+            padding: 1em 1.2em;
+            box-shadow: 0.25em 0.25em 0 rgba(0, 0, 0, 0.3);
+        }
+        .requests-section {
+            padding: 1em;
+        }
+        .requests-section h2 {
+            font-size: 1.3em;
+            margin-bottom: 1em;
+        }
+        .requests-list {
+            gap: 0.8em;
+        }
+        .request-card {
+            padding: 0.8em;
+        }
+        .request-card .pfp-container {
+            width: 50px;
+            height: 50px;
+            margin-bottom: 0.6em;
+        }
+        .request-card .requester-info .name {
+            font-size: 0.9em;
+        }
+        .request-card .request-actions {
+            gap: 0.4em;
+        }
+        .action-button {
+            font-size: 0.6em;
+            padding: 0.3em 0.5em;
+            border-width: 1.5px;
+            border-radius: 0.25em;
+            box-shadow: 0.15em 0.15em 0 var(--retro-shadow-dark);
+        }
+        .action-button svg {
+            width: 1em;
+            height: 1em;
+        }
+    }
+</style>
+
+<body>
+    <div class="event-management-page-container">
+        <div class="event-details-section">
+            <h1>Retro Gaming Tournament 2025</h1>
+            <p class="detail-item">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-calendar-days">
+                    <path d="M8 2v4"/><path d="M16 2v4"/><rect width="18" height="18" x="3" y="4" rx="2"/><path d="M3 10h18"/><path d="M8 14h.01"/><path d="M12 14h.01"/><path d="M16 14h.01"/><path d="M8 18h.01"/><path d="M12 18h.01"/><path d="M16 18h.01"/>
+                </svg>
+                AUG 15, 2025
+            </p>
+            <p class="detail-item">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-clock">
+                    <circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>
+                </svg>
+                19:00 IST
+            </p>
+            <div class="event-description-box">
+                <p>
+                    Prepare for the ultimate challenge! Join us for an epic showdown in classic 8-bit titles. This year, we're featuring intense tournaments for Street Fighter II, the maze-chasing frenzy of Pac-Man, and the barrel-dodging adventure of Donkey Kong. Whether you're a seasoned arcade veteran or a rising star, bring your A-game. Awesome pixel-themed prizes await the champions, along with bragging rights and retro glory! Don't miss out on a night of nostalgic fun and fierce competition.
+                </p>
+            </div>
+        </div>
+
+        <div class="requests-section">
+            <h2>Glimmer Requests</h2>
+            <div class="requests-list">
+                <% const requests = [
+                    {
+                        id: 'req1',
+                        pfp: "https://images.unsplash.com/photo-1535713875002-d1d0cfd492da?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8M3x8dXNlciUyMHByb2ZpbGV8ZW58MHx8MHx8fDA%3D&auto=format&fit=crop&w=800&q=60",
+                        name: "PixelatedPanda"
+                    },
+                    {
+                        id: 'req2',
+                        pfp: "https://images.unsplash.com/photo-1573496359142-b8d87734b35b?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTJ8fHVzZXIlMjBwcm9maWxlfGVufDB8fDB8fHww&auto=format&fit=crop&w=800&q=60",
+                        name: "ArcadeAce"
+                    },
+                    {
+                        id: 'req3',
+                        pfp: "https://images.unsplash.com/photo-1544005313-94ddf0286df2?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTB8fHVzZXIlMjBwcm9maWxlfGVufDB8fDB8fHww&auto=format&fit=crop&w=800&q=60",
+                        name: "ByteBrawler"
+                    },
+                     {
+                        id: 'req4',
+                        pfp: "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTl8fHVzZXIlMjBwcm9maWxlfGVufDB8fDB8fHww&auto=format&fit=crop&w=800&q=60",
+                        name: "GamerGuru"
+                    },
+                    {
+                        id: 'req5',
+                        pfp: "https://images.unsplash.com/photo-1502823403499-6ccfcf4fbcd6?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MzB8fHVzZXIlMjBwcm9maWxlfGVufDB8fDB8fHww&auto=format&fit=crop&w=800&q=60",
+                        name: "JoystickJunkie"
+                    }
+                ]; %>
+
+                <% if (requests && requests.length > 0) { %>
+                    <% requests.forEach(function(request) { %>
+                        <div class="request-card" data-request-id="<%= request.id %>">
+                            <div class="pfp-container">
+                                <img src="<%= request.pfp || '/images/default-avatar.png' %>" alt="<%= request.name %>'s Profile Picture">
+                            </div>
+                            <div class="requester-info">
+                                <span class="name"><%= request.name %></span>
+                            </div>
+                            <div class="request-actions">
+                                <a href="/users/<%= request.id %>/profile" class="action-button view-profile" aria-label="View <%= request.name %>'s Profile">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-user">
+                                        <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>
+                                    </svg>
+                                    <span>Profile</span>
+                                </a>
+                                <button type="button" class="action-button accept" onclick="handleRequest('<%= request.id %>', 'accept')" aria-label="Accept Request">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-check">
+                                        <path d="M20 6 9 17 4 12"/>
+                                    </svg>
+                                    <span>Accept</span>
+                                </button>
+                                <button type="button" class="action-button reject" onclick="handleRequest('<%= request.id %>', 'reject')" aria-label="Reject Request">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-x">
+                                        <path d="M18 6 6 18"/><path d="m6 6 12 12"/>
+                                    </svg>
+                                    <span>Reject</span>
+                                </button>
+                            </div>
+                        </div>
+                    <% }); %>
+                <% } else { %>
+                    <p class="no-requests-message">No new requests for this glimmer.</p>
+                <% } %>
+            </div>
+        </div>
+    </div>
+
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Inter:wght@400;500;700;800&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script>
+        lucide.createIcons(); // Initialize Lucide icons
+
+        // Dummy function to simulate handling requests
+        function handleRequest(requestId, action) {
+            console.log(`Request ID: ${requestId}, Action: ${action}`);
+            const requestCard = document.querySelector(`.request-card[data-request-id="${requestId}"]`);
+            if (requestCard) {
+                // In a real application, you'd send an AJAX request here
+                // On success, you'd remove the card from the DOM or update its status
+                alert(`${action.charAt(0).toUpperCase() + action.slice(1)} request for ${requestId}`);
+                requestCard.remove(); // Remove the card for demo purposes
+            }
+            // You might also check if no more requests are left and display the "no requests" message
+            checkNoRequests();
+        }
+
+        // Function to show/hide "No new requests" message
+        function checkNoRequests() {
+            const requestsList = document.querySelector('.requests-list');
+            let noRequestsMessage = document.querySelector('.no-requests-message');
+
+            // If there are no request cards remaining
+            if (requestsList.children.length === 0) {
+                if (!noRequestsMessage) { // Only add if it doesn't exist
+                    const messageP = document.createElement('p');
+                    messageP.className = 'no-requests-message';
+                    messageP.textContent = 'No new requests for this glimmer.';
+                    requestsList.parentNode.appendChild(messageP);
+                }
+            } else {
+                // If there are request cards, ensure the "no requests" message is removed if it exists
+                if (noRequestsMessage) {
+                    noRequestsMessage.remove();
+                }
+            }
+        }
+
+        // Initial check on page load to ensure correct message display
+        checkNoRequests();
+    </script>
+</body>

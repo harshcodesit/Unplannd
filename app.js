@@ -22,16 +22,35 @@ app.use(express.static(path.join(__dirname, "/public")));
 app.get("/",(req,res)=>{
  res.render("hub/index.ejs")
 });
+app.get("/hub",(req,res)=>{
+ res.render("hub/index.ejs")
+});
 
-app.get("/grid",(req,res)=>{
+app.get("/trail",(req,res)=>{
  res.render("grid/search.ejs")
 });
 
-app.get("/test",(req,res)=>{
+app.get("/launch",(req,res)=>{
  res.render("grid/launch.ejs")
 });
 app.get("/testt",(req,res)=>{
  res.render("grid/grid.ejs")
+});
+app.get("/sparks",(req,res)=>{
+ res.render("trail/sparks.ejs")
+});
+app.get("/footprints",(req,res)=>{
+ res.render("trail/footprints.ejs")
+});
+app.get("/review",(req,res)=>{
+ res.render("review/review.ejs")
+});
+
+app.get("/dekh",(req,res)=>{
+ res.render("aura/test.ejs")
+});
+app.get("/manage",(req,res)=>{
+ res.render("manage/manage.ejs")
 });
 app.get("/aura",(req,res)=>{
 

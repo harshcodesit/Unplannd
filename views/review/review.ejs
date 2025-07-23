@@ -1,0 +1,450 @@
+<% layout("/layouts/boilerplate") %>
+<style>
+    /* --- Root Variables for Theme Consistency --- */
+    :root {
+        --retro-bg: wheat; /* Main background and outer box */
+        --retro-text: #1F2937; /* Dark text for contrast */
+        --retro-accent-red: #d1451e; /* From box shadow, button hover */
+        --retro-accent-yellow: #FFD93D; /* From previous accent, price underline */
+        --retro-primary-teal: #2F9C95; /* From your card background */
+        --retro-secondary-light: #fff; /* From box shadow white */
+        --retro-shadow-dark: #000; /* From box shadow black */
+        --retro-shadow-light: rgba(0, 0, 0, 0.2); /* For softer elements, box-shadow opacity */
+
+        /* Fonts */
+        --font-primary: "Inter", sans-serif;
+        --font-heading-retro: 'Press Start 2P', cursive; /* For titles and buttons */
+
+        /* Transitions */
+        --transition-fast: 0.2s ease;
+        --transition-medium: 0.3s ease;
+        --transition-slow: 0.6s ease;
+    }
+
+    /* --- General Body Styling --- */
+    body {
+        background-color: var(--retro-bg);
+        font-family: var(--font-primary);
+        color: var(--retro-text);
+        margin: 0;
+        padding: 0;
+        min-height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: center; /* Center vertically */
+        box-sizing: border-box;
+    }
+
+    /* Pixelated image rendering for that retro feel */
+    img {
+        image-rendering: pixelated;
+        image-rendering: -moz-crisp-edges;
+        image-rendering: -o-crisp-edges;
+        image-rendering: -webkit-optimize-contrast;
+        -ms-interpolation-mode: nearest-neighbor;
+    }
+
+    /* --- Form Container: .retro-review-form-container --- */
+    .retro-review-form-container {
+        width: 100%;
+        max-width: 650px; /* Adjusted max-width for forms */
+        background-color: var(--retro-primary-teal); /* Teal background for the main form box */
+        padding: 2.5em; /* Ample padding inside the form */
+        border-radius: 15px;
+        box-shadow:
+            0 0 0 0.15em var(--retro-shadow-dark),
+            0 0 0 0.3em var(--retro-secondary-light),
+            0 0 0 0.45em var(--retro-shadow-dark),
+            0 0.6em 0 0 var(--retro-accent-red), /* Prominent red 3D shadow */
+            0 0.6em 0 0.15em var(--retro-shadow-dark); /* Dark outline for 3D shadow */
+        
+        transition: transform var(--transition-fast) steps(1);
+        animation: formEntry 0.8s ease-out; /* Add an entry animation for the form */
+        margin: 2rem auto; /* Center the form and add vertical margin */
+        box-sizing: border-box;
+        text-shadow: 1px 1px 0 rgba(0, 0, 0, 0.3); /* General text shadow for form content */
+    }
+
+    @keyframes formEntry {
+        0% { opacity: 0; transform: translateY(30px) scale(0.95); }
+        100% { opacity: 1; transform: translateY(0) scale(1); }
+    }
+
+    .retro-review-form-container:hover {
+        transform: translateY(-0.2em); /* Subtle lift on hover */
+        box-shadow:
+            0 0 0 0.15em var(--retro-shadow-dark),
+            0 0 0 0.3em var(--retro-secondary-light),
+            0 0 0 0.45em var(--retro-shadow-dark),
+            0 0.8em 0 0 var(--retro-accent-red), /* More pronounced red 3D shadow */
+            0 0.8em 0 0.15em var(--retro-shadow-dark);
+    }
+
+    .retro-review-form-container h1 {
+        font-family: var(--font-heading-retro);
+        color: var(--retro-text);
+        text-align: center;
+        margin-bottom: 1.5em;
+        font-size: 2em; /* Larger title */
+        text-shadow: 3px 3px 0 rgba(0, 0, 0, 0.5); /* Stronger shadow for heading */
+        padding-bottom: 0.5em;
+        border-bottom: 3px dashed var(--retro-accent-yellow); /* Yellow dashed underline */
+    }
+
+    /* --- Form Groups --- */
+    .form-group-retro {
+        margin-bottom: 1.8em; /* Increased spacing between form groups */
+    }
+
+    .form-group-retro label {
+        display: block;
+        font-family: var(--font-heading-retro); /* Retro font for labels */
+        font-size: 1em; /* Consistent label size */
+        color: var(--retro-secondary-light); /* White labels for contrast */
+        margin-bottom: 0.6em; /* Space between label and input */
+        text-shadow: 1px 1px 0 rgba(0, 0, 0, 0.4); /* Clear text shadow */
+    }
+
+    /* --- Input Fields (Textarea) --- */
+    .form-group-retro textarea {
+        width: 100%;
+        padding: 0.8em 1em; /* Increased padding for better touch targets */
+        border: 2px solid var(--retro-shadow-dark);
+        border-radius: 8px; /* Slightly rounded corners */
+        background-color: var(--retro-bg); /* Wheat background for inputs */
+        color: var(--retro-text);
+        font-family: var(--font-primary);
+        font-size: 1em;
+        box-sizing: border-box; /* Include padding in width */
+        box-shadow: 0.2em 0.2em 0 rgba(0, 0, 0, 0.2); /* Subtle inset-like shadow */
+        transition: all var(--transition-fast);
+        min-height: 150px; /* Ample height for review text */
+        resize: vertical; /* Allow vertical resizing */
+    }
+
+    .form-group-retro textarea:focus {
+        outline: none;
+        border-color: var(--retro-accent-red); /* Red border on focus */
+        box-shadow: 0 0 0 3px rgba(209, 69, 30, 0.5); /* Glowing red shadow on focus */
+        transform: translateY(-2px); /* Slight lift on focus */
+    }
+
+    /* --- Rating Stars --- */
+    .rating-container {
+        display: flex;
+        justify-content: center; /* Center the stars */
+        gap: 0.5em; /* Space between stars */
+        margin-top: 1em;
+        margin-bottom: 2em;
+        direction: rtl; /* Reverse order for right-to-left star selection */
+    }
+
+    .rating-container input[type="radio"] {
+        display: none; /* Hide default radio buttons */
+    }
+
+    .rating-container label {
+        cursor: pointer;
+        width: 2.5em; /* Larger touch target for stars */
+        height: 2.5em;
+        fill: var(--retro-shadow-light); /* Default star color (greyed out) */
+        transition: fill var(--transition-fast), transform var(--transition-fast);
+        text-shadow: none; /* Remove text shadow from labels */
+        display: flex; /* Allow SVG to be centered */
+        align-items: center;
+        justify-content: center;
+    }
+
+    .rating-container label svg {
+        width: 100%;
+        height: 100%;
+    }
+
+    .rating-container label:hover,
+    .rating-container label:hover ~ label,
+    .rating-container input[type="radio"]:checked ~ label {
+        fill: var(--retro-accent-yellow); /* Yellow on hover and selected */
+        transform: scale(1.1); /* Pop effect */
+        text-shadow: 0 0 8px rgba(255, 217, 61, 0.6); /* Glow effect */
+    }
+
+    /* --- Submit Review Button --- */
+    .submit-review-button {
+        display: block; /* Make it a block element to take full width */
+        width: 100%; /* Take full width */
+        margin-top: 2.5em; /* Spacing above the button */
+        position: relative;
+        background: var(--retro-accent-red); /* Red primary color for the button */
+        color: var(--retro-secondary-light);
+        font-family: var(--font-heading-retro);
+        font-size: 1.2em; /* Larger button text */
+        font-weight: 700;
+        padding: 0.8em 1.5em; /* More padding */
+        border: 0.25em solid var(--retro-shadow-dark); /* Thicker border */
+        border-radius: 0.5em; /* Slightly more rounded */
+        box-shadow: 0.4em 0.4em 0 var(--retro-shadow-dark); /* More pronounced shadow */
+        cursor: pointer;
+        transition: all var(--transition-fast);
+        overflow: hidden;
+        text-transform: uppercase;
+        letter-spacing: 0.1em; /* More letter spacing */
+        text-shadow: 2px 2px 0 rgba(0, 0, 0, 0.6); /* Stronger shadow for button text */
+        text-decoration: none; /* In case it's an <a> acting as button */
+        box-sizing: border-box; /* Ensure padding is included in width */
+    }
+
+    .submit-review-button::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(
+            90deg,
+            transparent 0%,
+            rgba(255, 255, 255, 0.3) 50%, /* Stronger shimmer */
+            transparent 100%
+        );
+        transition: left var(--transition-medium); /* Medium shimmer transition */
+        z-index: 1;
+    }
+
+    .submit-review-button:hover {
+        background: var(--retro-shadow-dark); /* Dark background on hover */
+        color: var(--retro-accent-yellow); /* Yellow text on hover */
+        transform: translate(-0.2em, -0.2em); /* More pronounced lift */
+        box-shadow: 0.6em 0.6em 0 var(--retro-accent-red); /* Red shadow on hover */
+        text-shadow: 2px 2px 0 rgba(0, 0, 0, 0.8);
+    }
+
+    .submit-review-button:hover::before {
+        left: 100%;
+    }
+
+    .submit-review-button:active {
+        transform: translate(0.15em, 0.15em); /* Simulate press */
+        box-shadow: 0.2em 0.2em 0 var(--retro-shadow-dark);
+    }
+
+    /* --- Responsive Adjustments --- */
+    @media (max-width: 992px) {
+        .retro-review-form-container {
+            padding: 2em;
+            margin: 1.5rem auto;
+        }
+        .retro-review-form-container h1 {
+            font-size: 1.8em;
+            margin-bottom: 1em;
+        }
+        .form-group-retro label {
+            font-size: 0.95em;
+        }
+        .form-group-retro textarea {
+            padding: 0.7em 1em;
+            font-size: 0.95em;
+        }
+        .rating-container label {
+            width: 2.2em;
+            height: 2.2em;
+        }
+        .submit-review-button {
+            font-size: 1.1em;
+            padding: 0.7em 1.2em;
+        }
+    }
+
+    @media (max-width: 768px) {
+        body {
+            align-items: flex-start; /* Align to top when content is longer on smaller screens */
+        }
+        .retro-review-form-container {
+            width: 95%; /* Take more width on smaller screens */
+            padding: 1.5em;
+            margin: 1rem auto;
+            box-shadow:
+                0 0 0 0.1em var(--retro-shadow-dark),
+                0 0 0 0.2em var(--retro-secondary-light),
+                0 0 0 0.3em var(--retro-shadow-dark),
+                0 0.4em 0 0 var(--retro-accent-red),
+                0 0.4em 0 0.1em var(--retro-shadow-dark);
+        }
+        .retro-review-form-container h1 {
+            font-size: 1.5em;
+            margin-bottom: 1em;
+            text-shadow: 2px 2px 0 rgba(0, 0, 0, 0.5);
+        }
+        .form-group-retro {
+            margin-bottom: 1.5em;
+        }
+        .form-group-retro label {
+            font-size: 0.9em;
+        }
+        .form-group-retro textarea {
+            padding: 0.6em 0.8em;
+            font-size: 0.9em;
+            border-radius: 6px;
+            min-height: 120px;
+        }
+        .rating-container label {
+            width: 2em;
+            height: 2em;
+        }
+        .submit-review-button {
+            font-size: 1em;
+            padding: 0.6em 1em;
+            border: 0.2em solid var(--retro-shadow-dark);
+            border-radius: 0.4em;
+            box-shadow: 0.3em 0.3em 0 var(--retro-shadow-dark);
+        }
+    }
+
+    @media (max-width: 480px) {
+        .retro-review-form-container {
+            padding: 1em;
+            margin: 0.5rem auto;
+        }
+        .retro-review-form-container h1 {
+            font-size: 1.2em;
+            margin-bottom: 0.8em;
+            text-shadow: 1.5px 1.5px 0 rgba(0, 0, 0, 0.5);
+        }
+        .form-group-retro {
+            margin-bottom: 1.2em;
+        }
+        .form-group-retro label {
+            font-size: 0.8em;
+        }
+        .form-group-retro textarea {
+            padding: 0.5em 0.7em;
+            font-size: 0.85em;
+            border-radius: 5px;
+            min-height: 100px;
+        }
+        .rating-container label {
+            width: 1.8em;
+            height: 1.8em;
+            gap: 0.3em;
+        }
+        .submit-review-button {
+            font-size: 0.9em;
+            padding: 0.5em 0.8em;
+            border: 0.15em solid var(--retro-shadow-dark);
+            border-radius: 0.3em;
+            box-shadow: 0.2em 0.2em 0 var(--retro-shadow-dark);
+        }
+    }
+</style>
+
+<body>
+    <div class="retro-review-form-container">
+        <h1>Submit Your Glimmer Review</h1>
+        <form action="/reviews" method="POST" novalidate class="needs-validation">
+            <!-- Rating Input -->
+            <div class="form-group-retro">
+                <label for="rating">Your Rating</label>
+                <div class="rating-container">
+                    <input type="radio" id="star5" name="review[rating]" value="5" required>
+                    <label for="star5" title="5 stars">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" stroke="none">
+                            <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14l-5-4.87 6.91-1.01L12 2z"/>
+                        </svg>
+                    </label>
+                    <input type="radio" id="star4" name="review[rating]" value="4">
+                    <label for="star4" title="4 stars">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" stroke="none">
+                            <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14l-5-4.87 6.91-1.01L12 2z"/>
+                        </svg>
+                    </label>
+                    <input type="radio" id="star3" name="review[rating]" value="3">
+                    <label for="star3" title="3 stars">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" stroke="none">
+                            <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14l-5-4.87 6.91-1.01L12 2z"/>
+                        </svg>
+                    </label>
+                    <input type="radio" id="star2" name="review[rating]" value="2">
+                    <label for="star2" title="2 stars">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" stroke="none">
+                            <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14l-5-4.87 6.91-1.01L12 2z"/>
+                        </svg>
+                    </label>
+                    <input type="radio" id="star1" name="review[rating]" value="1">
+                    <label for="star1" title="1 star">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" stroke="none">
+                            <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14l-5-4.87 6.91-1.01L12 2z"/>
+                        </svg>
+                    </label>
+                </div>
+                <div class="invalid-feedback" style="text-align: center;">
+                    Please provide a rating.
+                </div>
+            </div>
+
+            <!-- Review Textarea -->
+            <div class="form-group-retro">
+                <label for="reviewText">Write Your Review</label>
+                <textarea id="reviewText" name="review[text]" rows="7" placeholder="Share your experience with this glimmer!" required></textarea>
+                <div class="invalid-feedback">
+                    Please write your review.
+                </div>
+            </div>
+
+            <!-- Submit Button -->
+            <button type="submit" class="submit-review-button">Submit Review</button>
+        </form>
+    </div>
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Inter:wght@400;500;700;800&display=swap" rel="stylesheet">
+    <!-- Lucide Icons (though stars are custom SVG here) -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script>
+        lucide.createIcons(); // Initialize Lucide icons if any other are used
+
+        // Simple client-side validation for demonstration (Bootstrap-like)
+        (function () {
+            'use strict';
+            const form = document.querySelector('.needs-validation');
+            form.addEventListener('submit', function (event) {
+                // Check if a rating is selected
+                const ratingInputs = form.querySelectorAll('input[name="review[rating]"]');
+                let ratingSelected = false;
+                for (let i = 0; i < ratingInputs.length; i++) {
+                    if (ratingInputs[i].checked) {
+                        ratingSelected = true;
+                        break;
+                    }
+                }
+
+                if (!form.checkValidity() || !ratingSelected) {
+                    event.preventDefault();
+                    event.stopPropagation();
+                    // Show specific feedback for rating if not selected
+                    if (!ratingSelected) {
+                        const ratingFeedback = document.querySelector('.rating-container + .invalid-feedback');
+                        if (ratingFeedback) {
+                            ratingFeedback.style.display = 'block';
+                        }
+                    }
+                } else {
+                    const ratingFeedback = document.querySelector('.rating-container + .invalid-feedback');
+                    if (ratingFeedback) {
+                        ratingFeedback.style.display = 'none';
+                    }
+                }
+                form.classList.add('was-validated');
+            }, false);
+
+            // Hide rating feedback when a star is clicked
+            const ratingInputs = document.querySelectorAll('input[name="review[rating]"]');
+            ratingInputs.forEach(input => {
+                input.addEventListener('change', () => {
+                    const ratingFeedback = document.querySelector('.rating-container + .invalid-feedback');
+                    if (ratingFeedback) {
+                        ratingFeedback.style.display = 'none';
+                    }
+                });
+            });
+        })();
+    </script>
+</body>

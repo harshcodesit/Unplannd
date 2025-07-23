@@ -1,0 +1,84 @@
+<style>
+    /* --- Footer --- */
+    .footer {
+        width: 100%;
+        padding: 2rem;
+        background-color: var(--retro-shadow-dark);
+        color: var(--retro-secondary-light);
+        text-align: center;
+        font-family: var(--font-primary);
+        font-size: 0.9em;
+        border-top: 4px solid var(--retro-accent-red);
+        box-sizing: border-box;
+    }
+
+    .footer p {
+        margin: 0.5em 0;
+        text-shadow: 1px 1px 0 rgba(0, 0, 0, 0.3);
+    }
+
+    .footer-links a {
+        color: var(--retro-accent-yellow);
+        text-decoration: none;
+        margin: 0 0.8em;
+        transition: color var(--transition-fast);
+        text-shadow: 1px 1px 0 rgba(0, 0, 0, 0.3);
+    }
+
+    .footer-links a:hover {
+        color: var(--retro-accent-red);
+        text-decoration: underline;
+    }
+
+    .social-icons-footer {
+        display: flex;
+        justify-content: center;
+        gap: 1.5rem;
+        margin-top: 1.5rem;
+    }
+
+    .social-icons-footer a {
+        color: var(--retro-secondary-light);
+        font-size: 1.8rem;
+        transition: transform var(--transition-fast), color var(--transition-fast);
+        text-shadow: 1px 1px 0 rgba(0, 0, 0, 0.4);
+    }
+
+    .social-icons-footer a:hover {
+        transform: scale(1.2) rotate(5deg);
+        color: var(--retro-accent-yellow);
+    }
+
+    /* --- Responsive Adjustments for Footer --- */
+    @media (max-width: 992px) {
+        .footer { padding: 1.5rem; }
+        .footer-links a { margin: 0 0.6em; }
+        .social-icons-footer a { font-size: 1.5rem; }
+    }
+
+    @media (max-width: 768px) {
+        .footer { padding: 1rem; font-size: 0.8em; }
+        .footer-links a { margin: 0 0.6em; }
+        .social-icons-footer a { font-size: 1.3rem; }
+    }
+
+    @media (max-width: 480px) {
+        .footer { padding: 0.8rem; font-size: 0.7em; }
+        .footer-links a { margin: 0 0.4em; }
+        .social-icons-footer a { font-size: 1.1rem; }
+    }
+</style>
+
+<footer class="footer">
+    <p>&copy; 2025 The HUB. All rights reserved. Pixelated with passion.</p>
+    <div class="footer-links">
+        <a href="#">Privacy Policy</a>
+        <a href="#">Terms of Service</a>
+        <a href="#">Contact Us</a>
+    </div>
+    <div class="social-icons-footer">
+        <a href="#" aria-label="GitHub"><i class="fab fa-github"></i></a>
+        <a href="#" aria-label="LinkedIn"><i class="fab fa-linkedin"></i></a>
+        <a href="#" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
+    </div>
+</footer>
