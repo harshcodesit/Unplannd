@@ -28,7 +28,7 @@ app.get("/grid",(req,res)=>{
 });
 
 app.get("/test",(req,res)=>{
- res.render("grid/launch.ejs")
+ res.render("includes/navbar.ejs")
 });
 
 app.get("/testt",(req,res)=>{

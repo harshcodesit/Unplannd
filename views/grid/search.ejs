@@ -1,450 +1,311 @@
 <% layout("/layouts/boilerplate") %>
-
 <style>
-
-.search-container{
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: flex-start;
-    align-items: center;
-    
-}
-.article-wrapper {
-  width: 250px;
-  -webkit-transition: 0.15s all ease-in-out;
-  transition: 0.15s all ease-in-out;
-  border-radius: 10px;
-  padding: 5px;
-  border: 4px solid transparent;
-  cursor: pointer;
-  background-color: #2F9C95  ;
-  margin: 30px 15px 30px 15px;
-}
-
-.article-wrapper:hover {
-  -webkit-box-shadow: 10px 10px 0 #1F2937;
-  
-  
-  -webkit-transform: translate(-20px, -20px);
-  -ms-transform: translate(-20px, -20px);
-  transform: translate(-20px, -20px);
-}
-
-
-
-.types {
-  gap: 10px;
-  display: -webkit-box;
-  display: -ms-flexbox;
-  display: flex;
-  place-content: flex-start;
-}
-
-.rounded-lg {
- /* class tailwind */
-  border-radius: 10px;
-}
-
-.article-wrapper:hover .project-hover {
-  -webkit-transform: rotate(-45deg);
-  -ms-transform: rotate(-45deg);
-  transform: rotate(-45deg);
-  
-}
-
-.project-info {
-  padding-top: 20px;
-  padding: 10px;
-  display: -webkit-box;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-box-orient: vertical;
-  -webkit-box-direction: normal;
-  -ms-flex-direction: column;
-  flex-direction: column;
-  gap: 20px;
-}
-
-.project-title {
-  font-size: 1em;
-  margin: 0;
-  font-weight: 800;
- /* depend de la font */
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  color: black;
-}
-
-.flex-pr {
-  display: -webkit-box;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-box-pack: justify;
-  -ms-flex-pack: justify;
-  justify-content: space-between;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-}
-
-.project-type {
-  background: #b2b2fd;
-  color: #1a41cd;
-  font-weight: bold;
-  padding: 0.3em 0.7em;
-  border-radius: 15px;
-  font-size: 12px;
-  letter-spacing: -0.6px
-}
-
-.project-hover {
-  border-radius: 50%;
-  width: 50px;
-  height: 50px;
-  padding: 9px;
-  -webkit-transition: all 0.3s ease;
-  transition: all 0.3s ease;
-}
-
-.container-project {
-  width: 100%;
-  height: 170px;
-  background: gray;
-}
-.rounded-lg img{
-    border-radius: inherit;
-}
-/* inspired form gumroad website */
-.button {
-  --bg: #000;
-  --hover-bg: wheat;
-  --hover-text: #000;
-  color: #fff;
-  cursor: pointer;
-  border: 1px solid var(--bg);
-  border-radius: 40px;
-  padding: 0.8em 2em;
-  background: var(--bg);
-  transition: 0.2s;
-}
-
-.button:hover {
-  color: var(--hover-text);
-  transform: translate(-0.25rem, -0.25rem);
-  background: var(--hover-bg);
-  box-shadow: 0.25rem 0.25rem var(--bg);
-}
-
-.button:active {
-  transform: translate(0);
-  box-shadow: none;
-}
-.liquid-3 {
-  --primary: #000;
-  --secondary: #fff;
-  --time: 0.6s;
-  appearance: none;
-  position: relative;
-  cursor: pointer;
-  width: 6em; /* Reduced from 10em */
-  aspect-ratio: 2 / 1;
-  background: var(--primary);
-  border-radius: 20em;
-  box-shadow: 0 0 0 0.5em var(--secondary); /* Reduced from 1em */
-  transform: translateX(0.5px);
-  transition: transform var(--time) cubic-bezier(0.75, 0, 0.75, 50);
-  filter: blur(0.33em) contrast(20); /* Reduced from 0.66em (halved) */
-  mix-blend-mode: darken;
-  overflow: hidden;
-
-  &::before {
-    content: "";
-    position: absolute;
-    width: 200%;
-    height: 100%;
-    transform: translate(-25%, -50%);
-    left: 50%;
-    top: 50%;
-    background: radial-gradient(
-        closest-side circle at 12.5% 50%,
-        var(--secondary) 50%,
-        #0000 0
-      ),
-      radial-gradient(
-        closest-side circle at 87.5% 50%,
-        var(--secondary) 50%,
-        #0000 0
-      ),
-      #f000;
-    transition: transform var(--time) cubic-bezier(0.75, 0, 0.75, 1.3);
-  }
-
-  &:checked {
-    transform: translateX(-0.5px);
-    &::before {
-      transform: translate(-75%, -50%);
+    .entire-content{
+        display: flex ;
+        align-items: center;
+        margin: 40px;
+        justify-content: center;
+        flex-wrap: wrap; /* Added for responsiveness if many cards */
     }
-  }
-}
-.toggle{
-      display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    align-items: center;
-    margin-top: 30px;
-    
-}
-.switch {
-  --_switch-bg-clr: #2F9C95;
-  --_switch-padding: 4px; /* padding around button*/
-  --_slider-bg-clr: rgba(12, 74, 110, 0.65); /* slider color unchecked */
-  --_slider-bg-clr-on:  rgba(12, 74, 110, 0.65); /* slider color checked */
-  --_slider-txt-clr: #ffffff;
-  --_label-padding: 1rem 2rem; /* padding around the labels -  this gives the switch it's global width and height */
-  --_switch-easing: cubic-bezier(
-    0.47,
-    1.64,
-    0.41,
-    0.8
-  ); /* easing on toggle switch */
-  color: white;
-  width: fit-content;
-  display: flex;
-  justify-content: center;
-  position: relative;
-  border-radius: 9999px;
-  cursor: pointer;
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  position: relative;
-  isolation: isolate;
-}
+    .box{
+        width: 100%;
+        background-color: wheat;
+        font-family: "Inter", sans-serif;
+        font-size: 1em;
+        background: wheat;
+        color: #000;
+        padding: 1em;
+        image-rendering: pixelated;
+        text-shadow: 1px 1px #000;
+        box-shadow:
+            0 0 0 0.15em #000,
+            0 0 0 0.3em #fff,
+            0 0 0 0.45em #000,
+            0 0.5em 0 0 #d1451e,
+            0 0.5em 0 0.15em #000;
+        transition: transform 0.2s steps(1);
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-between;
+    }
+    /* From Uiverse.io by 0xnihilism */
+    .card {
+        margin: 14px;
+        width: 350px; /* Keep consistent width */
+        padding: 5px;
+        background: #2F9C95;
+        border-radius: 15px;
+        box-shadow: 0px 0px 0 #1F2937;
+        border: 3px solid black;
+        transition: all 0.3s ease;
+        position: relative;
+        overflow: hidden;
+        height: auto; /* Changed from fixed height to auto to accommodate new content */
+        display: flex; /* Added flex for internal layout */
+        flex-direction: column; /* Stack image and body vertically */
+    }
+    .card:active {
+        animation: shake 0.5s ease-in-out;
+    }
+    .card:hover {
+        transform: rotate(0deg) scale(1.02);
+        box-shadow: 10px 10px 0 #1F2937;
+    }
+    .card img{
+        height: 200px; /* Fixed height for image */
+        width: 100%;
+        border-radius: inherit;
+        object-fit: cover; /* Ensures image covers the area without distortion */
+        margin-bottom: 10px; /* Space between image and new content */
+    }
 
-.switch input[type="checkbox"] {
-  position: absolute;
-  width: 1px;
-  height: 1px;
-  padding: 0;
-  margin: -1px;
-  overflow: hidden;
-  clip: rect(0, 0, 0, 0);
-  white-space: nowrap;
-  border-width: 0;
-}
-.switch > span {
-  display: grid;
-  place-content: center;
-  transition: opacity 300ms ease-in-out 150ms;
-  padding: var(--_label-padding);
-}
-.switch::before,
-.switch::after {
-  content: "";
-  position: absolute;
-  border-radius: inherit;
-  transition: inset 150ms ease-in-out;
-}
-/* switch slider */
-.switch::before {
-  background-color: var(--_slider-bg-clr);
-  inset: var(--_switch-padding) 50% var(--_switch-padding)
-    var(--_switch-padding);
-  transition:
-    inset 500ms var(--_switch-easing),
-    background-color 500ms ease-in-out;
-  z-index: -1;
-  box-shadow:
-    inset 0 1px 1px rgba(0, 0, 0, 0.3),
-    0 1px rgba(255, 255, 255, 0.3);
-}
-/* switch bg color */
-.switch::after {
-  background-color: var(--_switch-bg-clr);
-  inset: 0;
-  z-index: -2;
-}
-/* switch hover & focus */
-.switch:focus-within::after {
-  inset: -0.25rem;
-}
-.switch:has(input:checked):hover > span:first-of-type,
-.switch:has(input:not(:checked)):hover > span:last-of-type {
-  opacity: 1;
-  transition-delay: 0ms;
-  transition-duration: 100ms;
-}
-/* switch hover */
-.switch:has(input:checked):hover::before {
-  inset: var(--_switch-padding) var(--_switch-padding) var(--_switch-padding)
-    45%;
-}
-.switch:has(input:not(:checked)):hover::before {
-  inset: var(--_switch-padding) 45% var(--_switch-padding)
-    var(--_switch-padding);
-}
-/* checked - move slider to right */
-.switch:has(input:checked)::before {
-  background-color: var(--_slider-bg-clr-on);
-  inset: var(--_switch-padding) var(--_switch-padding) var(--_switch-padding)
-    50%;
-}
-/* checked - set opacity */
-.switch > span:last-of-type,
-.switch > input:checked + span:first-of-type {
-  opacity: 0.75;
-}
-.switch > input:checked ~ span:last-of-type {
-  opacity: 1;
-}
+    /* CSS for the new card-body content from the second code */
+    .card-body-section {
+        --primary: #ff3e00;
+        --primary-hover: #ff6d43;
+        --secondary: wheat;
+        --secondary-hover: #FF6A6B;
+        --accent: #FFD93D;
+        --text: #050505;
+        --bg: #2F9C95;
+        --shadow-color: #000000;
+        --pattern-color: #cfcfcf;
 
+        flex-grow: 1; /* Allows the body to take available space */
+        position: relative;
+        padding: 1.5em;
+        padding-top: 0.1rem;
+        background-color: var(--bg); /* Use background from the second card's variables */
+        color: var(--text); /* Use text color from the second card's variables */
+        z-index: 2;
+        border-top: 0.15em dashed rgba(0, 0, 0, 0.15); /* Keep the dashed line effect */
+        /* Removed margin-top: auto; as it's less critical without a fixed height and can cause issues with spacing if not carefully managed */
+    }
 
+    /* Removed .card-description CSS as the element is removed */
+
+    .feature-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 1em;
+        margin-bottom: 1.5em; /* Keep this margin for spacing below the grid */
+        margin-top: 0; /* Adjust or remove if the top spacing looks off without description */
+    }
+
+    .feature-item {
+        display: flex;
+        align-items: center;
+        gap: 0.6em;
+        transition: transform 0.2s ease;
+    }
+
+    .feature-item:hover {
+        transform: translateX(0.3em);
+    }
+
+    .feature-icon {
+        width: 1.4em;
+        height: 1.4em;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: var(--secondary);
+        border: 0.12em solid var(--text);
+        border-radius: 0.3em;
+        box-shadow: 0.2em 0.2em 0 rgba(0, 0, 0, 0.2);
+        transition: all 0.2s ease;
+    }
+
+    .feature-item:hover .feature-icon {
+        background: var(--secondary-hover);
+        transform: rotate(-5deg);
+    }
+
+    .feature-icon svg {
+        width: 0.9em;
+        height: 0.9em;
+        fill: #1F2937;
+    }
+
+    .feature-text {
+        font-size: 0.85em;
+        font-weight: 400;
+        color: var(--text);
+    }
+
+    .card-actions {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-top: 1.5em;
+        padding-top: 1.2em;
+        border-top: 0.15em dashed rgba(0, 0, 0, 0.15);
+        position: relative;
+    }
+
+    .card-actions::before {
+        content: "✂";
+        position: absolute;
+        top: -0.8em;
+        left: 50%;
+        transform: translateX(-50%) rotate(90deg);
+        background: var(--bg);
+        padding: 0 0.5em;
+        font-size: 1em;
+        color: rgba(0, 0, 0, 0.4);
+    }
+
+    .price {
+        position: relative;
+        font-size: 1.8em;
+        font-weight: 800;
+        color: var(--text);
+        background: var(--bg);
+    }
+
+    .price::before {
+        content: "";
+        position: absolute;
+        bottom: 0.15em;
+        left: 0;
+        width: 100%;
+        height: 0.2em;
+        background: var(--accent);
+        z-index: -1;
+        opacity: 0.5;
+    }
+
+    .price-currency {
+        font-size: 0.6em;
+        font-weight: 700;
+        vertical-align: top;
+        margin-right: 0.1em;
+    }
+
+    .price-period {
+        display: block;
+        font-size: 0.4em;
+        font-weight: 600;
+        color: rgba(0, 0, 0, 0.6);
+        margin-top: 0.2em;
+    }
+
+    .card-button {
+        position: relative;
+        background: var(--secondary);
+        color: v#1F2937;
+        font-size: 0.9em;
+        font-weight: 700;
+        padding: 0.7em 1.2em;
+        border: 0.2em solid var(--text);
+        border-radius: 0.4em;
+        box-shadow: 0.3em 0.3em 0 var(--shadow-color);
+        cursor: pointer;
+        transition: all 0.2s ease;
+        overflow: hidden;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+    }
+
+    .card-button::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(
+            90deg,
+            transparent 0%,
+            rgba(255, 255, 255, 0.2) 50%,
+            transparent 100%
+        );
+        transition: left 0.6s ease;
+    }
+
+    .card-button:hover {
+        background: var(--secondary-hover);
+        transform: translate(-0.1em, -0.1em);
+        box-shadow: 0.4em 0.4em 0 var(--shadow-color);
+    }
+
+    .card-button:hover::before {
+        left: 100%;
+    }
+
+    .card-button:active {
+        transform: translate(0.1em, 0.1em);
+        box-shadow: 0.15em 0.15em 0 var(--shadow-color);
+    }
 </style>
 <body>
-    
+    <div class="entire-content">
+        <div class="box">
+            <% for (let i=0;i<=6;i++) {%>
+                <div class="card">
+                    <img src="https://media.istockphoto.com/id/505964108/photo/couples-dancing-and-drinking-at-evening-party.jpg?s=612x612&w=0&k=20&c=_pNpYuOdBQSwbCTMxvlWy6vQAlb4h_X3RJyU2bACGH0=" alt="Party Image">
+                    <div class="card-body-section">
+                      <div class="card-title">
+                            <h2>The Rooftop Meeting </h2>
+                          </div>
+                        <div class="feature-grid">
+                          
+                            <div class="feature-item">
+                                <div class="feature-icon">
+                                    <svg viewBox="0 0 24 24">
+                                        <path
+                                            d="M20,4C21.1,4 22,4.9 22,6V18C22,19.1 21.1,20 20,20H4C2.9,20 2,19.1 2,18V6C2,4.9 2.9,4 4,4H20M4,6V18H20V6H4M6,9H18V11H6V9M6,13H16V15H6V13Z"
+                                        ></path>
+                                    </svg>
+                                </div>
+                                <span class="feature-text">Dipesh Verma</span>
+                            </div>
 
-<div class="main-content" id="main-content" >
-    <div >
-        <div class="toggle">
-           <label for="filter" class="switch" aria-label="Toggle Filter">
-  <input type="checkbox" id="filter" />
-  <span>Find Glimmer</span>
-  <span>Launch Glimmer</span>
-</label>
+                            <div class="feature-item">
+                                <div class="feature-icon">
+                                    <svg viewBox="0 0 24 24">
+                                        <path
+                                            d="M12,17.56L16.07,16.43L16.62,10.33H9.38L9.2,8.3H16.8L17,6.31H7L7.56,12.32H14.45L14.22,14.9L12,15.5L9.78,14.9L9.64,13.24H7.64L7.93,16.43L12,17.56M4.07,3H19.93L18.5,19.2L12,21L5.5,19.2L4.07,3Z"
+                                        ></path>
+                                    </svg>
+                                </div>
+                                <span class="feature-text">Rating : 4.8</span>
+                            </div>
 
+                            <div class="feature-item">
+                                <div class="feature-icon">
+                                    <svg viewBox="0 0 24 24">
+                                        <path
+                                            d="M18.5,4L19.66,8.35L18.7,8.61C18.25,7.74 17.79,6.87 17.26,6.43C16.73,6 16.11,6 15.5,6H13V16.5C13,17 13,17.5 13.33,17.75C13.67,18 14.33,18 15,18V19H9V18C9.67,18 10.33,18 10.67,17.75C11,17.5 11,17 11,16.5V6H8.5C7.89,6 7.27,6 6.74,6.43C6.21,6.87 5.75,7.74 5.3,8.61L4.34,8.35L5.5,4H18.5Z"
+                                        ></path>
+                                    </svg>
+                                </div>
+                                <span class="feature-text">27/05/25</span>
+                            </div>
+
+                            <div class="feature-item">
+                                <div class="feature-icon">
+                                    <svg viewBox="0 0 24 24">
+                                        <path
+                                            d="M9.19,6.35C8.41,7.13 7.75,8.05 7.25,9H5V11H7.12C7.05,11.32 7,11.66 7,12C7,12.34 7.05,12.68 7.12,13H5V15H7.25C7.75,15.95 8.41,16.87 9.19,17.65L7.77,19.07L9.88,21.18L11.3,19.77C11.85,20.03 12.41,20.2 13,20.31V23H15V20.31C15.59,20.2 16.15,20.03 16.7,19.77L18.12,21.18L20.23,19.07L18.81,17.65C19.59,16.87 20.25,15.95 20.75,15H23V13H20.88C20.95,12.68 21,12.34 21,12C21,11.66 20.95,11.32 20.88,11H23V9H20.75C20.25,8.05 19.59,7.13 18.81,6.35L20.23,4.93L18.12,2.82L16.7,4.23C16.15,3.97 15.59,3.8 15,3.69V1H13V3.69C12.41,3.8 11.85,3.97 11.3,4.23L9.88,2.82L7.77,4.93L9.19,6.35M13,17A5,5 0 0,1 8,12A5,5 0 0,1 13,7A5,5 0 0,1 18,12A5,5 0 0,1 13,17Z"
+                                        ></path>
+                                    </svg>
+                                </div>
+                                <span class="feature-text">3:00 AM</span>
+                            </div>
+                        </div>
+
+                        <div class="card-actions">
+                            <div class="price">
+                                <span class="price-currency">$</span>0
+                                <span class="price-period" style="margin-left:3px;">to join</span>
+                            </div>
+
+                            <button class="card-button">Get Tickets</button>
+                        </div>
+                    </div>
+                </div>
+            <% }%>
         </div>
-        <ul class="search-container">
-        <li>
-            <article class="article-wrapper">
-            <div class="rounded-lg container-project">
-            <img src="https://images.ctfassets.net/hrltx12pl8hq/28ECAQiPJZ78hxatLTa7Ts/2f695d869736ae3b0de3e56ceaca3958/free-nature-images.jpg?fit=fill&w=1200&h=630" alt="" style="width: 100%" height="100%">
-            </div>
-            <div class="project-info">
-            <div class="flex-pr">
-                <div class="project-title text-nowrap">Project</div>
-                <div class="project-hover">
-                    
-                    </div>
-                </div>
-                 <div class="types"><span style="width: 40%;">
-                    dkd
-                </span>
-                    <span style="width: 60%;">
-                    <a href=""><button class="button">Explore</button></a> </span>
-                </div>
-                </div>
-        </article>
-        </li>
-        <li>
-            <article class="article-wrapper">
-            <div class="rounded-lg container-project">
-            <img src="https://images.ctfassets.net/hrltx12pl8hq/28ECAQiPJZ78hxatLTa7Ts/2f695d869736ae3b0de3e56ceaca3958/free-nature-images.jpg?fit=fill&w=1200&h=630" alt="" style="width: 100%" height="100%">
-            </div>
-            <div class="project-info">
-            <div class="flex-pr">
-                <div class="project-title text-nowrap">Project</div>
-                <div class="project-hover">
-                    <svg style="color: black;" xmlns="http://www.w3.org/2000/svg" width="2em" height="2em" color="black" stroke-linejoin="round" stroke-linecap="round" viewBox="0 0 24 24" stroke-width="2" fill="none" stroke="currentColor"><line y2="12" x2="19" y1="12" x1="5"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
-                    </div>
-                </div>
-                 <div class="types"><span style="width: 40%;">
-                    dkd
-                </span>
-                    <span style="width: 60%;">
-                    <a href=""><button class="button">Explore</button></a> </span>
-                </div>
-                </div>
-        </article>
-        </li>
-        <li>
-            <article class="article-wrapper">
-            <div class="rounded-lg container-project">
-            <img src="https://images.ctfassets.net/hrltx12pl8hq/28ECAQiPJZ78hxatLTa7Ts/2f695d869736ae3b0de3e56ceaca3958/free-nature-images.jpg?fit=fill&w=1200&h=630" alt="" style="width: 100%" height="100%">
-            </div>
-            <div class="project-info">
-            <div class="flex-pr">
-                <div class="project-title text-nowrap">Project</div>
-                <div class="project-hover">
-                    <svg style="color: black;" xmlns="http://www.w3.org/2000/svg" width="2em" height="2em" color="black" stroke-linejoin="round" stroke-linecap="round" viewBox="0 0 24 24" stroke-width="2" fill="none" stroke="currentColor"><line y2="12" x2="19" y1="12" x1="5"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
-                    </div>
-                </div>
-                <div class="types"><span style="width: 40%;">
-                    dkd
-                </span>
-                    <span style="width: 60%;">
-                    <a href=""><button class="button">Explore</button></a> </span>
-                </div>
-                </div>
-        </article>
-        </li>
-        <li><article class="article-wrapper">
-            <div class="rounded-lg container-project">
-            <img src="https://images.ctfassets.net/hrltx12pl8hq/28ECAQiPJZ78hxatLTa7Ts/2f695d869736ae3b0de3e56ceaca3958/free-nature-images.jpg?fit=fill&w=1200&h=630" alt="" style="width: 100%" height="100%">
-            </div>
-            <div class="project-info">
-            <div class="flex-pr">
-                <div class="project-title text-nowrap">Project</div>
-                <div class="project-hover">
-                    <svg style="color: black;" xmlns="http://www.w3.org/2000/svg" width="2em" height="2em" color="black" stroke-linejoin="round" stroke-linecap="round" viewBox="0 0 24 24" stroke-width="2" fill="none" stroke="currentColor"><line y2="12" x2="19" y1="12" x1="5"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
-                    </div>
-                </div>
-                 <div class="types"><span style="width: 40%;">
-                    dkd
-                </span>
-                    <span style="width: 60%;">
-                    <a href=""><button class="button">Explore</button></a> </span>
-                </div>
-                </div>
-        </article>
-    </li>
-        <li>
-              <article class="article-wrapper">
-            <div class="rounded-lg container-project">
-            <img src="https://images.ctfassets.net/hrltx12pl8hq/28ECAQiPJZ78hxatLTa7Ts/2f695d869736ae3b0de3e56ceaca3958/free-nature-images.jpg?fit=fill&w=1200&h=630" alt="" style="width: 100%" height="100%">
-            </div>
-            <div class="project-info">
-            <div class="flex-pr">
-                <div class="project-title text-nowrap">Project</div>
-                <div class="project-hover">
-                    <svg style="color: black;" xmlns="http://www.w3.org/2000/svg" width="2em" height="2em" color="black" stroke-linejoin="round" stroke-linecap="round" viewBox="0 0 24 24" stroke-width="2" fill="none" stroke="currentColor"><line y2="12" x2="19" y1="12" x1="5"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
-                    </div>
-                </div>
-                 <div class="types"><span style="width: 40%;">
-                    dkd
-                </span>
-                    <span style="width: 60%;">
-                    <a href=""><button class="button">Explore</button></a> </span>
-                </div>
-                </div>
-        </article>
-        </li>
-        <li>
-            <article class="article-wrapper">
-            <div class="rounded-lg container-project">
-            <img src="https://images.ctfassets.net/hrltx12pl8hq/28ECAQiPJZ78hxatLTa7Ts/2f695d869736ae3b0de3e56ceaca3958/free-nature-images.jpg?fit=fill&w=1200&h=630" alt="" style="width: 100%" height="100%">
-            </div>
-            <div class="project-info">
-            <div class="flex-pr">
-                <div class="project-title text-nowrap">Project</div>
-                <div class="project-hover">
-                    <svg style="color: black;" xmlns="http://www.w3.org/2000/svg" width="2em" height="2em" color="black" stroke-linejoin="round" stroke-linecap="round" viewBox="0 0 24 24" stroke-width="2" fill="none" stroke="currentColor"><line y2="12" x2="19" y1="12" x1="5"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
-                    </div>
-                </div>
-                <div class="types"><span style="width: 40%;">
-                    dkd
-                </span>
-                    <span style="width: 60%;">
-                    <a href=""><button class="button">Explore</button></a> </span>
-                </div>
-                </div>
-        </article>
-        </li>
-        </ul>
-        
-        
-        
-      
-        
-          
     </div>
 </body>
