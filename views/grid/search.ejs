@@ -1,155 +1,269 @@
 <% layout("/layouts/boilerplate") %>
 <style>
-    .entire-content{
-        display: flex ;
-        align-items: center;
-        margin: 40px;
-        justify-content: center;
-        flex-wrap: wrap; /* Added for responsiveness if many cards */
+    /* --- Root Variables for Theme Consistency --- */
+    :root {
+        --retro-bg: wheat; /* Main background and outer box */
+        --retro-text: #1F2937; /* Dark text for contrast */
+        --retro-accent-red: #d1451e; /* From box shadow, button hover */
+        --retro-accent-yellow: #FFD93D; /* From previous accent, price underline */
+        --retro-primary-teal: #2F9C95; /* From your card background */
+        --retro-secondary-light: #fff; /* From box shadow white */
+        --retro-shadow-dark: #000; /* From box shadow black */
+        --retro-shadow-light: rgba(0, 0, 0, 0.2); /* For softer elements, box-shadow opacity */
+
+        /* Fonts */
+        --font-primary: "Inter", sans-serif;
+        --font-heading-retro: 'Press Start 2P', cursive; /* For titles and buttons */
+
+        /* Transitions */
+        --transition-fast: 0.2s ease;
+        --transition-medium: 0.3s ease;
+        --transition-slow: 0.6s ease;
     }
-    .box{
-        width: 100%;
-        background-color: wheat;
-        font-family: "Inter", sans-serif;
-        font-size: 1em;
-        background: wheat;
-        color: #000;
-        padding: 1em;
+
+    /* --- General Body Styling --- */
+    body {
+        background-color: var(--retro-bg);
+        font-family: var(--font-primary);
+        color: var(--retro-text);
+        margin: 0;
+        padding: 0;
+        min-height: 100vh; /* Ensure body takes full height */
+        display: flex; /* Use flexbox to center content */
+        justify-content: center; /* Center horizontally */
+        align-items: center; /* Center vertically */
+        box-sizing: border-box; /* Include padding/border in element's total width/height */
+    }
+
+    /* Pixelated image rendering for that retro feel */
+    img {
         image-rendering: pixelated;
-        text-shadow: 1px 1px #000;
-        box-shadow:
-            0 0 0 0.15em #000,
-            0 0 0 0.3em #fff,
-            0 0 0 0.45em #000,
-            0 0.5em 0 0 #d1451e,
-            0 0.5em 0 0.15em #000;
-        transition: transform 0.2s steps(1);
-        display: flex;
-        flex-wrap: wrap;
-        justify-content: space-between;
+        image-rendering: -moz-crisp-edges;
+        image-rendering: -o-crisp-edges;
+        image-rendering: -webkit-optimize-contrast;
+        -ms-interpolation-mode: nearest-neighbor;
+        /* Optional: for a "true" pixel font look on some text, consider: */
+        /* -webkit-font-smoothing: none; */
+        /* -moz-osx-font-smoothing: grayscale; */
     }
-    /* From Uiverse.io by 0xnihilism */
-    .card {
-        margin: 14px;
-        width: 350px; /* Keep consistent width */
-        padding: 5px;
-        background: #2F9C95;
+
+    /* --- Outer Container: .events-page-container --- */
+    /* This new container will manage the overall page layout and outer spacing */
+    .events-page-container {
+        display: flex;
+        justify-content: center; /* Center the box within this container */
+        align-items: flex-start; /* Align content to the top */
+        padding: 2rem; /* General padding around the entire content */
+        background-color: var(--retro-bg); /* Matches body background */
+        font-family: var(--font-primary);
+        color: var(--retro-text);
+        min-height: 100vh;
+        width: 100%; /* Take full width */
+        box-sizing: border-box;
+    }
+
+    /* --- The "Box" Container: .retro-events-box --- */
+    /* This is the main wrapper with the distinct retro border effect */
+    .retro-events-box {
+        width: 100%; /* It will take up the available width within .events-page-container */
+        max-width: 1400px; /* Limit max width for very large screens */
+        background-color: var(--retro-bg); /* Wheat background */
+        padding: 1.5em; /* Internal padding around the cards */
+        /* Adjusted text-shadow for better readability */
+        text-shadow: 1px 1px 0 rgba(0, 0, 0, 0.3); /* Softer, single-pixel offset */
+        box-sizing: border-box; /* Include padding in the element's total width and height */
+
+        /* The iconic multi-layered box-shadow, adjusted for consistency */
+        box-shadow:
+            0 0 0 0.15em var(--retro-shadow-dark),
+            0 0 0 0.3em var(--retro-secondary-light),
+            0 0 0 0.45em var(--retro-shadow-dark),
+            0 0.5em 0 0 var(--retro-accent-red), /* Red 3D shadow */
+            0 0.5em 0 0.15em var(--retro-shadow-dark); /* Dark outline for 3D shadow */
+        
+        transition: transform var(--transition-fast) steps(1); /* Original transition for the box */
+        
+        display: flex; /* Makes cards inside flex items */
+        flex-wrap: wrap; /* Allows cards to wrap to the next line */
+        justify-content: space-between; /* Space out cards within the box */
+        gap: 2rem; /* Consistent spacing between cards */
+        animation: boxEntry 0.8s ease-out; /* Add an entry animation for the entire box */
+    }
+
+    @keyframes boxEntry {
+        0% { opacity: 0; transform: translateY(30px) scale(0.95); }
+        100% { opacity: 1; transform: translateY(0) scale(1); }
+    }
+
+
+    /* --- Individual Card: .retro-event-card --- */
+    .retro-event-card {
+        width: 350px; /* Fixed width as requested */
+        /* Removed fixed height here to allow content to dictate height */
+        padding: 10px; /* Slightly increased padding inside card */
+        background: var(--retro-primary-teal); /* Card background color */
         border-radius: 15px;
-        box-shadow: 0px 0px 0 #1F2937;
-        border: 2px solid black;
-        transition: all 0.3s ease;
+        border: 2px solid var(--retro-shadow-dark); /* Black border */
+        box-shadow: 0.2em 0.2em 0 var(--retro-shadow-light); /* Softer initial shadow */
+        transition: all var(--transition-medium); /* Smooth transition for hover */
         position: relative;
         overflow: hidden;
-        height: auto; /* Changed from fixed height to auto to accommodate new content */
-        display: flex; /* Added flex for internal layout */
-        flex-direction: column; /* Stack image and body vertically */
+        /* height: auto;  Already default, but good to be explicit */
+        display: flex;
+        flex-direction: column; /* Stacks image and body vertically */
+        animation: cardFadeIn 0.6s ease-out backwards; /* Add a subtle entry animation for cards */
+        /* Adjusted text-shadow for card content */
+        text-shadow: 1px 1px 0 rgba(0, 0, 0, 0.2); /* Lighter, less pronounced shadow */
     }
-    .card:active {
-        animation: shake 0.5s ease-in-out;
+
+    .retro-event-card:nth-child(even) { animation-delay: 0.1s; }
+    .retro-event-card:nth-child(odd) { animation-delay: 0.2s; }
+
+    @keyframes cardFadeIn {
+        from { opacity: 0; transform: scale(0.95) translateY(10px); }
+        to { opacity: 1; transform: scale(1) translateY(0); }
     }
-    .card:hover {
-        transform: rotate(0deg) scale(1.02);
-        box-shadow: 10px 10px 0 #1F2937;
+
+    .retro-event-card:hover {
+        transform: translateY(-5px) rotate(0deg) scale(1.02); /* Lift and slight scale */
+        box-shadow: 0.4em 0.4em 0 var(--retro-shadow-dark); /* More pronounced shadow on hover */
     }
-    .card img{
-        height: 200px; /* Fixed height for image */
+
+    .retro-event-card:active {
+        animation: shake 0.5s ease-in-out; /* Shake animation from your original code */
+    }
+
+    @keyframes shake {
+        0% { transform: translateX(0); }
+        25% { transform: translateX(-5px); }
+        50% { transform: translateX(5px); }
+        75% { transform: translateX(-5px); }
+        100% { transform: translateX(0); }
+    }
+
+    /* --- Card Image Styling --- */
+    .card-image-container {
         width: 100%;
-        border-radius: inherit;
-        object-fit: cover; /* Ensures image covers the area without distortion */
-        margin-bottom: 10px; /* Space between image and new content */
+        height: 160px; /* Reduced height for image */
+        border: 2px solid var(--retro-shadow-dark); /* Added border for visual consistency */
+        border-radius: 10px; /* Slightly less rounded than card */
+        overflow: hidden;
+        margin-bottom: 10px; /* Reduced space between image and card body */
+        background-color: var(--retro-secondary-light); /* Placeholder background */
     }
 
-    /* CSS for the new card-body content from the second code */
+    .card-image-container img {
+        height: 100%;
+        width: 100%;
+        object-fit: cover; /* Ensures image covers area without distortion */
+        display: block; /* Remove extra space below image */
+    }
+
+    /* --- Card Body Section --- */
+    /* Contains title, features, price, and button */
     .card-body-section {
-        --primary: #ff3e00;
-        --primary-hover: #ff6d43;
-        --secondary: wheat;
-        --secondary-hover: #FF6A6B;
-        --accent: #FFD93D;
-        --text: #050505;
-        --bg: #2F9C95;
-        --shadow-color: #000000;
-        --pattern-color: #cfcfcf;
-
-        flex-grow: 1; /* Allows the body to take available space */
+        flex-grow: 1; /* Allows this section to take up remaining vertical space */
         position: relative;
-        padding: 1.5em;
-        padding-top: 0.1rem;
-        background-color: var(--bg); /* Use background from the second card's variables */
-        color: var(--text); /* Use text color from the second card's variables */
+        padding: 0 1em 1em; /* Adjusted padding */
+        background-color: var(--retro-primary-teal); /* Uses the card background color */
+        color: var(--retro-text); /* Text color for content inside */
         z-index: 2;
-        border-top: 0.15em dashed rgba(0, 0, 0, 0.15); /* Keep the dashed line effect */
-        /* Removed margin-top: auto; as it's less critical without a fixed height and can cause issues with spacing if not carefully managed */
+        border-top: 2px dashed rgba(0, 0, 0, 0.2); /* Dashed line effect */
+        padding-top: 0.8em; /* Reduced space for the dashed line */
     }
 
-    /* Removed .card-description CSS as the element is removed */
+    /* --- Card Title --- */
+    .card-title h2 {
+        font-family: var(--font-heading-retro); /* Apply retro font */
+        font-size: 1.2em; /* Slightly reduced font size */
+        font-weight: 700;
+        margin-bottom: 0.8rem; /* Reduced margin */
+        color: var(--retro-text);
+        line-height: 1.2;
+        text-align: center;
+        /* Adjusted text-shadow for title */
+        text-shadow: 2px 2px 0 rgba(0, 0, 0, 0.4); /* Subtle, clear shadow */
+        word-break: break-word; /* Prevent long titles from overflowing */
+    }
 
+    /* --- Feature Grid --- */
     .feature-grid {
         display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 1em;
-        margin-bottom: 1.5em; /* Keep this margin for spacing below the grid */
-        margin-top: 0; /* Adjust or remove if the top spacing looks off without description */
+        grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); /* Adjusted minmax for smaller features */
+        gap: 0.8em; /* Reduced gap */
+        margin-bottom: 1em; /* Reduced margin */
+        padding: 0 0.5em; /* Small horizontal padding */
     }
 
     .feature-item {
         display: flex;
         align-items: center;
-        gap: 0.6em;
-        transition: transform 0.2s ease;
+        gap: 0.5em; /* Reduced gap inside feature item */
+        padding: 0.4em 0.6em; /* Reduced padding to fit more compactly */
+        background: var(--retro-secondary-light); /* Light background for feature boxes */
+        border: 0.12em solid var(--retro-shadow-dark);
+        border-radius: 0.3em;
+        box-shadow: 0.2em 0.2em 0 rgba(0, 0, 0, 0.2);
+        transition: transform var(--transition-fast), box-shadow var(--transition-fast);
     }
 
     .feature-item:hover {
-        transform: translateX(0.3em);
+        transform: translateX(0.2em) translateY(-0.05em); /* Slight shift and lift */
+        box-shadow: 0.25em 0.25em 0 rgba(0, 0, 0, 0.25);
     }
 
     .feature-icon {
-        width: 1.4em;
-        height: 1.4em;
+        width: 1.3em; /* Slightly reduced icon size */
+        height: 1.3em;
         display: flex;
         align-items: center;
         justify-content: center;
-        background: var(--secondary);
-        border: 0.12em solid var(--text);
+        background: var(--retro-accent-yellow); /* Yellow background for icons */
+        border: 0.12em solid var(--retro-shadow-dark);
         border-radius: 0.3em;
         box-shadow: 0.2em 0.2em 0 rgba(0, 0, 0, 0.2);
-        transition: all 0.2s ease;
+        transition: all var(--transition-fast);
+        flex-shrink: 0; /* Prevent icon from shrinking */
     }
 
     .feature-item:hover .feature-icon {
-        background: var(--secondary-hover);
+        background: var(--retro-accent-red); /* Change color on hover */
         transform: rotate(-5deg);
     }
 
     .feature-icon svg {
-        width: 0.9em;
-        height: 0.9em;
-        fill: #1F2937;
+        width: 0.8em; /* Adjusted SVG size to match icon box */
+        height: 0.8em;
+        fill: var(--retro-text);
     }
 
     .feature-text {
-        font-size: 0.85em;
+        font-size: 0.8em; /* Slightly reduced font size */
         font-weight: 400;
-        color: var(--text);
+        color: var(--retro-text);
+        word-break: break-word; /* Ensure text wraps if too long */
+        /* Removed text-shadow from here for maximum readability */
+        text-shadow: none;
     }
 
+    /* --- Card Actions (Price & Button) --- */
     .card-actions {
         display: flex;
         justify-content: space-between;
         align-items: center;
-        margin-top: 1.5em;
-        padding-top: 1.2em;
-        border-top: 0.15em dashed rgba(0, 0, 0, 0.15);
+        margin-top: 1em; /* Reduced margin */
+        padding-top: 0.8em; /* Reduced padding */
+        border-top: 2px dashed rgba(0, 0, 0, 0.2);
         position: relative;
     }
 
     .card-actions::before {
-        content: "✂";
+        content: "✂"; /* Scissor icon */
         position: absolute;
         top: -0.8em;
         left: 50%;
         transform: translateX(-50%) rotate(90deg);
-        background: var(--bg);
+        background: var(--retro-primary-teal); /* Match card background */
         padding: 0 0.5em;
         font-size: 1em;
         color: rgba(0, 0, 0, 0.4);
@@ -157,10 +271,14 @@
 
     .price {
         position: relative;
-        font-size: 1.8em;
+        font-family: var(--font-heading-retro); /* Retro font for price */
+        font-size: 1.6em; /* Slightly reduced price font size */
         font-weight: 800;
-        color: var(--text);
-        background: var(--bg);
+        color: var(--retro-text);
+        background: var(--retro-primary-teal); /* Match card background */
+        line-height: 1; /* Adjust line height for better alignment */
+        /* Adjusted text-shadow for price */
+        text-shadow: 1px 1px 0 rgba(0, 0, 0, 0.3);
     }
 
     .price::before {
@@ -170,9 +288,9 @@
         left: 0;
         width: 100%;
         height: 0.2em;
-        background: var(--accent);
+        background: var(--retro-accent-yellow);
         z-index: -1;
-        opacity: 0.5;
+        opacity: 0.8; /* Increased opacity for better visibility */
     }
 
     .price-currency {
@@ -184,27 +302,36 @@
 
     .price-period {
         display: block;
+        font-family: var(--font-primary); /* Use normal font for "to join" */
         font-size: 0.4em;
         font-weight: 600;
-        color: rgba(0, 0, 0, 0.6);
-        margin-top: 0.2em;
+        color: rgba(0, 0, 0, 0.7); /* Darker for readability */
+        margin-top: 0.1em; /* Reduced margin */
+        /* Removed text-shadow from here */
+        text-shadow: none;
     }
 
+    /* --- Card Button --- */
     .card-button {
         position: relative;
-        background: var(--secondary);
-        color: v#1F2937;
-        font-size: 0.9em;
+        background: var(--retro-bg); /* Wheat background for button */
+        color: var(--retro-text);
+        font-family: var(--font-heading-retro); /* Retro font for button text */
+        font-size: 0.8em; /* Slightly reduced button font size */
         font-weight: 700;
-        padding: 0.7em 1.2em;
-        border: 0.2em solid var(--text);
+        padding: 0.6em 1em; /* Reduced padding */
+        border: 0.2em solid var(--retro-shadow-dark);
         border-radius: 0.4em;
-        box-shadow: 0.3em 0.3em 0 var(--shadow-color);
+        box-shadow: 0.3em 0.3em 0 var(--retro-shadow-dark); /* Shadow matches border color */
         cursor: pointer;
-        transition: all 0.2s ease;
+        transition: all var(--transition-fast);
         overflow: hidden;
         text-transform: uppercase;
         letter-spacing: 0.05em;
+        /* Adjusted text-shadow for button */
+        text-shadow: 1px 1px 0 rgba(0, 0, 0, 0.4); /* Clearer shadow */
+        text-decoration: none; /* Remove underline for links acting as buttons */
+        display: inline-block; /* Ensure padding works correctly */
     }
 
     .card-button::before {
@@ -220,13 +347,17 @@
             rgba(255, 255, 255, 0.2) 50%,
             transparent 100%
         );
-        transition: left 0.6s ease;
+        transition: left var(--transition-slow);
+        z-index: 1; /* Ensure the shimmer is above the button background */
     }
 
     .card-button:hover {
-        background: var(--secondary-hover);
+        background: var(--retro-accent-red); /* Red on hover */
+        color: var(--retro-secondary-light); /* White text on hover */
         transform: translate(-0.1em, -0.1em);
-        box-shadow: 0.4em 0.4em 0 var(--shadow-color);
+        box-shadow: 0.4em 0.4em 0 var(--retro-shadow-dark);
+        /* Adjusted text-shadow on hover for button */
+        text-shadow: 1px 1px 0 rgba(0, 0, 0, 0.6); /* Slightly more pronounced when active */
     }
 
     .card-button:hover::before {
@@ -235,24 +366,168 @@
 
     .card-button:active {
         transform: translate(0.1em, 0.1em);
-        box-shadow: 0.15em 0.15em 0 var(--shadow-color);
+        box-shadow: 0.15em 0.15em 0 var(--retro-shadow-dark);
+    }
+
+    /* --- Responsive Adjustments --- */
+    /* Adjust general padding/margins */
+    @media (max-width: 1200px) {
+        .events-page-container {
+            padding: 1.5rem;
+        }
+        .retro-events-box {
+            gap: 1.5rem; /* Slightly reduce gap for better fit on narrower desktops */
+            padding: 1em;
+        }
+    }
+
+    /* Tablet and smaller desktops */
+    @media (max-width: 992px) {
+        .events-page-container {
+            padding: 1rem;
+        }
+        .retro-events-box {
+            gap: 1rem;
+        }
+        .retro-event-card {
+            width: calc(50% - 1rem); /* Two cards per row, accounting for gap */
+            max-width: 350px; /* Still constrain max width */
+        }
+        .card-image-container {
+            height: 140px; /* Further reduce image height */
+        }
+        .card-title h2 {
+            font-size: 1.1em;
+        }
+        .feature-text {
+            font-size: 0.75em;
+        }
+        .price {
+            font-size: 1.4em;
+        }
+        .card-button {
+            font-size: 0.75em;
+        }
+    }
+
+    /* Mobile devices */
+    @media (max-width: 768px) {
+        body {
+            align-items: flex-start; /* Align to top when content is longer */
+        }
+        .events-page-container {
+            padding: 1rem 0.5rem; /* Less horizontal padding */
+        }
+        .retro-events-box {
+            padding: 0.8em;
+            gap: 1.5rem; /* Maintain good spacing when stacked */
+            flex-direction: column; /* Stack cards vertically */
+            align-items: center; /* Center cards when stacked */
+            box-shadow:
+                0 0 0 0.1em var(--retro-shadow-dark), /* Slightly thinner outer border for mobile box */
+                0 0 0 0.2em var(--retro-secondary-light),
+                0 0 0 0.3em var(--retro-shadow-dark),
+                0 0.3em 0 0 var(--retro-accent-red), /* Adjusted 3D shadow for mobile */
+                0 0.3em 0 0.1em var(--retro-shadow-dark);
+        }
+        .retro-event-card {
+            width: 95%; /* Allow cards to take up most of the width */
+            max-width: 350px; /* But don't let them get wider than original spec */
+            padding: 8px; /* Slightly less internal padding */
+        }
+        .card-image-container {
+            height: 120px; /* Significantly reduced image height for small mobiles */
+            margin-bottom: 8px;
+        }
+        .card-title h2 {
+            font-size: 1em;
+            margin-bottom: 0.6rem;
+            /* Adjusted text-shadow for title on mobile */
+            text-shadow: 1.5px 1.5px 0 rgba(0, 0, 0, 0.4);
+        }
+        .feature-grid {
+            gap: 0.6em;
+            margin-bottom: 0.8em;
+        }
+        .feature-item {
+            padding: 0.3em 0.5em;
+            gap: 0.4em;
+        }
+        .feature-icon {
+            width: 1.1em;
+            height: 1.1em;
+        }
+        .feature-icon svg {
+            width: 0.7em;
+            height: 0.7em;
+        }
+        .feature-text {
+            font-size: 0.7em;
+        }
+        .card-actions {
+            margin-top: 0.8em;
+            padding-top: 0.6em;
+        }
+        .price {
+            font-size: 1.3em;
+        }
+        .card-button {
+            font-size: 0.7em;
+            padding: 0.5em 0.8em;
+        }
+    }
+
+    /* Very small mobile devices (e.g., iPhone 5/SE) */
+    @media (max-width: 480px) {
+        .events-page-container {
+            padding: 0.5rem;
+        }
+        .retro-events-box {
+            padding: 0.5em;
+            gap: 1rem;
+        }
+        .retro-event-card {
+            width: 100%; /* Take full width */
+            border-radius: 10px; /* Slightly less rounded for very small screens */
+        }
+        .card-image-container {
+            height: 100px; /* Minimum image height for very small screens */
+        }
+        .card-title h2 {
+            font-size: 0.9em;
+        }
+        .feature-text {
+            font-size: 0.65em;
+        }
+        .price {
+            font-size: 1.1em;
+        }
+        .card-button {
+            font-size: 0.6em;
+            padding: 0.4em 0.7em;
+        }
     }
 </style>
 <body>
-    <div class="entire-content">
-        <div class="box">
+    <div class="events-page-container">
+        <div class="retro-events-box">
             <% for (let i=0;i<=6;i++) {%>
-                <div class="card">
-                    <img src="https://media.istockphoto.com/id/505964108/photo/couples-dancing-and-drinking-at-evening-party.jpg?s=612x612&w=0&k=20&c=_pNpYuOdBQSwbCTMxvlWy6vQAlb4h_X3RJyU2bACGH0=" alt="Party Image">
+                <div class="retro-event-card">
+                    <div class="card-image-container">
+                        <img src="https://media.istockphoto.com/id/505964108/photo/couples-dancing-and-drinking-at-evening-party.jpg?s=612x612&w=0&k=20&c=_pNpYuOdBQSwbCTMxvlWy6vQAlb4h_X3RJyU2bACGH0=" alt="Party Image">
+                    </div>
                     <div class="card-body-section">
-                      <div class="card-title">
-                            <h2>The Rooftop Meeting </h2>
-                          </div>
+                        <div class="card-title">
+                            <h2>The Rooftop Meeting <%= i + 1 %></h2>
+                        </div>
                         <div class="feature-grid">
-                          
                             <div class="feature-item">
                                 <div class="feature-icon">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-venetian-mask-icon lucide-venetian-mask"><path d="M18 11c-1.5 0-2.5.5-3 2"/><path d="M4 6a2 2 0 0 0-2 2v4a5 5 0 0 0 5 5 8 8 0 0 1 5 2 8 8 0 0 1 5-2 5 5 0 0 0 5-5V8a2 2 0 0 0-2-2h-3a8 8 0 0 0-5 2 8 8 0 0 0-5-2z"/><path d="M6 11c1.5 0 2.5.5 3 2"/></svg>
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-venetian-mask">
+                                        <path d="M18 11c-1.5 0-2.5.5-3 2"/>
+                                        <path d="M4 6a2 2 0 0 0-2 2v4a5 5 0 0 0 5 5 8 8 0 0 1 5 2 8 8 0 0 1 5-2 5 5 0 0 0 5-5V8a2 2 0 0 0-2-2h-3a8 8 0 0 0-5 2 8 8 0 0 0-5-2z"/>
+                                        <path d="M6 11c1.5 0 2.5.5 3 2"/>
+                                    </svg>
                                 </div>
                                 <span class="feature-text">Dipesh Verma</span>
                             </div>
@@ -260,9 +535,7 @@
                             <div class="feature-item">
                                 <div class="feature-icon">
                                     <svg viewBox="0 0 24 24">
-                                        <path
-                                            d="M12,17.56L16.07,16.43L16.62,10.33H9.38L9.2,8.3H16.8L17,6.31H7L7.56,12.32H14.45L14.22,14.9L12,15.5L9.78,14.9L9.64,13.24H7.64L7.93,16.43L12,17.56M4.07,3H19.93L18.5,19.2L12,21L5.5,19.2L4.07,3Z"
-                                        ></path>
+                                        <path d="M12,17.56L16.07,16.43L16.62,10.33H9.38L9.2,8.3H16.8L17,6.31H7L7.56,12.32H14.45L14.22,14.9L12,15.5L9.78,14.9L9.64,13.24H7.64L7.93,16.43L12,17.56M4.07,3H19.93L18.5,19.2L12,21L5.5,19.2L4.07,3Z"/>
                                     </svg>
                                 </div>
                                 <span class="feature-text">Rating : 4.8</span>
@@ -271,9 +544,7 @@
                             <div class="feature-item">
                                 <div class="feature-icon">
                                     <svg viewBox="0 0 24 24">
-                                        <path
-                                            d="M18.5,4L19.66,8.35L18.7,8.61C18.25,7.74 17.79,6.87 17.26,6.43C16.73,6 16.11,6 15.5,6H13V16.5C13,17 13,17.5 13.33,17.75C13.67,18 14.33,18 15,18V19H9V18C9.67,18 10.33,18 10.67,17.75C11,17.5 11,17 11,16.5V6H8.5C7.89,6 7.27,6 6.74,6.43C6.21,6.87 5.75,7.74 5.3,8.61L4.34,8.35L5.5,4H18.5Z"
-                                        ></path>
+                                        <path d="M18.5,4L19.66,8.35L18.7,8.61C18.25,7.74 17.79,6.87 17.26,6.43C16.73,6 16.11,6 15.5,6H13V16.5C13,17 13,17.5 13.33,17.75C13.67,18 14.33,18 15,18V19H9V18C9.67,18 10.33,18 10.67,17.75C11,17.5 11,17 11,16.5V6H8.5C7.89,6 7.27,6 6.74,6.43C6.21,6.87 5.75,7.74 5.3,8.61L4.34,8.35L5.5,4H18.5Z"/>
                                     </svg>
                                 </div>
                                 <span class="feature-text">27/05/25</span>
@@ -282,9 +553,7 @@
                             <div class="feature-item">
                                 <div class="feature-icon">
                                     <svg viewBox="0 0 24 24">
-                                        <path
-                                            d="M9.19,6.35C8.41,7.13 7.75,8.05 7.25,9H5V11H7.12C7.05,11.32 7,11.66 7,12C7,12.34 7.05,12.68 7.12,13H5V15H7.25C7.75,15.95 8.41,16.87 9.19,17.65L7.77,19.07L9.88,21.18L11.3,19.77C11.85,20.03 12.41,20.2 13,20.31V23H15V20.31C15.59,20.2 16.15,20.03 16.7,19.77L18.12,21.18L20.23,19.07L18.81,17.65C19.59,16.87 20.25,15.95 20.75,15H23V13H20.88C20.95,12.68 21,12.34 21,12C21,11.66 20.95,11.32 20.88,11H23V9H20.75C20.25,8.05 19.59,7.13 18.81,6.35L20.23,4.93L18.12,2.82L16.7,4.23C16.15,3.97 15.59,3.8 15,3.69V1H13V3.69C12.41,3.8 11.85,3.97 11.3,4.23L9.88,2.82L7.77,4.93L9.19,6.35M13,17A5,5 0 0,1 8,12A5,5 0 0,1 13,7A5,5 0 0,1 18,12A5,5 0 0,1 13,17Z"
-                                        ></path>
+                                        <path d="M9.19,6.35C8.41,7.13 7.75,8.05 7.25,9H5V11H7.12C7.05,11.32 7,11.66 7,12C7,12.34 7.05,12.68 7.12,13H5V15H7.25C7.75,15.95 8.41,16.87 9.19,17.65L7.77,19.07L9.88,21.18L11.3,19.77C11.85,20.03 12.41,20.2 13,20.31V23H15V20.31C15.59,20.2 16.15,20.03 16.7,19.77L18.12,21.18L20.23,19.07L18.81,17.65C19.59,16.87 20.25,15.95 20.75,15H23V13H20.88C20.95,12.68 21,12.34 21,12C21,11.66 20.95,11.32 20.88,11H23V9H20.75C20.25,8.05 19.59,7.13 18.81,6.35L20.23,4.93L18.12,2.82L16.7,4.23C16.15,3.97 15.59,3.8 15,3.69V1H13V3.69C12.41,3.8 11.85,3.97 11.3,4.23L9.88,2.82L7.77,4.93L9.19,6.35M13,17A5,5 0 0,1 8,12A5,5 0 0,1 13,7A5,5 0 0,1 18,12A5,5 0 0,1 13,17Z"/>
                                     </svg>
                                 </div>
                                 <span class="feature-text">3:00 AM</span>
@@ -294,14 +563,15 @@
                         <div class="card-actions">
                             <div class="price">
                                 <span class="price-currency">$</span>0
-                                <span class="price-period" style="margin-left:3px;">to join</span>
+                                <span class="price-period">to join</span>
                             </div>
-
-                            <button class="card-button">Get Tickets</button>
+                            <a href="#" class="card-button">Get Tickets</a>
                         </div>
                     </div>
                 </div>
             <% }%>
         </div>
     </div>
+
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Inter:wght@400;500;700;800&display=swap" rel="stylesheet">
 </body>

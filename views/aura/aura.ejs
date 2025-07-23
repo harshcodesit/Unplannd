@@ -1,175 +1,462 @@
 <% layout("/layouts/boilerplate") %>
 
 <style>
-  .profile-section {
+  /* Root CSS Variables for the Retro Theme */
+  :root {
+    --retro-bg: wheat; /* Main background from your box */
+    --retro-text: #1F2937; /* Dark text for contrast */
+    --retro-accent-red: #d1451e; /* From box shadow */
+    --retro-accent-yellow: #FFD93D; /* From previous accent */
+    --retro-primary-teal: #2F9C95; /* From your card background */
+    --retro-secondary-light: #fff; /* From box shadow white */
+    --retro-shadow-dark: #000; /* From box shadow black */
+    --retro-shadow-light: rgba(0, 0, 0, 0.2); /* For softer elements */
+  }
+
+  /* --- General Layout --- */
+  .profile-page-container {
     display: flex;
-    justify-content: center;
-    align-items: center;
-    padding: 4rem 1rem;
-    background: linear-gradient(145deg, #2F9C95, #e8dcc4);
+    justify-content: center; /* Center the entire content */
+    align-items: flex-start; /* Align items to the top if they have different heights */
+    padding: 2rem;
+    background-color: var(--retro-bg);
+    font-family: "Press Start 2P", cursive; /* Retro font for headings/titles */
+    color: var(--retro-text);
     min-height: 100vh;
-    font-family: 'Inter', sans-serif;
+    flex-wrap: wrap; /* Allow wrapping for responsiveness */
+    gap: 2rem; /* Gap between main sections (profile card and reviews) */
   }
 
-  .profile-card {
-    background: rgba(255, 255, 255, 0.08);
-    border: 1.5px solid rgba(255, 255, 255, 0.2);
-    backdrop-filter: blur(18px);
-    -webkit-backdrop-filter: blur(18px);
-    border-radius: 1.5rem;
-    padding: 2.5rem 2rem;
-    max-width: 420px;
-    width: 100%;
-    text-align: center;
-    color: #000;
+  /* --- Retro Profile Card --- */
+  .retro-profile-card {
+    width: 380px; /* Slightly wider to accommodate content better */
+    background: var(--retro-primary-teal);
+    border-radius: 15px; /* From your card */
+    padding: 1rem; /* Slightly reduced padding */
+    box-shadow: 0px 0px 0 var(--retro-shadow-dark);
+    border: 2px solid var(--retro-shadow-dark);
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* Center content horizontally */
     box-shadow:
-      0 0 0 0.1em #000,
-      0 0 0 0.2em #fff,
-      0 0 0 0.3em #000,
-      0 0.4em 0 0 #d1451e,
-      0 0.4em 0 0.1em #000;
-    position: relative;
+        0 0 0 0.15em var(--retro-shadow-dark),
+        0 0 0 0.3em var(--retro-secondary-light),
+        0 0 0 0.45em var(--retro-shadow-dark),
+        0 0.5em 0 0 var(--retro-accent-red),
+        0 0.5em 0 0.15em var(--retro-shadow-dark); /* Applied from your .box */
+    /* Adjusted text-shadow for better readability */
+    text-shadow: 1px 1px 0 rgba(0, 0, 0, 0.3);
+    animation: bounceIn 0.8s ease-out; /* Add entry animation */
   }
 
-  .profile-img {
+  .retro-profile-card:hover {
+    transform: translateY(-5px) rotate(0deg) scale(1.01); /* Lift effect and slight scale */
+    box-shadow:
+        0 0 0 0.15em var(--retro-shadow-dark),
+        0 0 0 0.3em var(--retro-secondary-light),
+        0 0 0 0.45em var(--retro-shadow-dark),
+        0 0.8em 0 0 var(--retro-accent-red), /* More pronounced lift */
+        0 0.8em 0 0.15em var(--retro-shadow-dark);
+  }
+
+  /* Animation for card entry */
+  @keyframes bounceIn {
+    0% { opacity: 0; transform: translateY(50px) scale(0.8); }
+    60% { opacity: 1; transform: translateY(-10px) scale(1.05); }
+    100% { transform: translateY(0) scale(1); }
+  }
+
+
+  /* Profile Image and Online Indicator */
+  .profile-image-container {
     position: relative;
-    width: 120px;
+    width: 120px; /* Slightly smaller for compactness */
     height: 120px;
-    margin: 0 auto 1rem auto;
+    border-radius: 50%;
+    overflow: hidden;
+    border: 3px solid var(--retro-accent-yellow);
+    box-shadow: 0 4px 10px var(--retro-shadow-light);
+    margin-bottom: 1rem;
+    background-color: var(--retro-secondary-light); /* Background if image isn't perfect circle */
+    transition: transform 0.3s ease;
   }
 
-  .profile-img img {
+  .profile-image-container img {
     width: 100%;
     height: 100%;
     object-fit: cover;
-    border-radius: 50%;
-    border: 3px solid #fff;
-    transition: transform 0.4s ease;
+    display: block;
   }
 
-  .profile-img:hover img {
-    transform: scale(1.05);
+  .profile-image-container:hover {
+    transform: scale(1.05) rotate(2deg); /* Added slight rotation */
   }
 
-  .online-indicator {
+  .online-indicator-retro {
     position: absolute;
-    right: 8px;
-    bottom: 8px;
-    width: 16px;
-    height: 16px;
-    background: #00ff80;
-    border: 2px solid white;
+    bottom: 5px;
+    right: 5px;
+    width: 18px;
+    height: 18px;
+    background-color: #10b981; /* Standard green for online */
     border-radius: 50%;
-    box-shadow: 0 0 8px 2px #00ff80;
-    animation: pulse 1.5s infinite;
+    border: 2px solid var(--retro-secondary-light);
+    box-shadow: 0 0 5px rgba(0, 255, 0, 0.7); /* Glow effect */
+    animation: retroPulse 1.2s infinite ease-in-out;
   }
 
-  @keyframes pulse {
-    0% {
-      box-shadow: 0 0 8px 2px #00ff80;
-    }
-    50% {
-      box-shadow: 0 0 12px 4px #00ff80;
-    }
-    100% {
-      box-shadow: 0 0 8px 2px #00ff80;
-    }
+  @keyframes retroPulse {
+    0% { transform: scale(1); opacity: 1; }
+    50% { transform: scale(1.4); opacity: 0.7; }
+    100% { transform: scale(1); opacity: 1; }
   }
 
-  .profile-name {
-    font-size: 1.6rem;
-    font-weight: 700;
-    margin-bottom: 0.3rem;
-  }
-
-  .profile-title {
-    font-size: 1rem;
-    font-weight: 500;
-    color: rgba(0,0,0,0.6);
-    margin-bottom: 1rem;
-  }
-
-  .profile-bio {
-    font-size: 0.95rem;
-    line-height: 1.5;
+  /* Profile Text */
+  .profile-info {
+    text-align: center;
     margin-bottom: 1.5rem;
-    color: #222;
   }
 
-  .social-icons {
+  .profile-info h3 { /* Changed from .profile-name to h3 for semantic structure */
+    font-size: 1.4rem; /* More compact */
+    font-weight: 700;
+    color: var(--retro-text);
+    margin-bottom: 0.2rem;
+    /* Adjusted text-shadow for better readability */
+    text-shadow: 2px 2px 0 rgba(0, 0, 0, 0.4);
+    font-family: "Press Start 2P", cursive;
+  }
+
+  .profile-info p { /* Changed from .profile-title to p for semantic structure */
+    font-size: 0.95rem; /* More compact */
+    color: var(--retro-text);
+    margin-bottom: 0.5rem;
+    font-family: "Inter", sans-serif; /* Keep Inter for bio/description */
+    /* Removed text-shadow for better readability */
+    text-shadow: none;
+  }
+
+  .profile-info .bio { /* New class for bio */
+    font-size: 0.85rem;
+    line-height: 1.4;
+    max-width: 300px;
+    margin-bottom: 1rem;
+    font-family: "Inter", sans-serif;
+    color: var(--retro-text);
+    /* Removed text-shadow for better readability */
+    text-shadow: none;
+  }
+
+  /* Metrics Grid - Adapted from your theme */
+  .profile-metrics-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr); /* Two columns */
+    gap: 1em;
+    width: 100%;
+    margin-top: 0.8rem; /* Adjusted spacing */
+    margin-bottom: 1.5rem;
+    border-top: 0.15em dashed rgba(0, 0, 0, 0.15); /* Dashed line separator */
+    padding-top: 1em;
+  }
+
+  .metric-item-retro {
     display: flex;
-    justify-content: center;
-    gap: 1rem;
+    align-items: center;
+    gap: 0.6em;
+    padding: 0.5em 0.8em; /* Adjusted padding */
+    background: var(--retro-secondary-light); /* Use light color for boxes */
+    border: 0.12em solid var(--retro-shadow-dark);
+    border-radius: 0.3em;
+    box-shadow: 0.2em 0.2em 0 rgba(0, 0, 0, 0.2);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
   }
 
-  .social-icons a {
+  .metric-item-retro:hover {
+    transform: translateX(0.3em) translateY(-0.1em); /* Slight shift and lift */
+    box-shadow: 0.3em 0.3em 0 rgba(0, 0, 0, 0.3);
+  }
+
+  .metric-icon-retro {
+    width: 1.4em;
+    height: 1.4em;
     display: flex;
     align-items: center;
     justify-content: center;
-    background: wheat;
-    border: 1.5px solid #000;
-    border-radius: 50%;
-    width: 38px;
-    height: 38px;
-    transition: all 0.3s ease;
-    box-shadow: 0.2em 0.2em 0 #000;
+    background: var(--retro-accent-yellow); /* Yellow icon background */
+    border: 0.12em solid var(--retro-shadow-dark);
+    border-radius: 0.3em;
+    box-shadow: 0.2em 0.2em 0 rgba(0, 0, 0, 0.2);
+    transition: all 0.2s ease;
   }
 
-  .social-icons a:hover {
-    background: #FF6A6B;
-    transform: translateY(-3px);
-    box-shadow: 0.3em 0.3em 0 #000;
+  .metric-item-retro:hover .metric-icon-retro {
+    background: var(--retro-accent-red); /* Change color on hover */
+    transform: rotate(-5deg);
   }
 
-  .social-icons svg {
-    width: 18px;
-    height: 18px;
-    fill: #1F2937;
+  .metric-icon-retro svg {
+    width: 0.9em;
+    height: 0.9em;
+    fill: var(--retro-text);
   }
 
-  @media (max-width: 600px) {
-    .profile-card {
-      padding: 2rem 1.2rem;
+  .metric-text-retro {
+    font-size: 0.85em; /* From your feature-text */
+    font-weight: 400;
+    color: var(--retro-text);
+    font-family: "Inter", sans-serif; /* Keep Inter for numbers/labels */
+    /* Removed text-shadow for better readability */
+    text-shadow: none;
+  }
+
+  /* Social Icons */
+  .social-icons-retro {
+    display: flex;
+    gap: 1rem;
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 0.15em dashed rgba(0, 0, 0, 0.15); /* Dashed line separator */
+    width: 100%; /* Ensure it spans full width */
+    justify-content: center; /* Center social icons */
+  }
+
+  .social-icons-retro a {
+    color: var(--retro-text);
+    font-size: 1.5rem; /* Larger icons */
+    transition: transform 0.3s ease, color 0.3s ease;
+    /* Adjusted text-shadow for better readability */
+    text-shadow: 1px 1px 0 rgba(0, 0, 0, 0.2);
+  }
+
+  .social-icons-retro a:hover {
+    transform: scale(1.3) rotate(5deg); /* More dynamic hover */
+    color: var(--retro-accent-red); /* Change color on hover */
+  }
+
+  /* --- Review Section (Separated) --- */
+  .retro-review-section {
+    width: 380px; /* Consistent width with profile card */
+    background: var(--retro-primary-teal);
+    border-radius: 15px;
+    padding: 1.5rem;
+    box-shadow:
+        0 0 0 0.15em var(--retro-shadow-dark),
+        0 0 0 0.3em var(--retro-secondary-light),
+        0 0 0 0.45em var(--retro-shadow-dark),
+        0 0.5em 0 0 var(--retro-accent-red),
+        0 0.5em 0 0.15em var(--retro-shadow-dark);
+    /* Adjusted text-shadow for better readability */
+    text-shadow: 1px 1px 0 rgba(0, 0, 0, 0.3);
+    display: flex;
+    flex-direction: column;
+    animation: bounceIn 1s ease-out 0.2s backwards; /* Staggered entry */
+  }
+
+  .retro-review-section h2 {
+    font-family: "Press Start 2P", cursive;
+    font-size: 1.2rem;
+    color: var(--retro-text);
+    margin-bottom: 1rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 2px dashed var(--retro-accent-yellow);
+    text-align: center;
+    /* Adjusted text-shadow for better readability */
+    text-shadow: 2px 2px 0 rgba(0, 0, 0, 0.4);
+  }
+
+  .retro-review-item {
+    background: var(--retro-secondary-light); /* Light background for review items */
+    border: 2px solid var(--retro-shadow-dark);
+    border-radius: 8px; /* Slightly less rounded */
+    padding: 0.8rem 1rem;
+    margin-bottom: 1rem;
+    box-shadow: 0.2em 0.2em 0 rgba(0, 0, 0, 0.2);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  }
+
+  .retro-review-item:hover {
+    transform: translateY(-3px) translateX(3px); /* Subtle shift on hover */
+    box-shadow: 0.3em 0.3em 0 rgba(0, 0, 0, 0.3);
+  }
+
+  .retro-review-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.85rem;
+    margin-bottom: 0.4rem;
+    color: var(--retro-text);
+    font-weight: 600;
+    font-family: "Inter", sans-serif;
+    /* Removed text-shadow for better readability */
+    text-shadow: none;
+  }
+
+  .retro-review-stars {
+    color: var(--retro-accent-yellow);
+    letter-spacing: 1px;
+    font-size: 1.1em; /* Slightly larger stars */
+    /* Removed text-shadow for better readability */
+    text-shadow: none;
+  }
+
+  .retro-review-text {
+    font-size: 0.8rem;
+    color: var(--retro-text);
+    line-height: 1.4;
+    margin-bottom: 0.4rem;
+    font-family: "Inter", sans-serif;
+    /* Removed text-shadow for better readability */
+    text-shadow: none;
+  }
+
+  .retro-review-date {
+    font-size: 0.7rem;
+    color: var(--retro-text);
+    text-align: right;
+    font-family: "Inter", sans-serif;
+    /* Removed text-shadow for better readability */
+    text-shadow: none;
+  }
+
+  .no-reviews-message {
+    color: var(--retro-text);
+    text-align: center;
+    padding: 1rem;
+    font-style: italic;
+    font-family: "Inter", sans-serif;
+    text-shadow: none; /* Explicitly remove text shadow for this message */
+  }
+
+  /* --- Responsive Adjustments --- */
+  @media (max-width: 850px) {
+    .profile-page-container {
+      flex-direction: column; /* Stack vertically on smaller screens */
+      align-items: center; /* Center items when stacked */
     }
 
-    .profile-img {
-      width: 100px;
-      height: 100px;
+    .retro-profile-card,
+    .retro-review-section {
+      width: 90%; /* Max width for cards */
+      max-width: 380px; /* Limit max width */
+    }
+  }
+
+  @media (max-width: 480px) {
+    .profile-page-container {
+      padding: 1rem;
+    }
+
+    .retro-profile-card,
+    .retro-review-section {
+      padding: 1rem;
+      width: 100%; /* Take full width on very small screens */
+    }
+
+    .profile-info h3 {
+      font-size: 1.2rem;
+    }
+
+    .metric-item-retro {
+      font-size: 0.9em; /* Adjust text size within metrics */
     }
   }
 </style>
 
-<div class="profile-section">
-  <div class="profile-card">
-    <div class="profile-img">
-      <img src="<%= user.profilePhoto || 'https://via.placeholder.com/120' %>" alt="<%= user.name || 'Profile' %>">
-      <% if (user.isOnline) { %>
-        <span class="online-indicator"></span>
-      <% } %>
+<body>
+    
+  <div class="profile-page-container">
+    <div class="retro-profile-card">
+      <div class="profile-image-container">
+        <img src="<%= user.image || '/images/default-avatar.png' %>" alt="Profile Image" />
+        <% if (user.online) { %>
+          <div class="online-indicator-retro"></div>
+        <% } %>
+      </div>
+
+      <div class="profile-info">
+        <h3><%= user.name || 'Unknown Host' %></h3>
+        <p><%= user.title || 'Event Organizer' %></p>
+        <p class="bio"><%= user.bio || 'This user has not added a bio yet.' %></p>
+      </div>
+
+      <div class="profile-metrics-grid">
+        <div class="metric-item-retro">
+          <div class="metric-icon-retro">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-zap">
+                <path d="M12 10v6"/>
+                <path d="M12 10L14 3 5 14h6l-2 7z"/>
+            </svg>
+          </div>
+          <span class="metric-text-retro"><%= user.sparks || 0 %> Sparks</span>
+        </div>
+
+        <div class="metric-item-retro">
+          <div class="metric-icon-retro">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-map-pin">
+                <path d="M12 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8z"/>
+                <path d="M12 12v10"/>
+                <path d="M12 22s-8-4-8-10a8 8 0 0 1 16 0c0 6-8 10-8 10z"/>
+            </svg>
+          </div>
+          <span class="metric-text-retro"><%= user.footprints || 0 %> Footprints</span>
+        </div>
+
+        <div class="metric-item-retro">
+          <div class="metric-icon-retro">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-star">
+                <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+            </svg>
+          </div>
+          <span class="metric-text-retro"><%= user.rating ? user.rating.toFixed(1) : '0.0' %> Rating</span>
+        </div>
+
+        <div class="metric-item-retro">
+          <div class="metric-icon-retro">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-circle-dot">
+                <circle cx="12" cy="12" r="10"/>
+                <circle cx="12" cy="12" r="1"/>
+            </svg>
+          </div>
+          <span class="metric-text-retro"><%= user.online ? 'Online' : 'Offline' %></span>
+        </div>
+      </div>
+
+      <div class="social-icons-retro">
+        <% if (user.social) { %>
+          <% if (user.social.github) { %><a href="<%= user.social.github %>" target="_blank" aria-label="GitHub"><i class="fab fa-github"></i></a><% } %>
+          <% if (user.social.linkedin) { %><a href="<%= user.social.linkedin %>" target="_blank" aria-label="LinkedIn"><i class="fab fa-linkedin"></i></a><% } %>
+          <% if (user.social.twitter) { %><a href="<%= user.social.twitter %>" target="_blank" aria-label="Twitter"><i class="fab fa-twitter"></i></a><% } %>
+        <% } %>
+      </div>
     </div>
 
-    <div class="profile-name"><%= user.name || "Anonymous" %></div>
-    <div class="profile-title"><%= user.title || "Frontend Developer" %></div>
-    <p class="profile-bio"><%= user.bio || "Creative thinker, passionate coder, and team player with a knack for user-centric design." %></p>
-
-    <div class="social-icons">
-      <% if (user.twitter) { %>
-        <a href="<%= user.twitter %>" target="_blank" aria-label="Twitter">
-          <svg viewBox="0 0 24 24"><path d="M23 3a10.9 10.9 0 0 1-3.14 1.53A4.48 4.48 0 0 0 22.4.36a9.06 9.06 0 0 1-2.83 1.08A4.52 4.52 0 0 0 16.11 0C13.62 0 11.6 2.02 11.6 4.5c0 .35.04.7.11 1.03C7.69 5.33 4.07 3.54 1.64.83a4.48 4.48 0 0 0-.61 2.27c0 1.56.79 2.93 2.02 3.74A4.48 4.48 0 0 1 .8 6.1v.05c0 2.18 1.55 4 3.6 4.42a4.52 4.52 0 0 1-2.05.08c.58 1.8 2.26 3.11 4.25 3.15A9.06 9.06 0 0 1 0 19.54a12.79 12.79 0 0 0 6.92 2.03c8.3 0 12.85-6.87 12.85-12.83 0-.2 0-.39-.01-.58A9.1 9.1 0 0 0 23 3z"/></svg>
-        </a>
-      <% } %>
-
-      <% if (user.linkedin) { %>
-        <a href="<%= user.linkedin %>" target="_blank" aria-label="LinkedIn">
-          <svg viewBox="0 0 24 24"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-4 0v7h-4v-7a6 6 0 0 1 6-6zM2 9h4v12H2z"/><circle cx="4" cy="4" r="2"/></svg>
-        </a>
-      <% } %>
-
-      <% if (user.github) { %>
-        <a href="<%= user.github %>" target="_blank" aria-label="GitHub">
-          <svg viewBox="0 0 24 24"><path d="M12 .5C5.65.5.5 5.65.5 12c0 5.08 3.29 9.39 7.86 10.91.58.11.79-.25.79-.56v-2c-3.2.7-3.87-1.54-3.87-1.54-.53-1.35-1.3-1.71-1.3-1.71-1.06-.72.08-.71.08-.71 1.17.08 1.78 1.2 1.78 1.2 1.05 1.79 2.74 1.27 3.41.97.11-.76.41-1.27.74-1.56-2.56-.29-5.26-1.28-5.26-5.7 0-1.26.46-2.3 1.2-3.11-.12-.29-.52-1.45.11-3.02 0 0 .98-.31 3.2 1.18a11.09 11.09 0 0 1 5.83 0c2.22-1.5 3.2-1.18 3.2-1.18.63 1.57.23 2.73.11 3.02.75.81 1.2 1.85 1.2 3.11 0 4.43-2.7 5.4-5.27 5.68.42.36.79 1.09.79 2.2v3.26c0 .31.2.68.8.56A10.99 10.99 0 0 0 23.5 12C23.5 5.65 18.35.5 12 .5z"/></svg>
-        </a>
+    <div class="retro-review-section">
+      <h2>Recent Reviews</h2>
+      <% if (reviews && reviews.length > 0) { %>
+        <% reviews.slice(0, 5).forEach(function(review) { %>
+          <div class="retro-review-item">
+            <div class="retro-review-header">
+              <span><%= review.reviewer || 'Anonymous' %></span>
+              <span class="retro-review-stars"><%= '⭐'.repeat(review.rating || 0) %></span>
+            </div>
+            <div class="retro-review-text">
+              <%= review.text || 'No review content.' %>
+            </div>
+            <div class="retro-review-date">
+              <%= new Date(review.date).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' }) || '' %>
+            </div>
+          </div>
+        <% }) %>
+      <% } else { %>
+        <p class="no-reviews-message">No reviews available for this user yet.</p>
       <% } %>
     </div>
   </div>
-</div>
+
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+  <script src="https://kit.fontawesome.com/YOUR_FONT_AWESOME_KIT_CODE.js" crossorigin="anonymous"></script>
+</body>

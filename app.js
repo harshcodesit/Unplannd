@@ -28,22 +28,64 @@ app.get("/grid",(req,res)=>{
 });
 
 app.get("/test",(req,res)=>{
- res.render("includes/navbar.ejs")
+ res.render("grid/launch.ejs")
 });
+app.get("/testt",(req,res)=>{
+ res.render("grid/grid.ejs")
+});
+app.get("/aura",(req,res)=>{
 
-app.get("/hub",(req,res)=>{
-   const user = {
-        name: "Aarya Patel",
-        title: "Full Stack Developer",
-        bio: "Turning coffee into scalable code. Crafting seamless web experiences one pixel at a time.",
-        profilePhoto: "https://randomuser.me/api/portraits/women/44.jpg",
-        twitter: "https://twitter.com/aaryadev",
-        linkedin: "https://linkedin.com/in/aaryapatel",
-        github: "https://github.com/aaryadev",
-        isOnline: true
-    };
-
-    res.render('aura/aura.ejs', { user }); // profile.ejs in /views folder
+    res.render("aura/aura.ejs", {
+  user: {
+    name: "Dipesh Verma",
+    title: "Full Stack Event Organizer",
+    image: "/uploads/profile-dipesh.jpg",
+    bio: "Passionate about creating unforgettable local experiences. 🚀",
+    sparks: 24,
+    footprints: 376,
+    rating: 4.9,
+    online: true,
+    social: {
+      github: "https://github.com/dipeshverma",
+      linkedin: "https://linkedin.com/in/dipeshverma",
+      twitter: "https://twitter.com/dipesh_codes"
+    }
+  },
+  reviews: [
+    {
+      reviewer: "Harsh Codesit",
+      rating: 5,
+      text: "Absolutely loved the rooftop event. Super well managed!",
+      date: "2025-07-19"
+    },
+    {
+      reviewer: "Neha Sharma",
+      rating: 4,
+      text: "Creative themes and great crowd. Would join again.",
+      date: "2025-07-15"
+    },
+    {
+      reviewer: "Neha Sharma",
+      rating: 4,
+      text: "Creative themes and great crowd. Would join again.",
+      date: "2025-07-15"
+    },
+    {
+      reviewer: "Neha Sharma",
+      rating: 4,
+      text: "Creative themes and great crowd. Would join again.",
+      date: "2025-07-15"
+    },
+    {
+      reviewer: "Neha Sharma",
+      rating: 4,
+      text: "Creative themes and great crowd. Would join again.",
+      date: "2025-07-15"
+    }
+    // add up to 5
+  ]
+});
+// profile.ejs in /views folder
 });
 
 

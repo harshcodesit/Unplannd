@@ -1,303 +1,239 @@
-<% layout("/layouts/boilerplate") %>
-  <style>
-    :root {
-      --primary: #2F9C95;
-      --primary-dark: #1E655F;
-      --bg-light: #F5DEB3;
-      --text-dark: #1F2937;
-      --white: #ffffff;
-      --shadow: rgba(0, 0, 0, 0.1);
-    }
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Retro Events</title>
+    <link rel="stylesheet" href="/stylesheets/main.css">
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Inter:wght@400;500;700;800&display=swap" rel="stylesheet">
 
-body {
-            margin: 0;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: var(--primary-bg);
-            color: var(--text-color);
-            min-height: 100vh;
+    <style>
+        /*
+        * All the retro theme variables from :root should ideally be in main.css
+        * For demonstration, keeping them here if not already global.
+        */
+        :root {
+            --retro-bg: wheat;
+            --retro-text: #1F2937;
+            --retro-accent-red: #d1451e;
+            --retro-accent-yellow: #FFD93D;
+            --retro-primary-teal: #2F9C95;
+            --retro-secondary-light: #fff;
+            --retro-shadow-dark: #000;
+            --retro-shadow-light: rgba(0, 0, 0, 0.2);
+
+            --font-primary: "Inter", sans-serif;
+            --font-heading-retro: 'Press Start 2P', cursive;
+
+            --transition-fast: 0.2s ease;
+            --transition-medium: 0.3s ease;
+            --transition-slow: 0.6s ease;
+        }
+
+        /* --- Retro Toggle Switch CSS (from your second code snippet) --- */
+        .switch {
+            --_switch-bg-clr: var(--retro-primary-teal);
+            --_switch-padding: 4px;
+            --_slider-bg-clr: var(--retro-accent-red);
+            --_slider-bg-clr-on: var(--retro-accent-yellow);
+            --_slider-txt-clr: var(--retro-text);
+            --_label-padding: 0.75rem 1.5rem;
+            --_switch-easing: cubic-bezier(0.47, 1.64, 0.41, 0.8);
+
+            color: var(--retro-text);
+            font-family: var(--font-heading-retro); /* Use retro font here */
+            font-size: 0.8em;
+            width: fit-content;
             display: flex;
-            flex-direction: column;
-        
-}
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
+            justify-content: center;
+            position: relative;
+            border-radius: 9999px;
+            cursor: pointer;
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            position: relative;
+            isolation: isolate;
 
-    body {
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      background-color: var(--bg-light);
-      color: var(--text-dark);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 2rem;
-      min-height: 100vh;
-    }
+            border: 2px solid var(--retro-shadow-dark);
+            box-shadow: 4px 4px 0 var(--retro-shadow-dark);
+            transition: all 0.2s ease-out;
+            z-index: 100; /* Ensure toggle is above other content */
+        }
 
-    main {
-      background: var(--white);
-      border: 2px solid var(--primary);
-      border-radius: 1em;
-      box-shadow: 0 10px 20px var(--shadow);
-      max-width: 675px;
-      width: 100%;
-      overflow: hidden;
-      position: relative;
-      transition: box-shadow 0.3s ease;
-    }
+        .switch:hover {
+            transform: translate(-2px, -2px);
+            box-shadow: 6px 6px 0 var(--retro-shadow-dark);
+        }
 
-    .highlight-bar {
-      height: 4.5em;
-      background: var(--primary);
-      width: 100%;
-      transition: transform 0.4s ease, height 0.4s ease;
-      position: absolute;
-      top: 0;
-      left: 0;
-      z-index: 0;
-    
-    }
+        .switch input[type="checkbox"] {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            white-space: nowrap;
+            border-width: 0;
+        }
 
-    .white-filter {
-      position: absolute;
-      top: 0;
-      right: 0;
-      width: 3em;
-      height: 3em;
-      background: var(--white);
-      box-shadow: -5px 5px 15px rgba(0,0,0,0.2);
-      border-bottom-left-radius: 50%;
-      z-index: 2;
-    }
+        .switch > span {
+            display: grid;
+            place-content: center;
+            transition: opacity 300ms ease-in-out 150ms;
+            padding: var(--_label-padding);
+            text-shadow: 1px 1px 0 rgba(0, 0, 0, 0.2);
+        }
 
-    form {
-      position: relative;
-      padding: 2em;
-      display: flex;
-      flex-direction: column;
-      gap: 1.2em;
-      z-index: 1;
-    }
+        .switch::before,
+        .switch::after {
+            content: "";
+            position: absolute;
+            border-radius: inherit;
+            transition: inset 150ms ease-in-out;
+        }
 
-    .form-header {
-      text-align: center;
-    }
+        .switch::before {
+            background-color: var(--_slider-bg-clr);
+            inset: var(--_switch-padding) 50% var(--_switch-padding) var(--_switch-padding);
+            transition:
+                inset 500ms var(--_switch-easing),
+                background-color 500ms ease-in-out;
+            z-index: -1;
+            box-shadow:
+                inset 0 2px 4px rgba(0, 0, 0, 0.4),
+                0 2px 0 rgba(255, 255, 255, 0.5);
+            border: 2px solid var(--retro-shadow-dark);
+        }
 
-    .form-header h2 {
-      color: var(--white);
-      margin-bottom: 0.3em;
-      font-size: 1.6em;
-    }
+        .switch::after {
+            background-color: var(--_switch-bg-clr);
+            inset: 0;
+            z-index: -2;
+        }
 
-    .form-header span {
-      font-size: 0.85em;
-      font-weight: 600;
-      opacity: 0.8;
-      display: block;
-      margin-top: 0.5em;
-      color: var(--primary);
-    }
+        .switch:focus-within::after {
+            inset: -0.35rem;
+            box-shadow: 0 0 0 3px var(--retro-accent-yellow);
+        }
 
-    label {
-      font-weight: bold;
-      font-size: 0.9em;
-      margin-bottom: 0.4em;
-      display: block;
-    }
+        .switch:has(input:checked):hover > span:first-of-type,
+        .switch:has(input:not(:checked)):hover > span:last-of-type {
+            opacity: 1;
+            transition-delay: 0ms;
+            transition-duration: 100ms;
+        }
 
-    input[type="text"],
-    input[type="date"],
-    input[type="time"],
-    textarea {
-      width: 100%;
-      padding: 0.6em;
-      font-size: 0.9em;
-      border: 2px solid var(--primary);
-      border-radius: 0.5em;
-      background: var(--white);
-      color: var(--text-dark);
-      transition: 0.3s;
-    }
+        .switch:has(input:checked):hover::before {
+            inset: var(--_switch-padding) var(--_switch-padding) var(--_switch-padding) 45%;
+        }
 
-    input:focus,
-    textarea:focus {
-      outline: none;
-      border-color: var(--primary-dark);
-      background-color: #f0fefc;
-    }
+        .switch:has(input:not(:checked)):hover::before {
+            inset: var(--_switch-padding) 45% var(--_switch-padding) var(--_switch-padding);
+        }
 
-    textarea {
-      resize: vertical;
-      min-height: 5em;
-      max-height: 10em;
-    }
+        .switch:has(input:checked)::before {
+            background-color: var(--_slider-bg-clr-on);
+            inset: var(--_switch-padding) var(--_switch-padding) var(--_switch-padding) 50%;
+        }
 
-    .date-time-group {
-      display: flex;
-      gap: 2em;
-      flex-wrap: wrap;
-    }
+        .switch > span:last-of-type,
+        .switch > input:checked + span:first-of-type {
+            opacity: 0.75;
+        }
+        .switch > input:checked ~ span:last-of-type {
+            opacity: 1;
+        }
 
-    .file-upload {
-      display: flex;
-      flex-direction: column;
-      gap: 0.5em;
-    }
+        /* --- Positioning for the toggle switch on the page --- */
+        .toggle-container {
+            position: absolute;
+            top: 20px; /* Adjust as needed */
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 10px;
+            z-index: 100; /* Ensure it's above other content */
+        }
 
-    .file-upload input[type="file"] {
-      display: none;
-    }
+        /* Adjust body to accommodate the fixed toggle if needed */
+        body {
+            position: relative; /* Needed for absolute positioning of toggle-container */
+            padding-top: 80px; /* Make space for the fixed toggle at the top */
+        }
 
-    .file-upload label {
-      background-color: var(--primary);
-      color: var(--white);
-      padding: 0.5em 1em;
-      border-radius: 0.5em;
-      cursor: pointer;
-      font-size: 0.85em;
-      text-align: center;
-      transition: background-color 0.3s ease;
-      display: inline-block;
-    }
-
-    .file-upload label:hover {
-      background-color: var(--primary-dark);
-    }
-
-    .file-count {
-      font-size: 0.85em;
-      color: var(--primary);
-    }
-
-    .submit-button {
-      background: var(--primary);
-      color: var(--white);
-      border: none;
-      padding: 0.75em;
-      border-radius: 0.5em;
-      font-weight: bold;
-      font-size: 1em;
-      cursor: pointer;
-      box-shadow: 0 4px 6px rgba(0,0,0,0.15);
-      transition: background-color 0.3s ease;
-    }
-
-    .submit-button:hover {
-      background-color: var(--primary-dark);
-    }
-
-    .submit-button:active {
-      transform: scale(0.98);
-    }
-
-    .footer-help {
-      text-align: center;
-      font-size: 0.8em;
-      color: var(--primary);
-    }
-
-    .footer-help a {
-      font-weight: bold;
-      color: var(--primary-dark);
-      text-decoration: none;
-    }
-
-    .social-icons {
-      display: flex;
-      justify-content: center;
-      gap: 1em;
-      margin-top: 1em;
-    }
-
-    .social-icons i {
-      color: var(--primary);
-      font-size: 1.3em;
-      transition: transform 0.3s ease;
-      cursor: pointer;
-    }
-
-    .social-icons i:hover {
-      transform: scale(1.2);
-    }
-
-    @media (max-width: 480px) {
-      .date-time-group {
-        flex-direction: column;
-      }
-
-      form {
-        padding: 1.5em;
-      }
-
-      .submit-button {
-        font-size: 0.95em;
-      }
-    }
-  </style>
-
+        /* --- Responsive adjustments for the toggle (if needed) --- */
+        @media (max-width: 768px) {
+            .toggle-container {
+                top: 10px;
+                padding: 5px;
+            }
+            .switch {
+                font-size: 0.7em; /* Smaller text on mobile */
+                --_label-padding: 0.6rem 1.2rem; /* Smaller padding */
+                box-shadow: 3px 3px 0 var(--retro-shadow-dark); /* Smaller shadow */
+            }
+            .switch:hover {
+                transform: translate(-1px, -1px);
+                box-shadow: 4px 4px 0 var(--retro-shadow-dark);
+            }
+            body {
+                padding-top: 60px; /* Adjust body padding for smaller toggle */
+            }
+        }
+        @media (max-width: 480px) {
+             .switch {
+                font-size: 0.65em;
+                --_label-padding: 0.5rem 1rem;
+            }
+        }
+    </style>
+</head>
 <body>
-<div class="main-content" id="main-content"  >
-     <div class="toggle">
-           <label for="filter" class="switch" aria-label="Toggle Filter">
-  <input type="checkbox" id="filter" />
-  <span>Find Glimmer</span>
-  <span>Launch Glimmer</span>
-</label>
-
-        </div>
-<main>
-  <div class="highlight-bar" id="highlightBar"></div>
-  <div class="white-filter"></div>
-
-  <form id="eventForm" aria-label="Host an Event Form">
-    <div class="form-header">
-      <h2>HOST AN EVENT</h2>
-      <span>Share your amazing event!</span>
+    <div class="toggle-container">
+        <label for="pageToggle" class="switch" aria-label="Toggle Page View">
+            <input type="checkbox" id="pageToggle" />
+            <span>Grid</span>
+            <span>Aura</span>
+        </label>
     </div>
 
-    <section class="highlight-section">
-      <label for="title">Title of Event</label>
-      <input type="text" id="title" name="title" placeholder="Enter event title" required>
-    </section>
+    <main>
+        <%- body %>
+    </main>
 
-    <section class="highlight-section">
-      <label for="description">Description</label>
-      <textarea id="description" name="description" placeholder="Describe your event" required></textarea>
-    </section>
+    <script>
+        const pageToggle = document.getElementById('pageToggle');
 
-    <section class="file-upload highlight-section">
-      <label for="images">Upload Images</label>
-      
-      <input type="file" id="images" name="images" multiple>
-      <span class="file-count">No files chosen</span>
-    </section>
+        // Function to set the toggle state based on current URL
+        function setToggleState() {
+            const currentPath = window.location.pathname;
+            if (currentPath.includes('/aura')) {
+                pageToggle.checked = true; // 'Aura' is selected
+                pageToggle.querySelector('span:first-of-type').style.opacity = 0.75; // Manually dim 'Grid'
+                pageToggle.querySelector('span:last-of-type').style.opacity = 1; // Highlight 'Aura'
+            } else {
+                pageToggle.checked = false; // 'Grid' is selected (default)
+                pageToggle.querySelector('span:first-of-type').style.opacity = 1; // Highlight 'Grid'
+                pageToggle.querySelector('span:last-of-type').style.opacity = 0.75; // Manually dim 'Aura'
+            }
+        }
 
-    <section class="date-time-group highlight-section">
-      <div>
-        <label for="date">Date</label>
-        <input type="date" id="date" name="date" required>
-      </div>
-      <div>
-        <label for="time">Time</label>
-        <input type="time" id="time" name="time" required>
-      </div>
-    </section>
+        // Add event listener for when the toggle changes
+        pageToggle.addEventListener('change', function() {
+            if (this.checked) {
+                // If checked, navigate to /aura
+                window.location.href = '/aura';
+            } else {
+                // If unchecked, navigate to /grid
+                window.location.href = '/grid';
+            }
+        });
 
-    <button type="submit" class="submit-button">CREATE EVENT</button>
-
-    <div class="footer-help">
-      Need help? <a href="#">Contact Support</a>
-    </div>
-
-    <div class="social-icons">
-      <i class="fab fa-facebook-f" aria-label="Facebook"></i>
-      <i class="fab fa-instagram" aria-label="Instagram"></i>
-      <i class="fab fa-linkedin-in" aria-label="LinkedIn"></i>
-    </div>
-  </form>
-</main>
-</div>
+        // Initialize toggle state when the page loads
+        document.addEventListener('DOMContentLoaded', setToggleState);
+    </script>
 </body>
-
+</html>
