@@ -1,354 +1,569 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Modern Navbar with Notch Indicator</title>
-    <style>
-        :root {
-            --primary-bg: #2F9C95;
-            --accent-color: #F5DEB3;
-            --text-color: #FFFFFF;
-            --text-color-translucent: rgba(255, 255, 255, 0.85);
-            --active-text-color: #2F9C95; /* Text color for active link */
-        }
+<style>
+    /* --- Root Variables for Theme Consistency --- */
+    :root {
+        --retro-bg: wheat; /* Main background and outer box */
+        --retro-text: #1F2937; /* Dark text for contrast */
+        --retro-accent-red: #d1451e; /* From box shadow, button hover */
+        --retro-accent-yellow: #FFD93D; /* From previous accent, price underline */
+        --retro-primary-teal: #2F9C95; /* From your card background */
+        --retro-secondary-light: #fff; /* From box shadow white */
+        --retro-shadow-dark: #000; /* From box shadow black */
+        --retro-shadow-light: rgba(0, 0, 0, 0.2); /* For softer elements, box-shadow opacity */
 
-        body {
-            margin: 0;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: var(--primary-bg);
-            color: var(--text-color);
-            min-height: 100vh;
-            display: flex;
+        /* Fonts */
+        --font-primary: "Inter", sans-serif;
+        --font-heading-retro: 'Press Start 2P', cursive; /* For titles and buttons */
+
+        /* Transitions */
+        --transition-fast: 0.2s ease;
+        --transition-medium: 0.3s ease;
+        --transition-slow: 0.6s ease;
+    }
+
+    /* --- Navbar Layout --- */
+    .navbar-retro {
+        width: 100%;
+        background-color: var(--retro-primary-teal); /* Teal background */
+        border-bottom: 4px solid var(--retro-shadow-dark); /* Strong bottom border */
+        box-shadow: 0 4px 0 var(--retro-accent-red); /* Red 3D shadow */
+        padding: 0.8rem 1.5rem; /* Vertical and horizontal padding */
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap; /* Allow items to wrap on smaller screens */
+        font-family: var(--font-heading-retro); /* Retro font for navbar text */
+        text-shadow: 1px 1px 0 rgba(0, 0, 0, 0.4); /* Text shadow for retro feel */
+        position: sticky; /* Make it sticky at the top */
+        top: 0;
+        z-index: 1000; /* Ensure it stays on top of other content */
+        box-sizing: border-box; /* Include padding in width */
+    }
+
+    .navbar__left {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .navbar__icon {
+        width: 30px;
+        height: 30px;
+        background-color: var(--retro-accent-yellow); /* Yellow icon background */
+        border-radius: 50%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-size: 1.2em;
+        color: var(--retro-primary-teal); /* Teal icon color */
+        font-weight: bold;
+        box-shadow: 0.1em 0.1em 0 var(--retro-shadow-dark);
+    }
+
+    .navbar__company-name {
+        font-size: 1.6em;
+        font-weight: 700;
+        color: var(--retro-secondary-light); /* White company name */
+        letter-spacing: 0.5px;
+        text-decoration: none; /* Ensure it's not underlined if it's a link */
+        transition: color var(--transition-fast);
+    }
+    .navbar__company-name:hover {
+        color: var(--retro-accent-yellow); /* Yellow on hover */
+    }
+
+    .navbar__right {
+        display: flex;
+        position: relative; /* Crucial for indicator positioning */
+        align-items: center;
+        height: 45px; /* Fixed height for consistent alignment and indicator space */
+        gap: 1.5rem; /* Space between nav items */
+    }
+
+    .navbar__item {
+        position: relative; /* For dropdown positioning */
+        height: 100%; /* Match parent height */
+        display: flex;
+        align-items: center;
+    }
+
+    .navbar__link {
+        text-decoration: none;
+        color: var(--retro-secondary-light); /* White links */
+        font-size: 0.9em;
+        font-weight: 500;
+        padding: 8px 15px; /* Increased padding for better notch fit */
+        position: relative;
+        z-index: 2; /* Ensure text is above the indicator */
+        transition: color var(--transition-fast), transform var(--transition-fast);
+        border-radius: 5px; /* Subtle roundedness for links */
+        line-height: 1; /* Helps with vertical alignment */
+        display: flex; /* Use flex to center content within link */
+        align-items: center;
+        justify-content: center;
+        min-width: 80px; /* Ensure minimum width for indicator consistency */
+        box-sizing: border-box; /* Include padding in width calculation */
+    }
+
+    .navbar__link:hover {
+        color: var(--retro-accent-yellow); /* Yellow on hover */
+        transform: translateY(-2px); /* Subtle lift on hover */
+    }
+
+    .navbar__link.active {
+        color: var(--retro-text); /* Dark text color when active */
+        font-weight: 600;
+        /* No background or shadow here, the indicator provides the active visual */
+    }
+
+    /* --- Notch Indicator --- */
+    .navbar__indicator {
+        position: absolute;
+        bottom: -10px; /* Position below the links */
+        height: 10px; /* Height of the indicator bar */
+        background-color: var(--retro-accent-yellow); /* Yellow indicator */
+        border-radius: 5px 5px 0 0; /* Rounded top corners for the bar */
+        transition: left 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55), /* Springy transition for left */
+                    width 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55), /* Springy transition for width */
+                    opacity 0.3s ease-in-out;
+        opacity: 0; /* Hidden by default */
+        z-index: 1; /* Below the link text */
+        box-shadow: 0 2px 0 var(--retro-shadow-dark); /* Subtle 3D shadow for the bar */
+    }
+
+    /* Using pseudo-element to create the actual notch/bump effect below the indicator bar */
+    .navbar__indicator::before {
+        content: '';
+        position: absolute;
+        top: 100%; /* Position right below the indicator bar */
+        left: 50%;
+        transform: translateX(-50%);
+        width: 15px; /* Width of the notch 'bump' */
+        height: 10px; /* Height of the notch 'bump' */
+        background-color: var(--retro-accent-yellow);
+        border-radius: 0 0 10px 10px; /* Rounded bottom corners for the bump */
+        box-shadow: 0 2px 0 var(--retro-shadow-dark);
+        z-index: 1;
+        opacity: 1; /* Always visible when indicator is active */
+    }
+
+    .navbar__indicator.active {
+        opacity: 1;
+    }
+
+    /* --- Dropdown Menu Styles --- */
+    .dropdown-menu {
+        position: absolute;
+        top: 100%; /* Position below the parent link */
+        left: 50%; /* Center horizontally with parent */
+        transform: translateX(-50%) translateY(10px); /* Adjust for notch, push down slightly */
+        background-color: var(--retro-primary-teal); /* Same as navbar */
+        border: 2px solid var(--retro-shadow-dark);
+        border-radius: 8px;
+        box-shadow: 0.3em 0.3em 0 var(--retro-shadow-dark);
+        min-width: 180px; /* Minimum width for dropdown */
+        padding: 10px 0;
+        z-index: 999; /* Below navbar, above other content */
+        opacity: 0;
+        visibility: hidden;
+        transition: opacity var(--transition-fast), transform var(--transition-fast);
+        display: flex; /* For vertical stacking of items */
+        flex-direction: column;
+        gap: 5px; /* Space between dropdown items */
+    }
+
+    .navbar__item:hover .dropdown-menu { /* .show class for JS toggling */
+        opacity: 1;
+        visibility: visible;
+        transform: translateX(-50%) translateY(0); /* Slide up to position */
+    }
+    
+    /* For JS toggling on mobile/click */
+    .navbar__item.show .dropdown-menu {
+        opacity: 1;
+        visibility: visible;
+        transform: translateX(-50%) translateY(0);
+    }
+
+
+    .dropdown-item {
+        display: block;
+        padding: 8px 15px;
+        color: var(--retro-secondary-light);
+        text-decoration: none;
+        font-family: var(--font-primary); /* Use primary font for dropdown items */
+        font-size: 0.9em;
+        transition: background-color var(--transition-fast), color var(--transition-fast);
+        border-radius: 4px; /* Slightly rounded corners for items */
+        text-shadow: none; /* No text shadow for dropdown items */
+    }
+
+    .dropdown-item:hover {
+        background-color: rgba(0, 0, 0, 0.2); /* Subtle hover background */
+        color: var(--retro-accent-yellow);
+    }
+
+    .dropdown-item.active {
+        background-color: var(--retro-accent-red); /* Active background */
+        color: var(--retro-secondary-light); /* Active text color */
+        font-weight: bold;
+    }
+
+    /* --- Hamburger Menu for Small Screens --- */
+    .hamburger-menu {
+        display: none; /* Hidden by default, shown on mobile */
+        flex-direction: column;
+        cursor: pointer;
+        padding: 5px;
+        z-index: 1001;
+    }
+
+    .hamburger-menu span {
+        height: 3px;
+        width: 28px;
+        background-color: var(--retro-secondary-light); /* White bars */
+        margin-bottom: 5px;
+        border-radius: 2px;
+        transition: all 0.3s ease;
+    }
+
+    /* Hamburger menu animations (X shape) */
+    .hamburger-menu.open span:nth-child(1) {
+        transform: translateY(8px) rotate(45deg);
+    }
+
+    .hamburger-menu.open span:nth-child(2) {
+        opacity: 0;
+    }
+
+    .hamburger-menu.open span:nth-child(3) {
+        transform: translateY(-8px) rotate(-45deg);
+    }
+
+    /* --- Responsive Design --- */
+    @media (max-width: 768px) {
+        .navbar-retro {
             flex-direction: column;
-        }
-
-        /* --- Navbar Layout --- */
-        .navbar {
-            width: 100%;
-            background-color: var(--primary-bg);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 15px 30px;
-            box-sizing: border-box;
-            position: relative;
-            z-index: 1000;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
-        }
-
-        .navbar__left {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .navbar__icon {
-            width: 30px;
-            height: 30px;
-            background-color: var(--accent-color);
-            border-radius: 50%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            font-size: 1.2em;
-            color: var(--primary-bg);
-            font-weight: bold;
+            align-items: flex-start;
+            padding: 0.8rem 1rem;
         }
 
         .navbar__company-name {
-            font-size: 1.6em;
-            font-weight: 700;
-            color: var(--text-color);
-            letter-spacing: 0.5px;
+            font-size: 1.4em;
+        }
+
+        .hamburger-menu {
+            display: flex; /* Show hamburger on small screens */
+            position: absolute; /* Position it top-right */
+            top: 0.8rem;
+            right: 1rem;
         }
 
         .navbar__right {
+            display: none; /* Hidden by default */
+            flex-direction: column;
+            position: absolute;
+            top: 100%;
+            left: 0;
+            width: 100%;
+            background-color: var(--retro-primary-teal);
+            box-shadow: 0 5px 10px rgba(0,0,0,0.2);
+            padding: 15px 0;
+            border-top: 1px solid rgba(0, 0, 0, 0.1);
+            transition: max-height 0.3s ease-out, opacity 0.3s ease-out;
+            transform: translateY(-10px);
+            opacity: 0;
+            pointer-events: none;
+            gap: 0; /* Remove gap for vertical stacking */
+            height: auto; 
+            max-height: 0; /* Start collapsed */
+            overflow: hidden; /* Hide overflow during transition */
+        }
+
+        .navbar__right.active {
             display: flex;
-            position: relative; /* Crucial for indicator positioning */
-            align-items: center;
-            height: 45px; /* Fixed height for consistent alignment and indicator space */
+            transform: translateY(0);
+            opacity: 1;
+            pointer-events: auto;
+            max-height: 300px; /* Sufficient height to show all links */
+        }
+
+        .navbar__item {
+            width: 100%; /* Full width for mobile items */
+            height: auto; /* Allow height to adjust */
+            flex-direction: column; /* Stack link and dropdown vertically */
+            align-items: flex-start;
         }
 
         .navbar__link {
-            text-decoration: none;
-            color: var(--text-color-translucent);
-            font-size: 1.1em;
-            font-weight: 500;
-            padding: 8px 15px; /* Increased padding for better notch fit */
-            position: relative;
-            z-index: 2; /* Ensure text is above the indicator */
-            transition: color 0.3s ease-in-out, transform 0.2s ease-out;
-            border-radius: 25px; /* Initial subtle roundedness */
-            line-height: 1; /* Helps with vertical alignment */
-            display: flex; /* Use flex to center content within link */
-            align-items: center;
-            justify-content: center;
-            min-width: 80px; /* Ensure minimum width for indicator consistency */
-            box-sizing: border-box; /* Include padding in width calculation */
+            padding: 12px 20px;
+            width: 100%;
+            box-sizing: border-box;
+            text-align: left; /* Align text left in collapsed menu for clarity */
+            border-radius: 0; /* Remove rounded corners on mobile */
         }
 
-        .navbar__link:hover {
-            color: var(--text-color);
-            transform: translateY(-2px); /* Subtle lift on hover */
-        }
-
-        .navbar__link.active {
-            color: var(--active-text-color); /* Text color changes when active */
-            font-weight: 600;
-        }
-
-        /* --- Notch Indicator --- */
+        /* No notch indicator on mobile dropdown for simplicity */
         .navbar__indicator {
-            position: absolute;
-            top: 0; /* Position at the top of .navbar__right */
-            height: 100%; /* Take full height of .navbar__right */
-            background-color: var(--accent-color);
-            border-radius: 25px; /* Default rounded rectangle for the notch body */
-            transition: left 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55), /* Springy transition for left */
-                        width 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55), /* Springy transition for width */
-                        opacity 0.3s ease-in-out;
-            opacity: 0;
-            z-index: 1; /* Below the link text */
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2); /* More prominent shadow */
-            transform: scale(0.95); /* Slightly smaller than full size */
-        }
-
-        /* Using pseudo-element to create the actual notch effect within the indicator */
-        .navbar__indicator::before {
-            content: '';
-            position: absolute;
-            top: -15px; /* Position slightly above the indicator */
-            left: 50%;
-            transform: translateX(-50%);
-            width: 30px; /* Width of the notch 'bump' */
-            height: 25px; /* Height of the notch 'bump' */
-            background-color: var(--accent-color);
-            border-radius: 0 0 100% 100%; /* Rounded bottom corners for the bump */
-            z-index: 3; /* Ensure it's above the indicator body if needed, and below link text */
-            opacity: 0; /* Hidden by default, shown when indicator is active */
-            transition: opacity 0.3s ease;
-        }
-
-        .navbar__indicator.active {
-            opacity: 1;
-            transform: scale(1); /* Scale to full size when active */
-        }
-
-        /* Show the ::before notch when the indicator is active and on larger screens */
-        @media (min-width: 769px) {
-            .navbar__indicator.active::before {
-                opacity: 1;
-            }
-        }
-
-
-        /* --- Hamburger Menu for Small Screens --- */
-        .hamburger-menu {
             display: none;
-            flex-direction: column;
-            cursor: pointer;
-            padding: 5px;
-            z-index: 1001;
         }
 
-        .hamburger-menu span {
-            height: 3px;
-            width: 28px;
-            background-color: var(--text-color);
-            margin-bottom: 5px;
-            border-radius: 2px;
-            transition: all 0.3s ease;
+        .dropdown-menu {
+            position: static; /* Position normally within the flow */
+            transform: none; /* Remove translation */
+            width: 100%; /* Full width */
+            min-width: auto;
+            border: none; /* No border for mobile dropdown */
+            box-shadow: none; /* No shadow */
+            background-color: rgba(0, 0, 0, 0.1); /* Slightly darker background for sub-items */
+            border-radius: 0;
+            padding: 5px 0;
+            opacity: 1; /* Always visible when parent is active */
+            visibility: visible;
+            max-height: 0; /* Start collapsed */
+            overflow: hidden;
+            transition: max-height 0.3s ease-out;
+        }
+        /* Mobile: Show dropdown only when parent .navbar__item has 'show' class */
+        .navbar__item.show > .dropdown-menu { /* Use direct child selector */
+            max-height: 200px; /* Expand height for sub-items */
+            padding-top: 10px; /* Add some padding when expanded */
+            padding-bottom: 10px;
         }
 
-        /* Hamburger menu animations (X shape) */
-        .hamburger-menu.open span:nth-child(1) {
-            transform: translateY(8px) rotate(45deg);
+        .dropdown-item {
+            padding: 8px 30px; /* Indent sub-items */
+            text-align: left;
         }
+    }
+</style>
 
-        .hamburger-menu.open span:nth-child(2) {
-            opacity: 0;
-        }
+<nav class="navbar-retro">
+    <div class="navbar__left">
+        <div class="navbar__icon">✨</div>
+        <a href="/" class="navbar__company-name">Glimmer</a>
+    </div>
 
-        .hamburger-menu.open span:nth-child(3) {
-            transform: translateY(-8px) rotate(-45deg);
-        }
+    <div class="hamburger-menu" id="hamburgerMenu">
+        <span></span>
+        <span></span>
+        <span></span>
+    </div>
 
-        /* --- Responsive Design --- */
-        @media (max-width: 768px) {
-            .navbar {
-                padding: 15px 20px;
-            }
-
-            .navbar__company-name {
-                font-size: 1.4em;
-            }
-
-            .navbar__right {
-                display: none;
-                flex-direction: column;
-                position: absolute;
-                top: 100%;
-                left: 0;
-                width: 100%;
-                background-color: var(--primary-bg);
-                box-shadow: 0 5px 10px rgba(0,0,0,0.2);
-                padding: 15px 0;
-                border-top: 1px solid rgba(255, 255, 255, 0.1);
-                transition: transform 0.3s ease-out, opacity 0.3s ease-out;
-                transform: translateY(-10px);
-                opacity: 0;
-                pointer-events: none;
-                gap: 0;
-                height: auto; /* Allow height to adjust for content */
-                max-height: 0; /* Start collapsed */
-                overflow: hidden; /* Hide overflow during transition */
-            }
-
-            .navbar__right.active {
-                display: flex;
-                transform: translateY(0);
-                opacity: 1;
-                pointer-events: auto;
-                max-height: 300px; /* Sufficient height to show all links */
-            }
-
-            .navbar__link {
-                padding: 12px 20px;
-                width: 100%;
-                box-sizing: border-box;
-                text-align: center;
-                border-radius: 0; /* Remove rounded corners on mobile */
-            }
-
-            .hamburger-menu {
-                display: flex;
-            }
-
-            /* No notch indicator on mobile dropdown for simplicity */
-            .navbar__indicator {
-                display: none;
-            }
-        }
-    </style>
-</head>
-<body>
-    <nav class="navbar">
-        <div class="navbar__left">
-            <div class="navbar__icon">✨</div>
-            <div class="navbar__company-name">Unplann'd</div>
-        </div>
-        <div class="hamburger-menu" id="hamburgerMenu">
-            <span></span>
-            <span></span>
-            <span></span>
-        </div>
-        <div class="navbar__right" id="navbarNav">
+    <div class="navbar__right" id="navbarNav">
+        <div class="navbar__item">
             <a href="/hub" class="navbar__link" data-link="hub">HUB</a>
-            <a href="/grid" class="navbar__link" data-link="grid">Grid</a>
-            <a href="/trail" class="navbar__link" data-link="trail">Trail</a>
-            <a href="/aura" class="navbar__link" data-link="aura">Aura</a>
-            <div class="navbar__indicator" id="navIndicator"></div>
         </div>
-    </nav>
+        
+        <div class="navbar__item dropdown" data-dropdown-parent>
+            <a href="/grid" class="navbar__link" data-link="grid">GRID</a>
+            <div class="dropdown-menu">
+                <a href="/grid/glimmers-around" class="dropdown-item" data-link="glimmers-around">Glimmers Around</a>
+                <a href="/grid/launch-glimmer" class="dropdown-item" data-link="launch-glimmer">Launch Glimmer</a>
+            </div>
+        </div>
+        
+        <div class="navbar__item dropdown" data-dropdown-parent>
+            <a href="/trail" class="navbar__link" data-link="trail">TRAIL</a>
+            <div class="dropdown-menu">
+                <a href="/trail/sparks" class="dropdown-item" data-link="sparks">Sparks</a>
+                <a href="/trail/footprints" class="dropdown-item" data-link="footprints">Footprints</a>
+            </div>
+        </div>
+        
+        <div class="navbar__item">
+            <a href="/aura" class="navbar__link" data-link="aura">AURA</a>
+        </div>
+        
+        <div class="navbar__indicator" id="navIndicator"></div>
+    </div>
+</nav>
 
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            const navLinks = document.querySelectorAll('.navbar__link');
-            const navIndicator = document.getElementById('navIndicator');
-            const hamburgerMenu = document.getElementById('hamburgerMenu');
-            const navbarNav = document.getElementById('navbarNav');
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const navLinks = document.querySelectorAll('.navbar__link');
+        const navIndicator = document.getElementById('navIndicator');
+        const hamburgerMenu = document.getElementById('hamburgerMenu');
+        const navbarNav = document.getElementById('navbarNav');
+        const dropdownParents = document.querySelectorAll('[data-dropdown-parent]');
 
-            const updateIndicator = (activeLink) => {
-                if (!activeLink || window.innerWidth <= 768) {
-                    navIndicator.classList.remove('active'); // Ensure indicator is hidden
-                    return;
+        // Function to update the indicator's position and width
+        const updateIndicator = (activeLink) => {
+            if (!activeLink || window.innerWidth <= 768) {
+                navIndicator.classList.remove('active'); // Hide indicator on mobile or if no active link
+                return;
+            }
+
+            const linkRect = activeLink.getBoundingClientRect();
+            const navRightRect = navbarNav.getBoundingClientRect();
+
+            // Calculate relative position and width
+            const left = linkRect.left - navRightRect.left;
+            const width = linkRect.width;
+
+            navIndicator.style.left = `${left}px`;
+            navIndicator.style.width = `${width}px`;
+            navIndicator.classList.add('active'); // Activate the indicator
+        };
+
+        // Function to set the active link based on the current URL
+        const setActiveLinkFromURL = () => {
+            const currentPath = window.location.pathname;
+            let activeLinkFound = false;
+            let activeParentLink = null; // To store the main parent link (e.g., GRID, TRAIL)
+
+            // First, remove active class from all links and dropdown items
+            document.querySelectorAll('.navbar__link, .dropdown-item').forEach(link => link.classList.remove('active'));
+            // Ensure all dropdowns are closed visually initially (important for mobile on refresh)
+            dropdownParents.forEach(parent => parent.classList.remove('show'));
+
+            // Iterate through all links (main and dropdown items)
+            document.querySelectorAll('.navbar__link, .dropdown-item').forEach(link => {
+                const linkHref = link.getAttribute('href');
+
+                if (currentPath === linkHref) {
+                    link.classList.add('active');
+                    activeLinkFound = true;
+
+                    // If it's a dropdown item, also mark its parent as active and open the dropdown
+                    if (link.classList.contains('dropdown-item')) {
+                        const parentItem = link.closest('.navbar__item');
+                        if (parentItem) {
+                            parentItem.classList.add('show'); // Open dropdown on page load if sub-item is active
+                            const parentLink = parentItem.querySelector('.navbar__link');
+                            if (parentLink) {
+                                parentLink.classList.add('active');
+                                activeParentLink = parentLink; // Set parent as the one for indicator
+                            }
+                        }
+                    } else {
+                        activeParentLink = link; // If it's a main link, it's the one for indicator
+                    }
                 }
-
-                const linkRect = activeLink.getBoundingClientRect();
-                const navRightRect = navbarNav.getBoundingClientRect();
-
-                // Calculate relative position and width
-                const left = linkRect.left - navRightRect.left;
-                const width = linkRect.width;
-
-                navIndicator.style.left = `${left}px`;
-                navIndicator.style.width = `${width}px`;
-                navIndicator.classList.add('active'); // Activate the indicator
-            };
-
-            // Function to set the active link based on the current URL
-            const setActiveLinkFromURL = () => {
-                const currentPath = window.location.pathname;
-                let activeLinkFound = false;
-
-                navLinks.forEach(link => {
-                    link.classList.remove('active');
-                    const linkPath = link.getAttribute('href');
-                    if (currentPath === linkPath) {
-                        link.classList.add('active');
-                        updateIndicator(link);
-                        activeLinkFound = true;
-                    }
-                });
-
-                // If no direct match, set 'hub' as active by default or a fallback
-                if (!activeLinkFound) {
-                    const defaultLink = document.querySelector('.navbar__link[data-link="hub"]');
-                    if (defaultLink) {
-                        defaultLink.classList.add('active');
-                        updateIndicator(defaultLink);
-                    }
-                }
-            };
-
-            // Set initial active link and indicator position on page load
-            setActiveLinkFromURL();
-
-            navLinks.forEach(link => {
-                link.addEventListener('click', (e) => {
-                    // We no longer preventDefault() here as we want the browser to navigate
-                    // The active state and indicator will be set on the *next* page load
-                    // by setActiveLinkFromURL().
-                    // If you want a smoother transition *before* navigation, you'd need
-                    // to implement something like a client-side router.
-
-                    // For now, we only update the active class and indicator *before* navigation
-                    // if you are staying on the same page.
-                    // But if you are navigating to a new page, these updates will be momentary
-                    // and then re-calculated on the new page's load.
-                    
-                    // Remove active class from all links
-                    navLinks.forEach(l => l.classList.remove('active'));
-                    
-                    // Add active class to the clicked link
-                    e.currentTarget.classList.add('active'); // Use currentTarget as `this` might be different
-
-                    // Update indicator position momentarily before navigation (optional, depends on UX)
-                    updateIndicator(e.currentTarget);
-
-                    // Close mobile menu if open
-                    if (navbarNav.classList.contains('active')) {
-                        navbarNav.classList.remove('active');
-                        hamburgerMenu.classList.remove('open');
-                    }
-                    
-                    // The browser will now handle the navigation due to the anchor tag's href
-                });
             });
 
-            // Hamburger menu functionality
-            hamburgerMenu.addEventListener('click', () => {
-                navbarNav.classList.toggle('active');
-                hamburgerMenu.classList.toggle('open');
+            // If no specific link is active, fallback to 'HUB' as default
+            if (!activeLinkFound) {
+                const hubLink = document.querySelector('.navbar__link[data-link="hub"]');
+                if (hubLink) {
+                    hubLink.classList.add('active');
+                    activeParentLink = hubLink;
+                }
+            }
+            
+            // After setting active link(s), update indicator under the determined parent link
+            updateIndicator(activeParentLink);
+        };
+
+        // Set initial active link and indicator position on page load
+        setActiveLinkFromURL();
+
+        // Handle dropdown toggling for main navbar items
+        dropdownParents.forEach(parent => {
+            const parentLink = parent.querySelector('.navbar__link');
+            
+            // Desktop hover behavior
+            if (window.innerWidth > 768) {
+                parent.addEventListener('mouseenter', () => {
+                    parent.classList.add('show');
+                });
+                parent.addEventListener('mouseleave', () => {
+                    parent.classList.remove('show');
+                });
+            }
+
+            // Mobile/Click behavior (toggle on click)
+            parentLink.addEventListener('click', (e) => {
+                // This logic applies to both mobile and desktop if not handled by hover
+                if (window.innerWidth <= 768 || !parent.classList.contains('show')) {
+                    e.preventDefault(); // Prevent navigation on first click/mobile click to toggle dropdown
+                    parent.classList.toggle('show');
+
+                    // Close other open dropdowns
+                    dropdownParents.forEach(otherParent => {
+                        if (otherParent !== parent) {
+                            otherParent.classList.remove('show');
+                        }
+                    });
+                }
+                // If on desktop and already 'show'n, allow default navigation on second click
             });
 
-            // Update indicator on window resize
-            window.addEventListener('resize', () => {
-                const currentActiveLink = document.querySelector('.navbar__link.active');
-                updateIndicator(currentActiveLink);
+            // Click outside to close dropdowns (Desktop only for precision)
+            document.addEventListener('click', (e) => {
+                if (window.innerWidth > 768 && !parent.contains(e.target) && parent.classList.contains('show')) {
+                    parent.classList.remove('show');
+                }
             });
         });
-    </script>
-</body>
-</html>
+
+        // Hamburger menu functionality
+        hamburgerMenu.addEventListener('click', () => {
+            navbarNav.classList.toggle('active');
+            hamburgerMenu.classList.toggle('open');
+            // Close all dropdowns when mobile menu is toggled
+            dropdownParents.forEach(parent => parent.classList.remove('show'));
+            // Re-calculate indicator position if navbar changes visibility
+            const currentActiveLink = document.querySelector('.navbar__link.active');
+            updateIndicator(currentActiveLink);
+        });
+
+        // Update indicator on window resize
+        window.addEventListener('resize', () => {
+            const currentActiveLink = document.querySelector('.navbar__link.active');
+            updateIndicator(currentActiveLink);
+            
+            // Re-apply correct hover/click listeners if resized across breakpoint
+            dropdownParents.forEach(parent => {
+                const parentLink = parent.querySelector('.navbar__link');
+                // Remove existing listeners to re-add correctly (simple re-initialization)
+                parentLink.removeEventListener('click', (e) => {}); // This is a rough way, better is to use flag or specific listeners
+                parent.removeEventListener('mouseenter', () => {});
+                parent.removeEventListener('mouseleave', () => {});
+
+                if (window.innerWidth > 768) {
+                    parent.addEventListener('mouseenter', () => parent.classList.add('show'));
+                    parent.addEventListener('mouseleave', () => parent.classList.remove('show'));
+                    // Ensure dropdowns are hidden if resized from mobile
+                    parent.classList.remove('show'); 
+                } else {
+                    parentLink.addEventListener('click', (e) => {
+                        e.preventDefault();
+                        parent.classList.toggle('show');
+                        dropdownParents.forEach(otherParent => {
+                            if (otherParent !== parent) otherParent.classList.remove('show');
+                        });
+                    });
+                }
+            });
+
+            // Ensure mobile menu is hidden on resize if it's no longer mobile width
+            if (window.innerWidth > 768 && navbarNav.classList.contains('active')) {
+                navbarNav.classList.remove('active');
+                hamburgerMenu.classList.remove('open');
+            }
+        });
+
+        // Close mobile menu when a sub-link is clicked (after navigation)
+        document.querySelectorAll('.dropdown-item').forEach(item => {
+            item.addEventListener('click', () => {
+                // These actions happen before the browser navigates, but the new page load will re-initialize
+                if (navbarNav.classList.contains('active')) {
+                    navbarNav.classList.remove('active');
+                    hamburgerMenu.classList.remove('open');
+                }
+                dropdownParents.forEach(parent => parent.classList.remove('show')); // Close all dropdowns
+            });
+        });
+
+        // Click on document to close desktop dropdowns (re-added this more robustly)
+        document.addEventListener('click', (e) => {
+            if (window.innerWidth > 768) {
+                dropdownParents.forEach(parent => {
+                    if (parent.classList.contains('show') && !parent.contains(e.target)) {
+                        parent.classList.remove('show');
+                    }
+                });
+            }
+        });
+    });
+</script>

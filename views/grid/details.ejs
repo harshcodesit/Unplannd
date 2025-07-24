@@ -1,0 +1,614 @@
+<% layout("/layouts/boilerplate") %>
+
+
+<style>
+    /* --- Root Variables (assuming these are globally defined or imported) --- */
+    :root {
+        --retro-bg: wheat;
+        --retro-text: #1F2937;
+        --retro-accent-red: #d1451e;
+        --retro-accent-yellow: #FFD93D;
+        --retro-primary-teal: #2F9C95;
+        --retro-secondary-light: #fff;
+        --retro-shadow-dark: #000;
+        --retro-shadow-light: rgba(0, 0, 0, 0.2);
+
+        --font-primary: "Inter", sans-serif;
+        --font-heading-retro: 'Press Start 2P', cursive;
+
+        --transition-fast: 0.2s ease;
+        --transition-medium: 0.3s ease;
+        --transition-slow: 0.6s ease;
+    }
+
+    /* --- General Body Styling (Consistent with other pages) --- */
+    body {
+        background-color: var(--retro-bg);
+        font-family: var(--font-primary);
+        color: var(--retro-text);
+        margin: 0;
+        padding: 0;
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column; /* Stack navbar, content, footer */
+        align-items: center; /* Center horizontally */
+        box-sizing: border-box;
+        overflow-x: hidden; /* Prevent horizontal scroll */
+    }
+
+    /* Pixelated image rendering for that retro feel */
+    img {
+        image-rendering: pixelated;
+        image-rendering: -moz-crisp-edges;
+        image-rendering: -o-crisp-edges;
+        image-rendering: -webkit-optimize-contrast;
+        -ms-interpolation-mode: nearest-neighbor;
+    }
+
+    /* --- Event Details Wrapper --- */
+    .event-details-wrapper { /* Unique class name */
+        width: 100%;
+        max-width: 1000px; /* Max width for the entire details section */
+        padding: 2rem;
+        box-sizing: border-box;
+        display: flex;
+        flex-direction: column;
+        gap: 2rem;
+        flex-grow: 1; /* Allows content to push footer down */
+        animation: detailsEntry 0.8s ease-out;
+    }
+
+    @keyframes detailsEntry {
+        0% { opacity: 0; transform: translateY(30px); }
+        100% { opacity: 1; transform: translateY(0); }
+    }
+
+    /* --- Main Content Box for Event Details --- */
+    .event-main-content-box { /* Unique class name */
+        background-color: var(--retro-primary-teal);
+        padding: 1.5em;
+        border-radius: 15px;
+        box-shadow:
+            0 0 0 0.15em var(--retro-shadow-dark),
+            0 0 0 0.3em var(--retro-secondary-light),
+            0 0 0 0.45em var(--retro-shadow-dark),
+            0 0.5em 0 0 var(--retro-accent-red),
+            0 0.5em 0 0.15em var(--retro-shadow-dark);
+        text-shadow: 1px 1px 0 rgba(0, 0, 0, 0.3);
+        transition: all var(--transition-medium);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+    }
+
+    .event-main-content-box:hover {
+        transform: translateY(-5px);
+        box-shadow:
+            0 0 0 0.15em var(--retro-shadow-dark),
+            0 0 0 0.3em var(--retro-secondary-light),
+            0 0 0 0.45em var(--retro-shadow-dark),
+            0 0.8em 0 0 var(--retro-accent-red),
+            0 0.8em 0 0.15em var(--retro-shadow-dark);
+    }
+
+    /* --- Event Title --- */
+    .event-title { /* Unique class name */
+        font-family: var(--font-heading-retro);
+        font-size: 2.5em;
+        color: var(--retro-text);
+        margin-bottom: 0.5em;
+        text-shadow: 3px 3px 0 rgba(0, 0, 0, 0.5);
+        border-bottom: 3px dashed var(--retro-accent-yellow);
+        padding-bottom: 0.3em;
+        line-height: 1.2;
+        word-break: break-word;
+    }
+
+    /* --- Event Description --- */
+    .event-description { /* Unique class name */
+        font-family: var(--font-primary);
+        font-size: 1.1em;
+        color: var(--retro-text);
+        line-height: 1.6;
+        margin-bottom: 2em;
+        max-width: 800px;
+        text-align: justify;
+        text-shadow: 0.5px 0.5px 0 rgba(0, 0, 0, 0.2);
+    }
+
+    /* --- Image Slider / Carousel --- */
+    .event-image-slider-container { /* Unique class name */
+        width: 100%;
+        max-width: 800px; /* Max width for the slider */
+        height: 400px; /* Fixed height for the slider */
+        position: relative;
+        overflow: hidden;
+        border-radius: 10px;
+        border: 3px solid var(--retro-shadow-dark);
+        box-shadow: 0.3em 0.3em 0 var(--retro-shadow-dark);
+        margin-bottom: 2em;
+        background-color: var(--retro-secondary-light);
+    }
+
+    .event-slider-track { /* Unique class name */
+        display: flex;
+        height: 100%;
+        transition: transform 0.5s ease-in-out;
+    }
+
+    .event-slider-item { /* Unique class name */
+        min-width: 100%;
+        height: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background-color: var(--retro-secondary-light); /* Fallback background */
+    }
+
+    .event-slider-item img { /* Unique class name */
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        display: block;
+    }
+
+    .event-slider-nav-button { /* Unique class name */
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        background-color: var(--retro-accent-yellow);
+        border: 2px solid var(--retro-shadow-dark);
+        border-radius: 50%;
+        width: 45px;
+        height: 45px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-family: var(--font-heading-retro);
+        font-size: 1.5em;
+        color: var(--retro-text);
+        cursor: pointer;
+        z-index: 10;
+        box-shadow: 0.2em 0.2em 0 var(--retro-shadow-dark);
+        transition: all var(--transition-fast);
+        opacity: 0.8;
+    }
+
+    .event-slider-nav-button:hover {
+        background-color: var(--retro-accent-red);
+        color: var(--retro-secondary-light);
+        transform: translateY(-50%) scale(1.1);
+        box-shadow: 0.3em 0.3em 0 var(--retro-shadow-dark);
+        opacity: 1;
+    }
+
+    .event-slider-nav-button.left { left: 10px; }
+    .event-slider-nav-button.right { right: 10px; }
+
+    .event-slider-dots { /* Unique class name */
+        display: flex;
+        justify-content: center;
+        margin-top: -1.5rem; /* Position over the slider for a cleaner look */
+        gap: 0.8rem;
+        position: relative;
+        z-index: 5;
+    }
+
+    .event-dot { /* Unique class name */
+        width: 14px;
+        height: 14px;
+        background-color: rgba(0, 0, 0, 0.4); /* Semi-transparent dot */
+        border: 2px solid var(--retro-secondary-light);
+        border-radius: 50%;
+        cursor: pointer;
+        transition: all var(--transition-fast);
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+    }
+
+    .event-dot.active {
+        background-color: var(--retro-accent-yellow);
+        border-color: var(--retro-accent-red);
+        transform: scale(1.2);
+    }
+
+    /* --- Event Details Grid (Date, Time, Location, Host) --- */
+    .event-details-grid { /* Unique class name */
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); /* Responsive grid columns */
+        gap: 1.5rem;
+        width: 100%;
+        max-width: 800px;
+        margin-bottom: 2.5em;
+    }
+
+    .event-detail-item { /* Unique class name */
+        background-color: var(--retro-secondary-light);
+        padding: 1.2em;
+        border-radius: 10px;
+        border: 2px solid var(--retro-shadow-dark);
+        box-shadow: 0.2em 0.2em 0 var(--retro-shadow-dark);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        transition: transform var(--transition-fast);
+    }
+
+    .event-detail-item:hover {
+        transform: translateY(-3px);
+        box-shadow: 0.3em 0.3em 0 var(--retro-accent-red);
+    }
+
+    .event-detail-icon { /* Unique class name */
+        width: 40px;
+        height: 40px;
+        background-color: var(--retro-accent-yellow);
+        border-radius: 50%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin-bottom: 0.8em;
+        box-shadow: 0.15em 0.15em 0 rgba(0, 0, 0, 0.3);
+    }
+
+    .event-detail-icon svg {
+        width: 24px;
+        height: 24px;
+        fill: var(--retro-text);
+        stroke: var(--retro-text);
+        stroke-width: 2;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+    }
+
+    .event-detail-label { /* Unique class name */
+        font-family: var(--font-heading-retro);
+        font-size: 0.9em;
+        color: var(--retro-accent-red);
+        margin-bottom: 0.4em;
+        text-shadow: 1px 1px 0 rgba(0, 0, 0, 0.2);
+    }
+
+    .event-detail-value { /* Unique class name */
+        font-family: var(--font-primary);
+        font-size: 1.1em;
+        font-weight: 500;
+        color: var(--retro-text);
+        line-height: 1.3;
+        text-shadow: none;
+        word-break: break-word;
+    }
+
+    /* --- Host Details --- */
+    .event-host-info { /* Unique class name */
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        margin-top: 1em;
+        padding-top: 1em;
+        border-top: 2px dashed rgba(0, 0, 0, 0.2);
+        width: 100%;
+    }
+
+    .event-host-label { /* Unique class name */
+        font-family: var(--font-heading-retro);
+        font-size: 1em;
+        color: var(--retro-accent-red);
+        margin-bottom: 0.5em;
+        text-shadow: 1px 1px 0 rgba(0, 0, 0, 0.2);
+    }
+
+    .event-host-name { /* Unique class name */
+        font-family: var(--font-primary);
+        font-size: 1.2em;
+        font-weight: 700;
+        color: var(--retro-text);
+        margin-bottom: 0.5em;
+        text-shadow: 1px 1px 0 rgba(0, 0, 0, 0.2);
+    }
+
+    .event-host-rating { /* Unique class name */
+        display: flex;
+        align-items: center;
+        gap: 5px;
+        font-family: var(--font-primary);
+        font-size: 1em;
+        color: var(--retro-text);
+        text-shadow: none;
+    }
+
+    .event-host-rating svg {
+        width: 20px;
+        height: 20px;
+        fill: var(--retro-accent-yellow);
+        stroke: var(--retro-shadow-dark);
+        stroke-width: 1;
+    }
+
+    /* --- Request to Join Button (reusing card-button style) --- */
+    .event-join-button { /* Unique class name */
+        position: relative;
+        background: var(--retro-bg); /* Wheat background for button */
+        color: var(--retro-text);
+        font-family: var(--font-heading-retro); /* Retro font for button text */
+        font-size: 1.2em;
+        font-weight: 700;
+        padding: 0.8em 1.8em;
+        border: 0.25em solid var(--retro-shadow-dark);
+        border-radius: 0.5em;
+        box-shadow: 0.4em 0.4em 0 var(--retro-shadow-dark);
+        cursor: pointer;
+        transition: all var(--transition-fast);
+        overflow: hidden;
+        text-transform: uppercase;
+        letter-spacing: 0.1em;
+        text-shadow: 2px 2px 0 rgba(0, 0, 0, 0.6);
+        text-decoration: none;
+        display: inline-block;
+        box-sizing: border-box;
+        margin-top: 2.5em; /* Space above button */
+    }
+
+    .event-join-button::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(
+            90deg,
+            transparent 0%,
+            rgba(255, 255, 255, 0.2) 50%,
+            transparent 100%
+        );
+        transition: left var(--transition-slow);
+        z-index: 1;
+    }
+
+    .event-join-button:hover {
+        background: var(--retro-accent-red);
+        color: var(--retro-secondary-light);
+        transform: translate(-0.2em, -0.2em);
+        box-shadow: 0.6em 0.6em 0 var(--retro-shadow-dark);
+        text-shadow: 2px 2px 0 rgba(0, 0, 0, 0.8);
+    }
+
+    .event-join-button:hover::before {
+        left: 100%;
+    }
+
+    .event-join-button:active {
+        transform: translate(0.15em, 0.15em);
+        box-shadow: 0.2em 0.2em 0 var(--retro-shadow-dark);
+    }
+
+    /* --- Responsive Adjustments --- */
+    @media (max-width: 1024px) {
+        .event-details-wrapper {
+            padding: 1.5rem;
+            gap: 1.5rem;
+        }
+        .event-title { font-size: 2.2em; }
+        .event-description { font-size: 1em; }
+        .event-image-slider-container { height: 350px; }
+        .event-details-grid { grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); }
+        .event-join-button { font-size: 1.1em; padding: 0.7em 1.5em; }
+    }
+
+    @media (max-width: 768px) {
+        .event-details-wrapper {
+            padding: 1rem;
+            gap: 1rem;
+        }
+        .event-main-content-box {
+            padding: 1em;
+            box-shadow:
+                0 0 0 0.1em var(--retro-shadow-dark),
+                0 0 0 0.2em var(--retro-secondary-light),
+                0 0 0.3em 0 var(--retro-accent-red),
+                0 0.3em 0 0.1em var(--retro-shadow-dark);
+        }
+        .event-title { font-size: 1.8em; text-shadow: 2px 2px 0 rgba(0, 0, 0, 0.4); }
+        .event-description { font-size: 0.9em; margin-bottom: 1.5em; }
+        .event-image-slider-container {
+            height: 280px;
+            margin-bottom: 1.5em;
+            border-width: 2px;
+            box-shadow: 0.2em 0.2em 0 var(--retro-shadow-dark);
+        }
+        .event-slider-nav-button {
+            width: 35px;
+            height: 35px;
+            font-size: 1.2em;
+        }
+        .event-slider-dots { margin-top: -1rem; }
+        .event-dot { width: 10px; height: 10px; }
+        .event-details-grid {
+            grid-template-columns: 1fr; /* Stack items vertically on mobile */
+            gap: 1rem;
+            margin-bottom: 2em;
+        }
+        .event-detail-item {
+            padding: 1em;
+            border-width: 1px;
+            box-shadow: 0.15em 0.15em 0 var(--retro-shadow-dark);
+        }
+        .event-detail-icon { width: 35px; height: 35px; margin-bottom: 0.6em; }
+        .event-detail-icon svg { width: 20px; height: 20px; }
+        .event-detail-label { font-size: 0.8em; }
+        .event-detail-value { font-size: 1em; }
+        .event-host-info { padding-top: 0.8em; margin-top: 0.8em; }
+        .event-host-label { font-size: 0.9em; }
+        .event-host-name { font-size: 1.1em; }
+        .event-host-rating svg { width: 18px; height: 18px; }
+        .event-join-button { font-size: 1em; padding: 0.6em 1.2em; margin-top: 2em; }
+    }
+
+    @media (max-width: 480px) {
+        .event-details-wrapper {
+            padding: 0.5rem;
+            gap: 0.8rem;
+        }
+        .event-main-content-box {
+            padding: 0.8em;
+        }
+        .event-title { font-size: 1.5em; text-shadow: 1.5px 1.5px 0 rgba(0, 0, 0, 0.3); }
+        .event-description { font-size: 0.85em; margin-bottom: 1em; }
+        .event-image-slider-container { height: 200px; margin-bottom: 1em; }
+        .event-slider-nav-button { width: 30px; height: 30px; font-size: 1em; }
+        .event-slider-dots { margin-top: -0.8rem; }
+        .event-dot { width: 8px; height: 8px; border-width: 1px; }
+        .event-details-grid { gap: 0.8rem; margin-bottom: 1.5em; }
+        .event-detail-item { padding: 0.8em; }
+        .event-detail-icon { width: 30px; height: 30px; margin-bottom: 0.5em; }
+        .event-detail-icon svg { width: 18px; height: 18px; }
+        .event-detail-label { font-size: 0.7em; }
+        .event-detail-value { font-size: 0.9em; }
+        .event-host-info { padding-top: 0.6em; margin-top: 0.6em; }
+        .event-host-label { font-size: 0.8em; }
+        .event-host-name { font-size: 1em; }
+        .event-host-rating svg { width: 16px; height: 16px; }
+        .event-join-button { font-size: 0.9em; padding: 0.5em 1em; margin-top: 1.5em; }
+    }
+</style>
+
+<div class="event-details-wrapper">
+    <div class="event-main-content-box">
+        <h1 class="event-title">The Grand Pixel Gala 2025</h1>
+        
+        <!-- Image Slider Section -->
+        <div class="event-image-slider-container">
+            <div class="event-slider-track" id="eventImageSliderTrack">
+                <div class="event-slider-item">
+                    <img src="https://placehold.co/800x400/2F9C95/FFFFFF?text=Gala+Image+1" alt="Event Image 1">
+                </div>
+                <div class="event-slider-item">
+                    <img src="https://placehold.co/800x400/D1451E/FFFFFF?text=Gala+Image+2" alt="Event Image 2">
+                </div>
+                <div class="event-slider-item">
+                    <img src="https://placehold.co/800x400/FFD93D/1F2937?text=Gala+Image+3" alt="Event Image 3">
+                </div>
+            </div>
+            <button class="event-slider-nav-button left" onclick="moveEventSlider(-1)">&#x25C0;</button>
+            <button class="event-slider-nav-button right" onclick="moveEventSlider(1)">&#x25B6;</button>
+            <div class="event-slider-dots" id="eventSliderDots"></div>
+        </div>
+
+        <p class="event-description">
+            Step into a world where pixels meet elegance at The Grand Pixel Gala 2025! This exclusive event celebrates the fusion of retro charm and modern sophistication. Join us for an unforgettable night of digital art showcases, live 8-bit music, and a chance to mingle with pioneers of the pixelverse. Dress in your finest retro-futuristic attire and prepare for an evening of nostalgic wonder and groundbreaking innovation. Limited tickets available, secure your spot now!
+        </p>
+
+        <!-- Event Details Grid -->
+        <div class="event-details-grid">
+            <div class="event-detail-item">
+                <div class="event-detail-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-calendar-days"><path d="M8 2v4"/><path d="M16 2v4"/><rect width="18" height="18" x="3" y="4" rx="2"/><path d="M3 10h18"/><path d="M8 14h.01"/><path d="M12 14h.01"/><path d="M16 14h.01"/><path d="M8 18h.01"/><path d="M12 18h.01"/><path d="M16 18h.01"/></svg>
+                </div>
+                <span class="event-detail-label">Date</span>
+                <span class="event-detail-value">October 26, 2025</span>
+            </div>
+
+            <div class="event-detail-item">
+                <div class="event-detail-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-clock"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                </div>
+                <span class="event-detail-label">Time</span>
+                <span class="event-detail-value">7:00 PM - 11:00 PM</span>
+            </div>
+
+            <div class="event-detail-item">
+                <div class="event-detail-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-map-pin"><path d="M12 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8z"/><path d="M12 12v10"/><path d="M12 22s-8-4-8-10a8 8 0 0 1 16 0c0 6-8 10-8 10z"/></svg>
+                </div>
+                <span class="event-detail-label">Location</span>
+                <span class="event-detail-value">Cybernetic Convention Center, Hall A</span>
+            </div>
+
+            <div class="event-detail-item">
+                <div class="event-detail-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-user"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                </div>
+                <span class="event-detail-label">Host</span>
+                <span class="event-detail-value">Pixel Maestro</span>
+            </div>
+        </div>
+
+        <!-- Host Rating -->
+        <div class="event-host-info">
+            <span class="event-host-label">Hosted By</span>
+            <span class="event-host-name">Retro Events Inc.</span>
+            <div class="event-host-rating">
+                <span>Rating: 4.9</span>
+                <svg viewBox="0 0 24 24">
+                    <path d="M12,17.56L16.07,16.43L16.62,10.33H9.38L9.2,8.3H16.8L17,6.31H7L7.56,12.32H14.45L14.22,14.9L12,15.5L9.78,14.9L9.64,13.24H7.64L7.93,16.43L12,17.56M4.07,3H19.93L18.5,19.2L12,21L5.5,19.2L4.07,3Z"/>
+                </svg>
+            </div>
+        </div>
+
+        <button class="event-join-button">Request to Join</button>
+    </div>
+</div>
+
+
+<script>
+    // --- Event Image Slider Logic ---
+    const eventImageSliderTrack = document.getElementById('eventImageSliderTrack');
+    const eventSliderItems = document.querySelectorAll('.event-slider-item');
+    const totalEventSlides = eventSliderItems.length;
+    let currentEventSlideIndex = 0;
+    let isEventSliderTransitioning = false;
+    const EVENT_SLIDER_TRANSITION_DURATION = 500; // Match CSS transition duration
+
+    const eventSliderDotsContainer = document.getElementById('eventSliderDots');
+    for (let i = 0; i < totalEventSlides; i++) {
+        const dot = document.createElement('div');
+        dot.classList.add('event-dot');
+        dot.addEventListener('click', () => goToEventSlide(i));
+        eventSliderDotsContainer.appendChild(dot);
+    }
+
+    function updateEventSlider() {
+        const offset = -currentEventSlideIndex * 100;
+        eventImageSliderTrack.style.transform = `translateX(${offset}%)`;
+        updateEventDots();
+        isEventSliderTransitioning = true;
+        setTimeout(() => {
+            isEventSliderTransitioning = false;
+        }, EVENT_SLIDER_TRANSITION_DURATION);
+    }
+
+    function updateEventDots() {
+        const dots = document.querySelectorAll('.event-dot');
+        dots.forEach((dot, index) => {
+            dot.classList.toggle('active', index === currentEventSlideIndex);
+        });
+    }
+
+    window.moveEventSlider = function(direction) {
+        if (isEventSliderTransitioning) return;
+
+        currentEventSlideIndex += direction;
+        if (currentEventSlideIndex < 0) {
+            currentEventSlideIndex = totalEventSlides - 1;
+        } else if (currentEventSlideIndex >= totalEventSlides) {
+            currentEventSlideIndex = 0;
+        }
+        updateEventSlider();
+    }
+
+    function goToEventSlide(index) {
+        if (isEventSliderTransitioning) return;
+        
+        currentEventSlideIndex = index;
+        updateEventSlider();
+    }
+
+    // Initialize slider on load
+    document.addEventListener('DOMContentLoaded', () => {
+        updateEventSlider();
+        // Optional: Auto-advance slider
+        // setInterval(() => moveEventSlider(1), 5000);
+    });
+</script>

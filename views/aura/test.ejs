@@ -1,66 +1,177 @@
-<% layout("/layouts/boilerplate") %>
+<% layout('layouts/boilerplate') %>
+
 <style>
-    /* --- Root CSS Variables for the Retro Theme --- */
+    /* Root CSS Variables for the Retro Theme */
     :root {
-        --retro-bg: wheat; /* Main background and outer box */
+        --retro-bg: wheat; /* Main background from your box */
         --retro-text: #1F2937; /* Dark text for contrast */
-        --retro-accent-red: #d1451e; /* From box shadow, button hover */
-        --retro-accent-yellow: #FFD93D; /* From previous accent, price underline */
+        --retro-accent-red: #d1451e; /* From box shadow */
+        --retro-accent-yellow: #FFD93D; /* From previous accent */
         --retro-primary-teal: #2F9C95; /* From your card background */
         --retro-secondary-light: #fff; /* From box shadow white */
         --retro-shadow-dark: #000; /* From box shadow black */
-        --retro-shadow-light: rgba(0, 0, 0, 0.2); /* For softer elements, box-shadow opacity */
-
-        /* Fonts */
-        --font-primary: "Inter", sans-serif;
-        --font-heading-retro: 'Press Start 2P', cursive; /* For titles and buttons */
-
-        /* Transitions */
-        --transition-fast: 0.2s ease;
-        --transition-medium: 0.3s ease;
-        --transition-slow: 0.6s ease;
+        --retro-shadow-light: rgba(0, 0, 0, 0.2); /* For softer elements */
     }
 
-    /* --- General Body Styling --- */
-    body {
-        background-color: var(--retro-bg);
-        font-family: var(--font-primary);
-        color: var(--retro-text);
-        margin: 0;
-        padding: 0;
-        min-height: 100vh;
+    /* --- General Layout --- */
+    .profile-page-container {
         display: flex;
-        flex-direction: column; /* Stack content vertically */
-        align-items: center; /* Center horizontally */
-        box-sizing: border-box;
-        overflow-x: hidden; /* Prevent horizontal scroll */
-    }
-
-    /* Pixelated image rendering for that retro feel */
-    img {
-        image-rendering: pixelated;
-        image-rendering: -moz-crisp-edges;
-        image-rendering: -o-crisp-edges;
-        image-rendering: -webkit-optimize-contrast;
-        -ms-interpolation-mode: nearest-neighbor;
-    }
-
-    /* --- Page Container for overall layout --- */
-    .page-container {
-        width: 100%;
-        max-width: 1400px; /* Constrain overall content width */
+        justify-content: center; /* Center the entire content */
+        align-items: flex-start; /* Align items to the top if they have different heights */
         padding: 2rem;
-        box-sizing: border-box;
+        background-color: var(--retro-bg);
+        font-family: "Press Start 2P", cursive; /* Retro font for headings/titles */
+        color: var(--retro-text);
+        min-height: 100vh;
+        flex-wrap: wrap; /* Allow wrapping for responsiveness */
+        gap: 2rem; /* Gap between main sections (profile card and reviews) */
+    }
+
+    /* --- Retro Profile Card --- */
+    .retro-profile-card {
+        width: 380px; /* Slightly wider to accommodate content better */
+        background: var(--retro-primary-teal);
+        border-radius: 15px; /* From your card */
+        padding: 1rem; /* Slightly reduced padding */
+        box-shadow: 0px 0px 0 var(--retro-shadow-dark);
+        border: 2px solid var(--retro-shadow-dark);
+        transition: all 0.3s ease;
+        position: relative;
+        overflow: hidden;
         display: flex;
         flex-direction: column;
-        gap: 3rem; /* Spacing between main sections */
+        align-items: center; /* Center content horizontally */
+        box-shadow:
+            0 0 0 0.15em var(--retro-shadow-dark),
+            0 0 0 0.3em var(--retro-secondary-light),
+            0 0 0 0.45em var(--retro-shadow-dark),
+            0 0.5em 0 0 var(--retro-accent-red),
+            0 0.5em 0 0.15em var(--retro-shadow-dark); /* Applied from your .box */
+        text-shadow: 1px 1px 0 rgba(0, 0, 0, 0.3);
+        animation: bounceIn 0.8s ease-out; /* Add entry animation */
     }
 
-    /* --- Section Styling (reusing retro-events-box for consistency) --- */
-    .retro-section-box {
-        background-color: var(--retro-primary-teal);
-        padding: 1.5em;
+    .retro-profile-card:hover {
+        transform: translateY(-5px) rotate(0deg) scale(1.01); /* Lift effect and slight scale */
+        box-shadow:
+            0 0 0 0.15em var(--retro-shadow-dark),
+            0 0 0 0.3em var(--retro-secondary-light),
+            0 0 0 0.45em var(--retro-shadow-dark),
+            0 0.8em 0 0 var(--retro-accent-red), /* More pronounced lift */
+            0 0.8em 0 0.15em var(--retro-shadow-dark);
+    }
+
+    /* Animation for card entry */
+    @keyframes bounceIn {
+        0% { opacity: 0; transform: translateY(50px) scale(0.8); }
+        60% { opacity: 1; transform: translateY(-10px) scale(1.05); }
+        100% { transform: translateY(0) scale(1); }
+    }
+
+
+    /* Profile Image and Online Indicator */
+    .profile-image-container {
+        position: relative;
+        width: 120px; /* Slightly smaller for compactness */
+        height: 120px;
+        border-radius: 50%;
+        overflow: hidden;
+        border: 3px solid var(--retro-accent-yellow);
+        box-shadow: 0 4px 10px var(--retro-shadow-light);
+        margin-bottom: 1rem;
+        background-color: var(--retro-secondary-light); /* Background if image isn't perfect circle */
+        transition: transform 0.3s ease;
+    }
+
+    .profile-image-container img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        display: block;
+        image-rendering: pixelated; /* Ensure pixelated look for images */
+    }
+
+    .profile-image-container:hover {
+        transform: scale(1.05) rotate(2deg); /* Added slight rotation */
+    }
+
+    /* Profile Text */
+    .profile-info {
+        text-align: center;
+        margin-bottom: 1.5rem;
+    }
+
+    .profile-info h3 { 
+        font-size: 1.4rem; /* More compact */
+        font-weight: 700;
+        color: var(--retro-text);
+        margin-bottom: 0.2rem;
+        text-shadow: 2px 2px 0 rgba(0, 0, 0, 0.4);
+        font-family: "Press Start 2P", cursive;
+    }
+
+    .profile-info p { /* For email and username */
+        font-size: 0.95rem; /* More compact */
+        color: var(--retro-text);
+        margin-bottom: 0.5rem;
+        font-family: "Inter", sans-serif;
+        text-shadow: none;
+        word-break: break-all; /* Important for long emails/usernames */
+    }
+
+    /* Action Buttons */
+    .profile-action-buttons {
+        display: flex;
+        flex-direction: row; /* Changed to row for side-by-side */
+        gap: 0.8rem; /* Space between buttons */
+        margin-top: 1rem;
+        padding-top: 1rem;
+        border-top: 0.15em dashed rgba(0, 0, 0, 0.15); /* Dashed line separator */
+        width: 100%; /* Ensure it spans full width */
+        justify-content: center; /* Center buttons horizontally */
+        align-items: center; /* Align buttons vertically if they had different heights */
+        flex-wrap: wrap; /* Allow buttons to wrap to next line on small screens */
+    }
+
+    .btn-retro-profile {
+        display: inline-flex; /* Use flex to center text within button */
+        align-items: center;
+        justify-content: center;
+        min-width: 150px; /* Reduced min-width to allow more flexibility */
+        background-color: var(--retro-accent-red); /* Primary action color */
+        color: var(--retro-secondary-light); /* White text */
+        font-family: "Press Start 2P", cursive;
+        font-size: 1.1em; /* Slightly larger font */
+        padding: 0.8em 1.5em; /* Generous padding */
+        border: 4px solid var(--retro-shadow-dark);
         border-radius: 15px;
+        box-shadow: 0.5em 0.5em 0 var(--retro-shadow-dark); /* Prominent 3D shadow */
+        cursor: pointer;
+        transition: all 0.2s ease;
+        text-shadow: 2px 2px 0 rgba(0, 0, 0, 0.5);
+        letter-spacing: 1px;
+        text-decoration: none; /* Remove underline for links */
+        box-sizing: border-box; /* Include padding/border in width */
+    }
+
+    .btn-retro-profile:hover {
+        background-color: var(--retro-accent-yellow); /* Change color on hover */
+        color: var(--retro-text); /* Dark text on hover */
+        transform: translateY(-5px); /* Lift effect */
+        box-shadow: 0.7em 0.7em 0 var(--retro-shadow-dark); /* Enhanced shadow on hover */
+    }
+
+    .btn-retro-profile:active {
+        transform: translateY(0); /* "Press down" effect */
+        box-shadow: 0.2em 0.2em 0 var(--retro-shadow-dark); /* Reduced shadow when active */
+    }
+
+    /* --- Review Section --- */
+    .retro-review-section {
+        width: 380px; /* Consistent width with profile card */
+        background: var(--retro-primary-teal);
+        border-radius: 15px;
+        padding: 1.5rem;
         box-shadow:
             0 0 0 0.15em var(--retro-shadow-dark),
             0 0 0 0.3em var(--retro-secondary-light),
@@ -68,1199 +179,168 @@
             0 0.5em 0 0 var(--retro-accent-red),
             0 0.5em 0 0.15em var(--retro-shadow-dark);
         text-shadow: 1px 1px 0 rgba(0, 0, 0, 0.3);
-        transition: all var(--transition-medium);
-    }
-
-    .retro-section-box:hover {
-        transform: translateY(-5px);
-        box-shadow:
-            0 0 0 0.15em var(--retro-shadow-dark),
-            0 0 0 0.3em var(--retro-secondary-light),
-            0 0 0 0.45em var(--retro-shadow-dark),
-            0 0.8em 0 0 var(--retro-accent-red),
-            0 0.8em 0 0.15em var(--retro-shadow-dark);
-    }
-
-    .section-heading {
-        font-family: var(--font-heading-retro);
-        color: var(--retro-text);
-        text-align: center;
-        margin-bottom: 1.5em;
-        font-size: 2em;
-        text-shadow: 3px 3px 0 rgba(0, 0, 0, 0.5);
-        padding-bottom: 0.5em;
-        border-bottom: 3px dashed var(--retro-accent-yellow);
-    }
-
-    /* --- Hero Section --- */
-    .hero-section {
         display: flex;
         flex-direction: column;
-        align-items: center;
-        text-align: center;
-        padding: 4rem 2rem;
-        background-color: var(--retro-primary-teal); /* Use primary teal for hero background */
-        border-radius: 20px;
-        box-shadow:
-            0 0 0 0.2em var(--retro-shadow-dark),
-            0 0 0 0.4em var(--retro-secondary-light),
-            0 0 0 0.6em var(--retro-shadow-dark),
-            0 1em 0 0 var(--retro-accent-red),
-            0 1em 0 0.2em var(--retro-shadow-dark);
-        animation: heroEntry 1s ease-out;
-        margin-top: 2rem; /* Give some space from the top */
+        animation: bounceIn 1s ease-out 0.2s backwards; /* Staggered entry */
     }
 
-    @keyframes heroEntry {
-        0% { opacity: 0; transform: translateY(50px) scale(0.9); }
-        100% { opacity: 1; transform: translateY(0) scale(1); }
-    }
-
-    .hero-title {
-        font-family: var(--font-heading-retro);
-        font-size: 3.5em;
+    .retro-review-section h2 {
+        font-family: "Press Start 2P", cursive;
+        font-size: 1.2rem;
         color: var(--retro-text);
-        margin-bottom: 0.2em;
-        text-shadow: 4px 4px 0 rgba(0, 0, 0, 0.6);
-        line-height: 1.1;
-    }
-
-    .hero-subtitle {
-        font-family: var(--font-primary);
-        font-size: 1.2em;
-        color: var(--retro-secondary-light);
-        margin-bottom: 2em;
-        text-shadow: 1px 1px 0 rgba(0, 0, 0, 0.3);
-        position: relative;
-        padding-bottom: 0.5em;
-    }
-
-    .hero-subtitle::after {
-        content: '';
-        position: absolute;
-        left: 50%;
-        bottom: 0;
-        transform: translateX(-50%);
-        width: 60%;
-        height: 2px;
-        background: var(--retro-accent-yellow);
+        margin-bottom: 1rem;
+        padding-bottom: 0.5rem;
         border-bottom: 2px dashed var(--retro-accent-yellow);
-    }
-
-    .hero-buttons-container { /* New container for buttons */
-        display: flex;
-        gap: 1.5rem; /* Space between buttons */
-        flex-wrap: wrap; /* Allow buttons to wrap on smaller screens */
-        justify-content: center;
-    }
-
-    .hero-button {
-        position: relative;
-        background: var(--retro-accent-red);
-        color: var(--retro-secondary-light);
-        font-family: var(--font-heading-retro);
-        font-size: 1.5em;
-        font-weight: 700;
-        padding: 0.8em 1.8em;
-        border: 0.25em solid var(--retro-shadow-dark);
-        border-radius: 0.5em;
-        box-shadow: 0.4em 0.4em 0 var(--retro-shadow-dark);
-        cursor: pointer;
-        transition: all var(--transition-fast);
-        overflow: hidden;
-        text-transform: uppercase;
-        letter-spacing: 0.1em;
-        text-shadow: 2px 2px 0 rgba(0, 0, 0, 0.6);
-        text-decoration: none;
-        display: inline-block;
-        box-sizing: border-box;
-    }
-
-    .hero-button::before {
-        content: "";
-        position: absolute;
-        top: 0;
-        left: -100%;
-        width: 100%;
-        height: 100%;
-        background: linear-gradient(
-            90deg,
-            transparent 0%,
-            rgba(255, 255, 255, 0.3) 50%,
-            transparent 100%
-        );
-        transition: left var(--transition-medium);
-        z-index: 1;
-    }
-
-    .hero-button:hover {
-        background: var(--retro-shadow-dark);
-        color: var(--retro-accent-yellow);
-        transform: translate(-0.2em, -0.2em);
-        box-shadow: 0.6em 0.6em 0 var(--retro-accent-red);
-        text-shadow: 2px 2px 0 rgba(0, 0, 0, 0.8);
-    }
-
-    .hero-button:active {
-        transform: translate(0.15em, 0.15em);
-        box-shadow: 0.2em 0.2em 0 var(--retro-shadow-dark);
-    }
-
-    /* --- Slider Gallery --- */
-    .slider-gallery-container {
-        position: relative;
-        padding: 1em;
-        overflow: hidden; /* Hide overflowing slides */
-    }
-
-    .slider-wrapper {
-        display: flex;
-        transition: transform 0.5s ease-in-out; /* Match this duration with JS transition delay */
-    }
-
-    .slider-item {
-        min-width: 100%; /* Each item takes full width of its container */
-        box-sizing: border-box;
-        padding: 0 1rem; /* Padding between slides */
-        display: flex;
-        justify-content: center;
-    }
-
-    .slider-item .hub-slider-card { /* Updated class name */
-        width: 350px; /* Fixed width for card */
-        flex-shrink: 0; /* Prevent card from shrinking */
-        margin: 0 auto; /* Center the card within the slide item */
-    }
-
-    .slider-nav-button {
-        position: absolute;
-        top: 50%;
-        transform: translateY(-50%);
-        background-color: var(--retro-accent-yellow);
-        border: 2px solid var(--retro-shadow-dark);
-        border-radius: 50%;
-        width: 40px;
-        height: 40px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-family: var(--font-heading-retro);
-        font-size: 1.2em;
-        color: var(--retro-text);
-        cursor: pointer;
-        z-index: 10;
-        box-shadow: 0.2em 0.2em 0 var(--retro-shadow-dark);
-        transition: all var(--transition-fast);
-    }
-
-    .slider-nav-button:hover {
-        background-color: var(--retro-accent-red);
-        color: var(--retro-secondary-light);
-        transform: translateY(-50%) scale(1.1);
-        box-shadow: 0.3em 0.3em 0 var(--retro-shadow-dark);
-    }
-
-    .slider-nav-button.left { left: 10px; }
-    .slider-nav-button.right { right: 10px; }
-
-    .slider-dots {
-        display: flex;
-        justify-content: center;
-        margin-top: 1.5rem;
-        gap: 0.8rem;
-    }
-
-    .dot {
-        width: 12px;
-        height: 12px;
-        background-color: var(--retro-shadow-light);
-        border: 2px solid var(--retro-shadow-dark);
-        border-radius: 50%;
-        cursor: pointer;
-        transition: all var(--transition-fast);
-    }
-
-    .dot.active {
-        background-color: var(--retro-accent-yellow);
-        border-color: var(--retro-accent-red);
-        transform: scale(1.2);
-    }
-
-    /* --- Individual Card: .hub-slider-card (Updated class name) --- */
-    .hub-slider-card {
-        width: 350px;
-        padding: 10px;
-        background: var(--retro-primary-teal);
-        border-radius: 15px;
-        border: 2px solid var(--retro-shadow-dark);
-        box-shadow: 0.2em 0.2em 0 var(--retro-shadow-light);
-        transition: all var(--transition-medium);
-        position: relative;
-        overflow: hidden;
-        display: flex;
-        flex-direction: column;
-        text-shadow: 1px 1px 0 rgba(0, 0, 0, 0.2);
-    }
-
-    .hub-slider-card:hover {
-        transform: translateY(-5px) rotate(0deg) scale(1.02);
-        box-shadow: 0.4em 0.4em 0 var(--retro-shadow-dark);
-    }
-
-    .hub-slider-card:active {
-        animation: shake 0.5s ease-in-out;
-    }
-
-    @keyframes shake {
-        0% { transform: translateX(0); }
-        25% { transform: translateX(-5px); }
-        50% { transform: translateX(5px); }
-        75% { transform: translateX(-5px); }
-        100% { transform: translateX(0); }
-    }
-
-    .card-image-container {
-        width: 100%;
-        height: 160px;
-        border: 2px solid var(--retro-shadow-dark);
-        border-radius: 10px;
-        overflow: hidden;
-        margin-bottom: 10px;
-        background-color: var(--retro-secondary-light);
-    }
-
-    .card-image-container img {
-        height: 100%;
-        width: 100%;
-        object-fit: cover;
-        display: block;
-    }
-
-    .card-body-section {
-        flex-grow: 1;
-        position: relative;
-        padding: 0 1em 1em;
-        background-color: var(--retro-primary-teal);
-        color: var(--retro-text);
-        z-index: 2;
-        border-top: 2px dashed rgba(0, 0, 0, 0.2);
-        padding-top: 0.8em;
-    }
-
-    .card-title h2 {
-        font-family: var(--font-heading-retro);
-        font-size: 1.2em;
-        font-weight: 700;
-        margin-bottom: 0.8rem;
-        color: var(--retro-text);
-        line-height: 1.2;
         text-align: center;
         text-shadow: 2px 2px 0 rgba(0, 0, 0, 0.4);
-        word-break: break-word;
     }
 
-    .feature-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-        gap: 0.8em;
-        margin-bottom: 1em;
-        padding: 0 0.5em;
-    }
-
-    .feature-item {
-        display: flex;
-        align-items: center;
-        gap: 0.5em;
-        padding: 0.4em 0.6em;
-        background: var(--retro-secondary-light);
-        border: 0.12em solid var(--retro-shadow-dark);
-        border-radius: 0.3em;
+    .retro-review-item {
+        background: var(--retro-secondary-light); /* Light background for review items */
+        border: 2px solid var(--retro-shadow-dark);
+        border-radius: 8px; /* Slightly less rounded */
+        padding: 0.8rem 1rem;
+        margin-bottom: 1rem;
         box-shadow: 0.2em 0.2em 0 rgba(0, 0, 0, 0.2);
-        transition: transform var(--transition-fast), box-shadow var(--transition-fast);
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
     }
 
-    .feature-item:hover {
-        transform: translateX(0.2em) translateY(-0.05em);
-        box-shadow: 0.25em 0.25em 0 rgba(0, 0, 0, 0.25);
+    .retro-review-item:hover {
+        transform: translateY(-3px) translateX(3px); /* Subtle shift on hover */
+        box-shadow: 0.3em 0.3em 0 rgba(0, 0, 0, 0.3);
     }
 
-    .feature-icon {
-        width: 1.3em;
-        height: 1.3em;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        background: var(--retro-accent-yellow);
-        border: 0.12em solid var(--retro-shadow-dark);
-        border-radius: 0.3em;
-        box-shadow: 0.2em 0.2em 0 rgba(0, 0, 0, 0.2);
-        transition: all var(--transition-fast);
-        flex-shrink: 0;
-    }
-
-    .feature-item:hover .feature-icon {
-        background: var(--retro-accent-red);
-        transform: rotate(-5deg);
-    }
-
-    .feature-icon svg {
-        width: 0.8em;
-        height: 0.8em;
-        fill: var(--retro-text);
-    }
-
-    .feature-text {
-        font-size: 0.8em;
-        font-weight: 400;
-        color: var(--retro-text);
-        word-break: break-word;
-        text-shadow: none;
-    }
-
-    .card-actions {
+    .retro-review-header {
         display: flex;
         justify-content: space-between;
         align-items: center;
-        margin-top: 1em;
-        padding-top: 0.8em;
-        border-top: 2px dashed rgba(0, 0, 0, 0.2);
-        position: relative;
-    }
-
-    .card-actions::before {
-        content: "✂";
-        position: absolute;
-        top: -0.8em;
-        left: 50%;
-        transform: translateX(-50%) rotate(90deg);
-        background: var(--retro-primary-teal);
-        padding: 0 0.5em;
-        font-size: 1em;
-        color: rgba(0, 0, 0, 0.4);
-    }
-
-    .price {
-        position: relative;
-        font-family: var(--font-heading-retro);
-        font-size: 1.6em;
-        font-weight: 800;
+        font-size: 0.85rem;
+        margin-bottom: 0.4rem;
         color: var(--retro-text);
-        background: var(--retro-primary-teal);
-        line-height: 1;
-        text-shadow: 1px 1px 0 rgba(0, 0, 0, 0.3);
-    }
-
-    .price::before {
-        content: "";
-        position: absolute;
-        bottom: 0.15em;
-        left: 0;
-        width: 100%;
-        height: 0.2em;
-        background: var(--retro-accent-yellow);
-        z-index: -1;
-        opacity: 0.8;
-    }
-
-    .price-currency {
-        font-size: 0.6em;
-        font-weight: 700;
-        vertical-align: top;
-        margin-right: 0.1em;
-    }
-
-    .price-period {
-        display: block;
-        font-family: var(--font-primary);
-        font-size: 0.4em;
         font-weight: 600;
-        color: rgba(0, 0, 0, 0.7);
-        margin-top: 0.1em;
+        font-family: "Inter", sans-serif;
         text-shadow: none;
     }
 
-    .card-button {
-        position: relative;
-        background: var(--retro-bg);
-        color: var(--retro-text);
-        font-family: var(--font-heading-retro);
-        font-size: 0.8em;
-        font-weight: 700;
-        padding: 0.6em 1em;
-        border: 0.2em solid var(--retro-shadow-dark);
-        border-radius: 0.4em;
-        box-shadow: 0.3em 0.3em 0 var(--retro-shadow-dark);
-        cursor: pointer;
-        transition: all var(--transition-fast);
-        overflow: hidden;
-        text-transform: uppercase;
-        letter-spacing: 0.05em;
-        text-shadow: 1px 1px 0 rgba(0, 0, 0, 0.4);
-        text-decoration: none;
-        display: inline-block;
-    }
-
-    .card-button::before {
-        content: "";
-        position: absolute;
-        top: 0;
-        left: -100%;
-        width: 100%;
-        height: 100%;
-        background: linear-gradient(
-            90deg,
-            transparent 0%,
-            rgba(255, 255, 255, 0.2) 50%,
-            transparent 100%
-        );
-        transition: left var(--transition-slow);
-        z-index: 1;
-    }
-
-    .card-button:hover {
-        background: var(--retro-accent-red);
-        color: var(--retro-secondary-light);
-        transform: translate(-0.1em, -0.1em);
-        box-shadow: 0.4em 0.4em 0 var(--retro-shadow-dark);
-        text-shadow: 1px 1px 0 rgba(0, 0, 0, 0.6);
-    }
-
-    .card-button:active {
-        transform: translate(0.1em, 0.1em);
-        box-shadow: 0.15em 0.15em 0 var(--retro-shadow-dark);
-    }
-
-    /* --- Arcade Corner --- */
-    .arcade-corner {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        text-align: center;
-    }
-
-    .game-area {
-        width: 100%;
-        max-width: 600px; /* Max width for the game canvas */
-        background-color: var(--retro-shadow-dark);
-        border: 4px solid var(--retro-accent-red);
-        border-radius: 10px;
-        overflow: hidden;
-        position: relative;
-        box-shadow: 0.5em 0.5em 0 var(--retro-shadow-dark);
-        margin-top: 1.5em;
-        display: flex; /* Use flexbox to center canvas */
-        justify-content: center;
-        align-items: center;
-    }
-
-    #pixelInvadersGame { /* Changed ID for the new game */
-        background-color: #333; /* Dark background for game */
-        display: block; /* Remove extra space below canvas */
-        width: 100%;
-        height: 300px; /* Fixed height for the game area */
-    }
-
-    .game-instructions {
-        font-family: var(--font-primary);
-        font-size: 0.9em;
-        color: var(--retro-text);
-        margin-top: 1em;
+    .retro-review-stars {
+        color: var(--retro-accent-yellow);
+        letter-spacing: 1px;
+        font-size: 1.1em; /* Slightly larger stars */
         text-shadow: none;
     }
 
-    .game-button {
-        background: var(--retro-accent-yellow);
+    .retro-review-text {
+        font-size: 0.8rem;
         color: var(--retro-text);
-        font-family: var(--font-heading-retro);
-        font-size: 0.9em;
-        padding: 0.6em 1.2em;
-        border: 2px solid var(--retro-shadow-dark);
-        border-radius: 8px;
-        box-shadow: 0.3em 0.3em 0 var(--retro-shadow-dark);
-        cursor: pointer;
-        transition: all var(--transition-fast);
-        text-transform: uppercase;
-        margin-top: 1em;
+        line-height: 1.4;
+        margin-bottom: 0.4rem;
+        font-family: "Inter", sans-serif;
+        text-shadow: none;
     }
 
-    .game-button:hover {
-        background: var(--retro-accent-red);
-        color: var(--retro-secondary-light);
-        transform: translate(-0.1em, -0.1em);
-        box-shadow: 0.4em 0.4em 0 var(--retro-shadow-dark);
+    .retro-review-date {
+        font-size: 0.7rem;
+        color: var(--retro-text);
+        text-align: right;
+        font-family: "Inter", sans-serif;
+        text-shadow: none;
     }
 
-    .game-button:active {
-        transform: translate(0.1em, 0.1em);
-        box-shadow: 0.15em 0.15em 0 var(--retro-shadow-dark);
-    }
-
-    /* --- Scrolling Text Banner --- */
-    .marquee-section {
-        width: 100%;
-        margin-top: 3rem;
-        margin-bottom: 3rem;
-        box-sizing: border-box;
-    }
-
-    .marquee-container {
-        width: 100%;
-        overflow: hidden;
-        background-color: var(--retro-shadow-dark);
-        padding: 0.8em 0;
-        border: 2px solid var(--retro-primary-teal);
-        box-shadow:
-            0 0 0 0.1em var(--retro-primary-teal),
-            0 0.3em 0 0 var(--retro-accent-red),
-            0 0.3em 0 0.1em var(--retro-shadow-dark);
-        white-space: nowrap;
-        display: flex;
-        align-items: center;
-        justify-content: center; /* Center content horizontally */
-        position: relative;
-        height: 60px; /* Fixed height for the banner */
-    }
-
-    .retro-announcement { /* New class name */
-        font-family: var(--font-heading-retro);
-        color: var(--retro-accent-yellow);
-        text-shadow: 1px 1px 0 rgba(0, 0, 0, 0.2);
-        font-size: 1.1em;
-        opacity: 0; /* Start hidden */
-        transform: translateY(10px); /* Start slightly below */
-        transition: opacity 0.8s ease-in-out, transform 0.8s ease-in-out; /* Smooth transition */
-        text-align: center; /* Center text within its own space */
-        white-space: normal; /* Allow text to wrap if needed */
-        max-width: 90%; /* Prevent overflow on very long messages */
-        overflow: hidden; /* Hide overflow if text is too long for one line */
-        text-overflow: ellipsis; /* Add ellipsis if text is clipped */
-        /* Add a subtle flicker/glitch animation */
-        animation: textFlicker 5s infinite alternate; /* Subtle flicker */
-    }
-
-    .retro-announcement.show {
-        opacity: 1;
-        transform: translateY(0);
-    }
-
-    @keyframes textFlicker {
-        0%, 19.99%, 22%, 62.99%, 64%, 69.99%, 71%, 100% {
-            opacity: 1;
-            text-shadow: 1px 1px 0 rgba(0, 0, 0, 0.2), 0 0 5px var(--retro-accent-yellow);
-        }
-        20%, 21.99%, 63%, 63.99%, 70%, 70.99% {
-            opacity: 0.8;
-            text-shadow: 1px 1px 0 rgba(0, 0, 0, 0.2), 0 0 10px var(--retro-accent-red);
-        }
-    }
-
-    /* --- Footer --- */
-    .footer {
-        width: 100%;
-        padding: 2rem;
-        background-color: var(--retro-shadow-dark);
-        color: var(--retro-secondary-light);
+    .no-reviews-message {
+        color: var(--retro-text);
         text-align: center;
-        font-family: var(--font-primary);
-        font-size: 0.9em;
-        border-top: 4px solid var(--retro-accent-red);
-        box-sizing: border-box;
-    }
-
-    .footer p {
-        margin: 0.5em 0;
-        text-shadow: 1px 1px 0 rgba(0, 0, 0, 0.3);
-    }
-
-    .footer-links a {
-        color: var(--retro-accent-yellow);
-        text-decoration: none;
-        margin: 0 0.8em;
-        transition: color var(--transition-fast);
-        text-shadow: 1px 1px 0 rgba(0, 0, 0, 0.3);
-    }
-
-    .footer-links a:hover {
-        color: var(--retro-accent-red);
-        text-decoration: underline;
-    }
-
-    .social-icons-footer {
-        display: flex;
-        justify-content: center;
-        gap: 1.5rem;
-        margin-top: 1.5rem;
-    }
-
-    .social-icons-footer a {
-        color: var(--retro-secondary-light);
-        font-size: 1.8rem;
-        transition: transform var(--transition-fast), color var(--transition-fast);
-        text-shadow: 1px 1px 0 rgba(0, 0, 0, 0.4);
-    }
-
-    .social-icons-footer a:hover {
-        transform: scale(1.2) rotate(5deg);
-        color: var(--retro-accent-yellow);
+        padding: 1rem;
+        font-style: italic;
+        font-family: "Inter", sans-serif;
+        text-shadow: none;
     }
 
     /* --- Responsive Adjustments --- */
-    @media (max-width: 1200px) {
-        .page-container {
-            padding: 1.5rem;
-            gap: 2.5rem;
+    @media (max-width: 850px) {
+        .profile-page-container {
+            flex-direction: column; /* Stack vertically on smaller screens */
+            align-items: center; /* Center items when stacked */
         }
-        .hero-title { font-size: 3em; }
-        .hero-subtitle { font-size: 1.1em; }
-        .hero-button { font-size: 1.3em; }
-        .section-heading { font-size: 1.8em; }
-        .slider-item .hub-slider-card { width: 320px; } /* Updated class name */
-        .retro-announcement { font-size: 1em; }
-    }
-
-    @media (max-width: 992px) {
-        .page-container {
-            padding: 1rem;
-            gap: 2rem;
+        .retro-profile-card,
+        .retro-review-section {
+            width: 90%; /* Max width for cards */
+            max-width: 380px; /* Limit max width */
         }
-        .hero-title { font-size: 2.5em; }
-        .hero-subtitle { font-size: 1em; }
-        .hero-button { font-size: 1.1em; padding: 0.7em 1.5em; }
-        .section-heading { font-size: 1.5em; }
-        .slider-item .hub-slider-card { width: 300px; } /* Updated class name */
-        .slider-nav-button { width: 35px; height: 35px; font-size: 1em; }
-        .retro-announcement { font-size: 0.9em; }
-        .footer { padding: 1.5rem; }
-        .footer-links a { margin: 0 0.6em; }
-        .social-icons-footer a { font-size: 1.5rem; }
-    }
-
-    @media (max-width: 768px) {
-        .page-container {
-            padding: 0.8rem;
-            gap: 1.5rem;
-        }
-        .hero-section { padding: 3rem 1.5rem; margin-top: 1rem; }
-        .hero-title { font-size: 2em; text-shadow: 3px 3px 0 rgba(0, 0, 0, 0.5); }
-        .hero-subtitle { font-size: 0.9em; }
-        .hero-button { font-size: 1em; padding: 0.6em 1.2em; }
-        .section-heading { font-size: 1.3em; margin-bottom: 1em; }
-        .slider-item .hub-slider-card { width: 90%; max-width: 320px; } /* Updated class name */ /* Allow cards to be more fluid */
-        .slider-nav-button { display: none; } /* Hide buttons on small screens, rely on touch swipe if implemented */
-        .slider-dots { margin-top: 1rem; }
-        .game-area { max-width: 100%; border-width: 3px; box-shadow: 0.3em 0.3em 0 var(--retro-shadow-dark); }
-        #pixelInvadersGame { height: 250px; } /* Changed ID */
-        .game-instructions { font-size: 0.8em; }
-        .game-button { font-size: 0.8em; padding: 0.5em 1em; }
-        .marquee-section { margin-top: 2rem; margin-bottom: 2rem; }
-        .marquee-container { height: 50px; }
-        .retro-announcement { font-size: 0.8em; }
-        .footer { padding: 1rem; font-size: 0.8em; }
-        .footer-links a { margin: 0 0.6em; }
-        .social-icons-footer a { font-size: 1.3rem; }
     }
 
     @media (max-width: 480px) {
-        .page-container {
-            padding: 0.5rem;
-            gap: 1rem;
+        .profile-page-container {
+            padding: 1rem;
         }
-        .hero-section { padding: 2rem 1rem; margin-top: 0.5rem; border-radius: 15px; }
-        .hero-title { font-size: 1.5em; text-shadow: 2px 2px 0 rgba(0, 0, 0, 0.4); }
-        .hero-subtitle { font-size: 0.8em; }
-        .hero-button { font-size: 0.9em; padding: 0.5em 1em; border-width: 0.2em; box-shadow: 0.3em 0.3em 0 var(--retro-shadow-dark); }
-        .section-heading { font-size: 1.1em; margin-bottom: 0.8em; text-shadow: 1.5px 1.5px 0 rgba(0, 0, 0, 0.5); }
-        .retro-section-box { padding: 1em; border-radius: 10px; }
-        .slider-item .hub-slider-card { width: 100%; } /* Updated class name */
-        .card-image-container { height: 120px; }
-        .card-title h2 { font-size: 1em; }
-        .feature-text { font-size: 0.7em; }
-        .price { font-size: 1.2em; }
-        .card-button { font-size: 0.7em; padding: 0.4em 0.8em; }
-        .game-area { border-width: 2px; box-shadow: 0.2em 0.2em 0 var(--retro-shadow-dark); }
-        #pixelInvadersGame { height: 200px; } /* Changed ID */
-        .game-instructions { font-size: 0.7em; }
-        .game-button { font-size: 0.7em; padding: 0.4em 0.8em; }
-        .marquee-container { height: 40px; }
-        .retro-announcement { font-size: 0.7em; }
-        .footer { padding: 0.8rem; font-size: 0.7em; }
-        .footer-links a { margin: 0 0.4em; }
-        .social-icons-footer a { font-size: 1.1rem; }
+        .retro-profile-card,
+        .retro-review-section {
+            padding: 1rem;
+            width: 100%; /* Take full width on very small screens */
+        }
+        .profile-info h3 {
+            font-size: 1.2rem;
+        }
+        .profile-action-buttons {
+            flex-direction: column; /* Stack buttons vertically on very small screens */
+        }
+        .btn-retro-profile {
+            min-width: unset; /* Remove min-width to allow full width */
+            width: 100%; /* Take full width when stacked */
+        }
     }
 </style>
 
-<div class="page-container">
-    <!-- Hero Section / Welcome Banner -->
-    <section class="hero-section">
-        <h1 class="hero-title">Welcome to The [HUB]</h1>
-        <p class="hero-subtitle">Your Gateway to Pixelated Adventures & Unforgettable Glitches!</p>
-        <div class="hero-buttons-container"> <!-- New container for buttons -->
-            <a href="#" class="hero-button">Explore Glitches</a>
-            <a href="/search" class="hero-button">Explore All Glimmers</a> <!-- New button -->
-        </div>
-    </section>
+<body>
+    <div class="profile-page-container">
+        <div class="retro-profile-card">
+            <div class="profile-image-container">
+                <!-- Hardcoded avatar path -->
+                <img src="/images/default-avatar.png" alt="Profile Image" />
+            </div>
 
-    <!-- Featured/Sponsored Events Slider Gallery -->
-    <section class="retro-section-box slider-gallery-container">
-        <h2 class="section-heading">Featured Glitches & Sponsored Events</h2>
-        <div class="slider-wrapper" id="eventSlider">
-            <!-- Example Event Cards (will be dynamically updated or looped) -->
-            <div class="slider-item">
-                <div class="hub-slider-card"> <!-- Updated class name -->
-                    <div class="card-image-container">
-                        <img src="https://placehold.co/400x250/2F9C95/FFFFFF?text=Pixel+Party" alt="Pixel Party Event">
-                    </div>
-                    <div class="card-body-section">
-                        <div class="card-title">
-                            <h2>Neon Arcade Night</h2>
-                        </div>
-                        <div class="feature-grid">
-                            <div class="feature-item">
-                                <div class="feature-icon">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-calendar-days"><path d="M8 2v4"/><path d="M16 2v4"/><rect width="18" height="18" x="3" y="4" rx="2"/><path d="M3 10h18"/><path d="M8 14h.01"/><path d="M12 14h.01"/><path d="M16 14h.01"/><path d="M8 18h.01"/><path d="M12 18h.01"/><path d="M16 18h.01"/></svg>
-                                </div>
-                                <span class="feature-text">Aug 15, 2025</span>
-                            </div>
-                            <div class="feature-item">
-                                <div class="feature-icon">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-map-pin"><path d="M12 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8z"/><path d="M12 12v10"/><path d="M12 22s-8-4-8-10a8 8 0 0 1 16 0c0 6-8 10-8 10z"/></svg>
-                                </div>
-                                <span class="feature-text">Game City Hall</span>
-                            </div>
-                        </div>
-                        <div class="card-actions">
-                            <div class="price">
-                                <span class="price-currency">$</span>15
-                                <span class="price-period">to join</span>
-                            </div>
-                            <a href="#" class="card-button">Get Tickets</a>
-                        </div>
-                    </div>
-                </div>
+            <div class="profile-info">
+                <h3>JOHN DOE</h3>
+                <p>@JOHNDOE123</p>
+                <p>JOHN.DOE@EXAMPLE.COM</p>
             </div>
-            <div class="slider-item">
-                <div class="hub-slider-card"> <!-- Updated class name -->
-                    <div class="card-image-container">
-                        <img src="https://placehold.co/400x250/D1451E/FFFFFF?text=Code+Jam" alt="Code Jam Event">
-                    </div>
-                    <div class="card-body-section">
-                        <div class="card-title">
-                            <h2>8-Bit Code Jam</h2>
-                        </div>
-                        <div class="feature-grid">
-                            <div class="feature-item">
-                                <div class="feature-icon">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-calendar-days"><path d="M8 2v4"/><path d="M16 2v4"/><rect width="18" height="18" x="3" y="4" rx="2"/><path d="M3 10h18"/><path d="M8 14h.01"/><path d="M12 14h.01"/><path d="M16 14h.01"/><path d="M8 18h.01"/><path d="M12 18h.01"/><path d="M16 18h.01"/></svg>
-                                </div>
-                                <span class="feature-text">Sep 01, 2025</span>
-                            </div>
-                            <div class="feature-item">
-                                <div class="feature-icon">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-map-pin"><path d="M12 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8z"/><path d="M12 12v10"/><path d="M12 22s-8-4-8-10a8 8 0 0 1 16 0c0 6-8 10-8 10z"/></svg>
-                                </div>
-                                <span class="feature-text">Dev HQ</span>
-                            </div>
-                        </div>
-                        <div class="card-actions">
-                            <div class="price">
-                                <span class="price-currency">$</span>0
-                                <span class="price-period">to join</span>
-                            </div>
-                            <a href="#" class="card-button">Get Tickets</a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="slider-item">
-                <div class="hub-slider-card"> <!-- Updated class name -->
-                    <div class="card-image-container">
-                        <img src="https://placehold.co/400x250/FFD93D/1F2937?text=Retro+Con" alt="Retro Con Event">
-                    </div>
-                    <div class="card-body-section">
-                        <div class="card-title">
-                            <h2>Retro Gaming Con</h2>
-                        </div>
-                        <div class="feature-grid">
-                            <div class="feature-item">
-                                <div class="feature-icon">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-calendar-days"><path d="M8 2v4"/><path d="M16 2v4"/><rect width="18" height="18" x="3" y="4" rx="2"/><path d="M3 10h18"/><path d="M8 14h.01"/><path d="M12 14h.01"/><path d="M16 14h.01"/><path d="M8 18h.01"/><path d="M12 18h.01"/><path d="M16 18h.01"/></svg>
-                                </div>
-                                <span class="feature-text">Oct 20, 2025</span>
-                            </div>
-                            <div class="feature-item">
-                                <div class="feature-icon">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-map-pin"><path d="M12 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8z"/><path d="M12 12v10"/><path d="M12 22s-8-4-8-10a8 8 0 0 1 16 0c0 6-8 10-8 10z"/></svg>
-                                </div>
-                                <span class="feature-text">Expo Center</span>
-                            </div>
-                        </div>
-                        <div class="card-actions">
-                            <div class="price">
-                                <span class="price-currency">$</span>25
-                                <span class="price-period">to join</span>
-                            </div>
-                            <a href="#" class="card-button">Get Tickets</a>
-                        </div>
-                    </div>
-                </div>
+
+            <div class="profile-action-buttons">
+                <!-- Hardcoded links for testing -->
+                <a href="/edit-profile-test" class="btn-retro-profile">EDIT PROFILE</a>
+                <a href="/logout-test" class="btn-retro-profile">LOGOUT</a>
             </div>
         </div>
-        <button class="slider-nav-button left" onclick="moveSlider(-1)">&#x25C0;</button>
-        <button class="slider-nav-button right" onclick="moveSlider(1)">&#x25B6;</button>
-        <div class="slider-dots" id="sliderDots"></div>
-    </section>
 
-    <!-- Arcade Corner with Minor Game -->
-    <section class="retro-section-box arcade-corner">
-        <h2 class="section-heading">Arcade Corner: Pixel Invaders!</h2> <!-- Updated Game Title -->
-        <div class="game-area">
-            <canvas id="pixelInvadersGame"></canvas> <!-- Changed Canvas ID -->
+        <div class="retro-review-section">
+            <h2>Recent Reviews</h2>
+            <!-- Hardcoded reviews for testing -->
+            <div class="retro-review-item">
+                <div class="retro-review-header">
+                    <span>ANONYMOUS</span>
+                    <span class="retro-review-stars">⭐⭐⭐⭐⭐</span>
+                </div>
+                <div class="retro-review-text">
+                    GREAT EXPERIENCE! HIGHLY RECOMMENDED.
+                </div>
+                <div class="retro-review-date">
+                    JULY 24, 2025
+                </div>
+            </div>
+            <div class="retro-review-item">
+                <div class="retro-review-header">
+                    <span>GLIMMER_FAN</span>
+                    <span class="retro-review-stars">⭐⭐⭐⭐</span>
+                </div>
+                <div class="retro-review-text">
+                    FUN EVENT, A BIT CROWDED.
+                </div>
+                <div class="retro-review-date">
+                    JULY 15, 2025
+                </div>
+            </div>
+            <p class="no-reviews-message" style="display: none;">No reviews available for this user yet.</p>
         </div>
-        <p class="game-instructions">Use <span style="font-family: var(--font-heading-retro); color: var(--retro-accent-yellow); text-shadow: 1px 1px 0 rgba(0,0,0,0.3);">LEFT/RIGHT ARROWS</span> to move, <span style="font-family: var(--font-heading-retro); color: var(--retro-accent-yellow); text-shadow: 1px 1px 0 rgba(0,0,0,0.3);">SPACE</span> or click/tap to Shoot!</p> <!-- Updated Instructions -->
-        <button id="restartGameBtn" class="game-button" style="display: none;">Restart Game</button>
-    </section>
-</div>
-
-<!-- Scrolling Text Banner -->
-<section class="marquee-section">
-    <div class="marquee-container">
-        <div class="retro-announcement"></div>
     </div>
-</section>
 
-
-
-<script>
-    // --- Slider Gallery Logic ---
-    const slider = document.getElementById('eventSlider');
-    const sliderItems = document.querySelectorAll('.slider-item');
-    const totalSlides = sliderItems.length;
-    let currentIndex = 0;
-    let isTransitioning = false; // New flag to prevent rapid transitions
-    const SLIDER_TRANSITION_DURATION = 500; // Match CSS transition duration in milliseconds
-
-    const sliderDotsContainer = document.getElementById('sliderDots');
-    for (let i = 0; i < totalSlides; i++) {
-        const dot = document.createElement('div');
-        dot.classList.add('dot');
-        dot.addEventListener('click', () => goToSlide(i));
-        sliderDotsContainer.appendChild(dot);
-    }
-
-    function updateSlider() {
-        const offset = -currentIndex * 100;
-        slider.style.transform = `translateX(${offset}%)`;
-        updateDots();
-        isTransitioning = true; // Set flag when transition starts
-        setTimeout(() => {
-            isTransitioning = false; // Reset flag after transition ends
-        }, SLIDER_TRANSITION_DURATION);
-    }
-
-    function updateDots() {
-        const dots = document.querySelectorAll('.dot');
-        dots.forEach((dot, index) => {
-            dot.classList.toggle('active', index === currentIndex);
-        });
-    }
-
-    function moveSlider(direction) {
-        if (isTransitioning) return; // Prevent action if already transitioning
-
-        currentIndex += direction;
-        if (currentIndex < 0) {
-            currentIndex = totalSlides - 1;
-        } else if (currentIndex >= totalSlides) {
-            currentIndex = 0;
-        }
-        updateSlider();
-    }
-
-    function goToSlide(index) {
-        if (isTransitioning) return; // Prevent action if already transitioning
-        
-        currentIndex = index;
-        updateSlider();
-    }
-
-    // Initialize slider
-    updateSlider();
-
-    // Auto-advance slider
-    let slideInterval = setInterval(() => moveSlider(1), 5000); // Change slide every 5 seconds
-
-    // Pause auto-advance on hover
-    slider.closest('.slider-gallery-container').addEventListener('mouseenter', () => clearInterval(slideInterval));
-    slider.closest('.slider-gallery-container').addEventListener('mouseleave', () => {
-        slideInterval = setInterval(() => moveSlider(1), 5000);
-    });
-
-
-    // --- Pixel Invaders Game Logic ---
-    const canvas = document.getElementById('pixelInvadersGame'); // Changed ID
-    const ctx = canvas.getContext('2d');
-    const restartGameBtn = document.getElementById('restartGameBtn');
-
-    // Game state variables
-    let spaceship = {
-        x: 0, // Will be centered
-        y: 0, // Will be near bottom
-        width: 40,
-        height: 20,
-        color: 'var(--retro-accent-yellow)',
-        speed: 5
-    };
-
-    let bullets = [];
-    let invaders = [];
-    let score = 0;
-    let gameOver = false;
-    let gameFrame = 0;
-    let invaderSpawnInterval = 100; // Frames between invaders
-    let invaderSpeed = 1;
-    let bulletSpeed = 7;
-
-    // Ensure canvas dimensions are set correctly for responsiveness
-    function resizeCanvas() {
-        canvas.width = canvas.offsetWidth;
-        canvas.height = canvas.offsetHeight;
-        // Center spaceship horizontally and place near bottom
-        spaceship.x = (canvas.width / 2) - (spaceship.width / 2);
-        spaceship.y = canvas.height - spaceship.height - 10;
-        if (gameOver) drawGameOver(); // Redraw game over screen if applicable
-    }
-
-    window.addEventListener('resize', resizeCanvas);
-    resizeCanvas(); // Initial resize
-
-    function drawSpaceship() {
-        ctx.fillStyle = spaceship.color;
-        ctx.fillRect(spaceship.x, spaceship.y, spaceship.width, spaceship.height);
-    }
-
-    function drawBullets() {
-        bullets.forEach(bullet => {
-            ctx.fillStyle = 'var(--retro-secondary-light)'; // White bullets
-            ctx.fillRect(bullet.x, bullet.y, bullet.width, bullet.height);
-        });
-    }
-
-    function drawInvaders() {
-        invaders.forEach(invader => {
-            ctx.fillStyle = 'var(--retro-accent-red)'; // Red invaders
-            ctx.fillRect(invader.x, invader.y, invader.width, invader.height);
-        });
-    }
-
-    function updateGameArea() {
-        if (gameOver) return;
-
-        ctx.clearRect(0, 0, canvas.width, canvas.height); // Clear canvas
-
-        // Update bullets
-        bullets.forEach((bullet, bIndex) => {
-            bullet.y -= bulletSpeed;
-            // Remove off-screen bullets
-            if (bullet.y + bullet.height < 0) {
-                bullets.splice(bIndex, 1);
-            }
-        });
-
-        // Spawn invaders
-        gameFrame++;
-        if (gameFrame % invaderSpawnInterval === 0) {
-            const invaderWidth = 25;
-            const invaderHeight = 25;
-            const spawnX = Math.random() * (canvas.width - invaderWidth);
-            invaders.push({
-                x: spawnX,
-                y: 0, // Start from top
-                width: invaderWidth,
-                height: invaderHeight
-            });
-        }
-
-        // Update and draw invaders
-        invaders.forEach((invader, iIndex) => {
-            invader.y += invaderSpeed;
-
-            // Check if invader reached bottom
-            if (invader.y + invader.height > canvas.height) {
-                endGame(); // Game over if invader reaches bottom
-                return; // Stop further updates if game is over
-            }
-
-            // Collision: Bullet vs Invader
-            bullets.forEach((bullet, bIndex) => {
-                if (
-                    bullet.x < invader.x + invader.width &&
-                    bullet.x + bullet.width > invader.x &&
-                    bullet.y < invader.y + invader.height &&
-                    bullet.y + bullet.height > invader.y
-                ) {
-                    // Collision detected: remove both bullet and invader
-                    invaders.splice(iIndex, 1);
-                    bullets.splice(bIndex, 1);
-                    score += 10; // Increase score
-                }
-            });
-
-            // Collision: Invader vs Spaceship
-            if (
-                spaceship.x < invader.x + invader.width &&
-                spaceship.x + spaceship.width > invader.x &&
-                spaceship.y < invader.y + spaceship.height &&
-                spaceship.y + spaceship.height > invader.y
-            ) {
-                endGame(); // Game over if invader hits spaceship
-            }
-        });
-
-        drawSpaceship();
-        drawBullets();
-        drawInvaders();
-        drawScore();
-
-        requestAnimationFrame(updateGameArea);
-    }
-
-    function drawScore() {
-        ctx.fillStyle = 'var(--retro-text)';
-        ctx.font = '20px var(--font-heading-retro)';
-        ctx.textAlign = 'right';
-        ctx.textBaseline = 'top';
-        ctx.fillText('SCORE: ' + score, canvas.width - 10, 10);
-    }
-
-    function endGame() {
-        gameOver = true;
-        drawGameOver();
-        restartGameBtn.style.display = 'block';
-    }
-
-    function drawGameOver() {
-        ctx.clearRect(0, 0, canvas.width, canvas.height); // Clear canvas
-        drawSpaceship(); // Draw spaceship in final position
-        drawInvaders(); // Draw invaders in final position
-        drawBullets(); // Draw bullets in final position
-
-        ctx.fillStyle = 'rgba(0, 0, 0, 0.7)'; // Semi-transparent overlay
-        ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-        ctx.fillStyle = 'var(--retro-accent-red)';
-        ctx.font = '40px var(--font-heading-retro)';
-        ctx.textAlign = 'center';
-        ctx.textBaseline = 'middle';
-        ctx.fillText('GAME OVER!', canvas.width / 2, canvas.height / 2 - 30);
-
-        ctx.fillStyle = 'var(--retro-secondary-light)';
-        ctx.font = '25px var(--font-heading-retro)';
-        ctx.fillText('Final Score: ' + score, canvas.width / 2, canvas.height / 2 + 20);
-    }
-
-    function shoot() {
-        if (!gameOver) {
-            bullets.push({
-                x: spaceship.x + spaceship.width / 2 - 2, // Center bullet on spaceship
-                y: spaceship.y,
-                width: 4,
-                height: 10
-            });
-        }
-    }
-
-    function resetGame() {
-        bullets = [];
-        invaders = [];
-        score = 0;
-        gameOver = false;
-        gameFrame = 0;
-        restartGameBtn.style.display = 'none';
-        resizeCanvas(); // Reset spaceship position and canvas size
-        updateGameArea();
-    }
-
-    // Event Listeners for game
-    let leftPressed = false;
-    let rightPressed = false;
-
-    document.addEventListener('keydown', (e) => {
-        if (e.code === 'ArrowLeft') {
-            leftPressed = true;
-        } else if (e.code === 'ArrowRight') {
-            rightPressed = true;
-        } else if (e.code === 'Space') {
-            e.preventDefault(); // Prevent scrolling
-            shoot();
-        }
-    });
-
-    document.addEventListener('keyup', (e) => {
-        if (e.code === 'ArrowLeft') {
-            leftPressed = false;
-        } else if (e.code === 'ArrowRight') {
-            rightPressed = false;
-        }
-    });
-
-    // Touch/Click to shoot
-    canvas.addEventListener('click', shoot);
-    canvas.addEventListener('touchstart', (e) => {
-        e.preventDefault(); // Prevent default touch behavior (like scrolling)
-        shoot();
-    });
-
-    // Continuous spaceship movement based on key presses
-    function moveSpaceship() {
-        if (!gameOver) {
-            if (leftPressed && spaceship.x > 0) {
-                spaceship.x -= spaceship.speed;
-            }
-            if (rightPressed && spaceship.x + spaceship.width < canvas.width) {
-                spaceship.x += spaceship.speed;
-            }
-        }
-        requestAnimationFrame(moveSpaceship);
-    }
-
-    restartGameBtn.addEventListener('click', resetGame);
-
-    // Start the game loop and movement loop
-    window.onload = function() {
-        resizeCanvas(); // Ensure canvas is correctly sized on load
-        updateGameArea();
-        moveSpaceship(); // Start continuous movement check
-    };
-
-    // --- Scrolling Text Banner (Updated to Fading/Glitching Announcements) ---
-    const announcements = [
-        "NEW GLITCH ALERT! Check out the 8-Bit Code Jam on Sep 1! ★",
-        "The HUB is now live! Explore events and host your own! ★",
-        "Don't miss the Neon Arcade Night on Aug 15! Tickets selling fast! ★",
-        "\"It's dangerous to go alone! Take this.\" - Legendary Quote ★",
-        "Submit your event ideas for a chance to be featured! ★",
-        "Game On! Get ready for endless fun! ★",
-        "Remember to save your progress! ★" // Added one more for variety
-    ];
-    let currentAnnouncementIndex = 0;
-    const announcementDisplay = document.querySelector('.retro-announcement'); // Changed selector
-
-    function displayNextAnnouncement() {
-        // Fade out current message
-        announcementDisplay.classList.remove('show');
-
-        // After transition, update content and fade in new message
-        setTimeout(() => {
-            currentAnnouncementIndex = (currentAnnouncementIndex + 1) % announcements.length;
-            announcementDisplay.textContent = announcements[currentAnnouncementIndex];
-            announcementDisplay.classList.add('show');
-        }, 800); // Match CSS transition duration
-    }
-
-    // Initial display
-    announcementDisplay.textContent = announcements[currentAnnouncementIndex];
-    announcementDisplay.classList.add('show');
-
-    // Set interval for changing announcements
-    setInterval(displayNextAnnouncement, 6000); // Change every 6 seconds (800ms fade + 5200ms display)
-</script>
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+</body>

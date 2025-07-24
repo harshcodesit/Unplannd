@@ -1,0 +1,206 @@
+<% layout('layouts/boilerplate') %>
+
+<style>
+    /* Specific styles for the login page to match the retro theme */
+
+    .login-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: calc(100vh - var(--navbar-height, 80px) - var(--footer-height, 60px)); /* Adjust based on your navbar/footer height */
+        padding: 20px;
+        box-sizing: border-box;
+        background-color: var(--retro-bg); /* Use the retro background */
+    }
+
+    .login-card {
+        background-color: var(--retro-primary-teal); /* Teal background for the card */
+        border: 4px solid var(--retro-shadow-dark); /* Strong dark border */
+        border-radius: 15px; /* Rounded corners */
+        box-shadow: 0.5em 0.5em 0 var(--retro-accent-red); /* Prominent 3D shadow */
+        padding: 2.5rem;
+        max-width: 450px;
+        width: 100%;
+        text-align: center;
+        position: relative;
+        overflow: hidden; /* For potential background patterns */
+    }
+
+    .login-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-image: 
+            repeating-linear-gradient(45deg, rgba(0,0,0,0.05) 0, rgba(0,0,0,0.05) 1px, transparent 1px, transparent 10px),
+            repeating-linear-gradient(-45deg, rgba(0,0,0,0.05) 0, rgba(0,0,0,0.05) 1px, transparent 1px, transparent 10px);
+        background-size: 10px 10px;
+        opacity: 0.1; /* Subtle overlay pattern */
+        z-index: 0;
+    }
+
+    .login-content {
+        position: relative;
+        z-index: 1; /* Ensure content is above the pattern */
+    }
+
+    .login-card-title {
+        font-family: var(--font-heading-retro); /* Retro font for title */
+        color: var(--retro-accent-yellow); /* Yellow title */
+        font-size: 2.2em;
+        margin-bottom: 1.5rem;
+        text-shadow: 2px 2px 0 var(--retro-shadow-dark); /* Strong text shadow */
+    }
+
+    .form-label-retro {
+        font-family: var(--font-heading-retro); /* Retro font for labels */
+        color: var(--retro-secondary-light); /* White labels */
+        font-size: 0.9em;
+        margin-bottom: 0.5rem;
+        display: block; /* Ensure label is on its own line */
+        text-align: left;
+        text-shadow: 1px 1px 0 rgba(0, 0, 0, 0.3);
+    }
+
+    .form-control-retro {
+        background-color: var(--retro-bg); /* Wheat background for input fields */
+        border: 2px solid var(--retro-shadow-dark); /* Dark border */
+        border-radius: 8px; /* Rounded corners */
+        padding: 0.8em 1em;
+        color: var(--retro-text); /* Dark text color */
+        font-family: var(--font-primary); /* Primary font for input text */
+        font-size: 1em;
+        width: 100%;
+        box-sizing: border-box; /* Include padding in width */
+        margin-bottom: 1rem;
+        transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
+        box-shadow: 0.2em 0.2em 0 var(--retro-shadow-dark); /* Subtle 3D effect */
+    }
+
+    .form-control-retro:focus {
+        border-color: var(--retro-accent-yellow); /* Yellow border on focus */
+        box-shadow: 0.2em 0.2em 0 var(--retro-accent-red); /* Red shadow on focus */
+        outline: none;
+    }
+
+    .btn-retro-primary {
+        background-color: var(--retro-accent-red); /* Red button */
+        color: var(--retro-secondary-light); /* White text */
+        font-family: var(--font-heading-retro); /* Retro font */
+        font-size: 1.1em;
+        padding: 0.8em 1.5em;
+        border: 2px solid var(--retro-shadow-dark); /* Dark border */
+        border-radius: 8px; /* Rounded corners */
+        box-shadow: 0.3em 0.3em 0 var(--retro-shadow-dark); /* Strong 3D shadow */
+        cursor: pointer;
+        transition: all var(--transition-fast);
+        width: 100%; /* Full width button */
+        margin-top: 1rem;
+    }
+
+    .btn-retro-primary:hover {
+        background-color: var(--retro-accent-yellow); /* Yellow on hover */
+        color: var(--retro-text); /* Dark text on hover */
+        transform: translateY(-3px); /* Lift effect */
+        box-shadow: 0.4em 0.4em 0 var(--retro-shadow-dark); /* Larger shadow on hover */
+    }
+
+    .signup-link-section {
+        margin-top: 1.5rem;
+        padding-top: 1.5rem;
+        border-top: 3px dashed var(--retro-accent-yellow); /* Dashed separator */
+    }
+
+    .signup-link-section p {
+        color: var(--retro-secondary-light); /* White text */
+        font-family: var(--font-primary);
+        font-size: 0.95em;
+        margin-bottom: 0.8rem;
+    }
+
+    .signup-link-section a {
+        color: var(--retro-accent-yellow); /* Yellow link */
+        text-decoration: none;
+        font-weight: bold;
+        transition: color var(--transition-fast);
+    }
+
+    .signup-link-section a:hover {
+        color: var(--retro-accent-red); /* Red on hover */
+        text-decoration: underline;
+    }
+
+    /* Basic validation feedback styling */
+    .was-validated .form-control-retro:invalid {
+        border-color: var(--retro-accent-red);
+        box-shadow: 0.2em 0.2em 0 var(--retro-accent-red);
+    }
+    .was-validated .form-control-retro:valid {
+        border-color: #28a745; /* Bootstrap green for valid */
+    }
+    .invalid-feedback-retro {
+        color: var(--retro-accent-red);
+        font-family: var(--font-primary);
+        font-size: 0.85em;
+        text-align: left;
+        margin-top: 0.25rem;
+        display: none; /* Hidden by default */
+    }
+    .was-validated .form-control-retro:invalid + .invalid-feedback-retro {
+        display: block; /* Show on invalid */
+    }
+</style>
+
+<div class="login-container">
+    <div class="login-card">
+        <div class="login-content">
+            <h1 class="login-card-title">LOGIN</h1>
+            <form action="/login" method="POST" class="needs-validation" novalidate>
+                <div class="mb-3">
+                    <label class="form-label-retro" for="username">USERNAME</label>
+                    <input class="form-control-retro" type="text" id="username" name="username" required autofocus>
+                    <div class="invalid-feedback-retro">
+                        Please enter your username.
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label-retro" for="password">PASSWORD</label>
+                    <input class="form-control-retro" type="password" id="password" name="password" required>
+                    <div class="invalid-feedback-retro">
+                        Please enter your password.
+                    </div>
+                </div>
+                
+                <button class="btn-retro-primary" type="submit">LOG IN</button>
+            </form>
+
+            <div class="signup-link-section">
+                <p>Don't have an account?</p>
+                <a href="/register">SIGN UP HERE</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Client-side validation for the form
+    (function () {
+        'use strict';
+
+        var forms = document.querySelectorAll('.needs-validation');
+
+        Array.prototype.slice.call(forms)
+            .forEach(function (form) {
+                form.addEventListener('submit', function (event) {
+                    if (!form.checkValidity()) {
+                        event.preventDefault();
+                        event.stopPropagation();
+                    }
+                    form.classList.add('was-validated');
+                }, false);
+            });
+    })();
+</script>

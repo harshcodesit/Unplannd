@@ -1,0 +1,404 @@
+<% layout("/layouts/boilerplate") %>
+
+<style>
+    /* --- Root Variables (assuming these are globally defined or imported) --- */
+    :root {
+        --retro-bg: wheat;
+        --retro-text: #1F2937;
+        --retro-accent-red: #d1451e;
+        --retro-accent-yellow: #FFD93D;
+        --retro-primary-teal: #2F9C95;
+        --retro-secondary-light: #fff;
+        --retro-shadow-dark: #000;
+        --retro-shadow-light: rgba(0, 0, 0, 0.2);
+
+        --font-primary: "Inter", sans-serif;
+        --font-heading-retro: 'Press Start 2P', cursive;
+
+        --transition-fast: 0.2s ease;
+        --transition-medium: 0.3s ease;
+        --transition-slow: 0.6s ease;
+    }
+
+    /* --- General Body Styling (Consistent with other pages) --- */
+    body {
+        background-color: var(--retro-bg);
+        font-family: var(--font-primary);
+        color: var(--retro-text);
+        margin: 0;
+        padding: 0;
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column; /* Stack navbar, content, footer */
+        align-items: center; /* Center horizontally */
+        box-sizing: border-box;
+        overflow-x: hidden; /* Prevent horizontal scroll */
+    }
+
+    /* --- Edit Profile Page Container --- */
+    .edit-profile-page-container { /* Unique class name */
+        flex-grow: 1; /* Allows content to take up available space */
+        width: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 2rem;
+        box-sizing: border-box;
+        animation: editProfileEntry 0.8s ease-out;
+    }
+
+    @keyframes editProfileEntry {
+        0% { opacity: 0; transform: translateY(30px) scale(0.95); }
+        100% { opacity: 1; transform: translateY(0) scale(1); }
+    }
+
+    /* --- Edit Profile Box --- */
+    .edit-profile-box { /* Unique class name */
+        background-color: var(--retro-primary-teal);
+        padding: 3em; /* Increased padding for more space */
+        border-radius: 15px;
+        box-shadow:
+            0 0 0 0.15em var(--retro-shadow-dark),
+            0 0 0 0.3em var(--retro-secondary-light),
+            0 0 0 0.45em var(--retro-shadow-dark),
+            0 0.5em 0 0 var(--retro-accent-red),
+            0 0.5em 0 0.15em var(--retro-shadow-dark);
+        text-shadow: 1px 1px 0 rgba(0, 0, 0, 0.3);
+        transition: all var(--transition-medium);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        max-width: 800px; /* Increased max-width for a broader view */
+        width: 100%;
+        box-sizing: border-box;
+    }
+
+    .edit-profile-box:hover {
+        transform: translateY(-5px);
+        box-shadow:
+            0 0 0 0.15em var(--retro-shadow-dark),
+            0 0 0 0.3em var(--retro-secondary-light),
+            0 0 0 0.45em var(--retro-shadow-dark),
+            0 0.8em 0 0 var(--retro-accent-red),
+            0 0.8em 0 0.15em var(--retro-shadow-dark);
+    }
+
+    /* --- Edit Profile Title --- */
+    .edit-profile-title { /* Unique class name */
+        font-family: var(--font-heading-retro);
+        font-size: 2em;
+        color: var(--retro-text);
+        margin-bottom: 1em;
+        text-shadow: 3px 3px 0 rgba(0, 0, 0, 0.5);
+        border-bottom: 3px dashed var(--retro-accent-yellow);
+        padding-bottom: 0.3em;
+        line-height: 1.2;
+        word-break: break-word;
+    }
+
+    /* --- Input Group --- */
+    .edit-profile-input-group { /* Unique class name */
+        width: 100%;
+        margin-bottom: 1.2em; /* Slightly less margin for more inputs */
+        text-align: left;
+    }
+
+    .edit-profile-label { /* Unique class name */
+        display: block;
+        font-family: var(--font-heading-retro);
+        font-size: 0.9em;
+        color: var(--retro-text);
+        margin-bottom: 0.5em;
+        text-shadow: 1px 1px 0 rgba(0, 0, 0, 0.2);
+    }
+
+    .edit-profile-input, .edit-profile-textarea { /* Unique class name */
+        width: 100%;
+        padding: 0.8em 1em;
+        border: 2px solid var(--retro-shadow-dark);
+        border-radius: 8px;
+        background-color: var(--retro-secondary-light);
+        color: var(--retro-text);
+        font-family: var(--font-primary);
+        font-size: 1em;
+        box-sizing: border-box;
+        box-shadow: 0.15em 0.15em 0 rgba(0, 0, 0, 0.2);
+        transition: all var(--transition-fast);
+    }
+
+    .edit-profile-input:focus, .edit-profile-textarea:focus {
+        outline: none;
+        border-color: var(--retro-accent-red);
+        box-shadow: 0.2em 0.2em 0 var(--retro-accent-red);
+    }
+
+    .edit-profile-textarea {
+        resize: vertical; /* Allow vertical resizing */
+        min-height: 80px;
+    }
+
+    .edit-profile-char-count { /* Unique class name */
+        font-size: 0.75em;
+        color: rgba(0, 0, 0, 0.7);
+        text-align: right;
+        margin-top: 5px;
+        text-shadow: none;
+    }
+
+    /* --- File Input Styling (Hidden default, custom button) --- */
+    .edit-profile-file-input-wrapper { /* Unique class name */
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        width: 100%;
+        margin-bottom: 1.2em;
+    }
+
+    .edit-profile-file-input-wrapper input[type="file"] {
+        display: none; /* Hide default file input */
+    }
+
+    .edit-profile-file-button { /* Unique class name */
+        background: var(--retro-accent-yellow);
+        color: var(--retro-text);
+        font-family: var(--font-heading-retro);
+        font-size: 0.8em;
+        padding: 0.6em 1em;
+        border: 2px solid var(--retro-shadow-dark);
+        border-radius: 8px;
+        box-shadow: 0.2em 0.2em 0 var(--retro-shadow-dark);
+        cursor: pointer;
+        transition: all var(--transition-fast);
+        text-transform: uppercase;
+        white-space: nowrap;
+    }
+
+    .edit-profile-file-button:hover {
+        background: var(--retro-accent-red);
+        color: var(--retro-secondary-light);
+        transform: translateY(-2px);
+        box-shadow: 0.3em 0.3em 0 var(--retro-shadow-dark);
+    }
+
+    .edit-profile-file-name { /* Unique class name */
+        flex-grow: 1;
+        font-size: 0.9em;
+        color: var(--retro-text);
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        overflow: hidden;
+        border: 1px dashed rgba(0, 0, 0, 0.3);
+        padding: 0.6em 1em;
+        border-radius: 5px;
+        background-color: rgba(255, 255, 255, 0.5);
+        text-align: left;
+    }
+
+    /* --- Action Buttons Container --- */
+    .edit-profile-action-buttons {
+        display: flex;
+        flex-direction: row; /* Side-by-side */
+        justify-content: center; /* Center buttons horizontally */
+        gap: 0.8rem; /* Space between buttons */
+        width: 100%;
+        margin-top: 1em; /* Space above buttons */
+        padding-top: 1em;
+        border-top: 0.15em dashed rgba(0, 0, 0, 0.15);
+        align-items: center;
+        flex-wrap: wrap; /* Allow wrapping */
+    }
+
+    /* --- Button Styling (Save Changes & Cancel) --- */
+    .edit-profile-button { /* Unique class name */
+        position: relative;
+        background: var(--retro-bg); /* Wheat background for button */
+        color: var(--retro-text);
+        font-family: var(--font-heading-retro); /* Retro font for button text */
+        font-size: 1.2em;
+        font-weight: 700;
+        padding: 0.8em 1.8em;
+        border: 0.25em solid var(--retro-shadow-dark);
+        border-radius: 0.5em;
+        box-shadow: 0.4em 0.4em 0 var(--retro-shadow-dark);
+        cursor: pointer;
+        transition: all var(--transition-fast);
+        overflow: hidden;
+        text-transform: uppercase;
+        letter-spacing: 0.1em;
+        text-shadow: 2px 2px 0 rgba(0, 0, 0, 0.6);
+        text-decoration: none;
+        display: inline-block;
+        box-sizing: border-box;
+        flex: 1; /* Allow buttons to grow and shrink */
+        max-width: 200px; /* Constrain button width */
+        min-width: 150px; /* Ensure minimum width */
+        text-align: center;
+    }
+
+    .edit-profile-button::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(
+            90deg,
+            transparent 0%,
+            rgba(255, 255, 255, 0.2) 50%,
+            transparent 100%
+        );
+        transition: left var(--transition-slow);
+        z-index: 1;
+    }
+
+    .edit-profile-button:hover {
+        background: var(--retro-accent-red);
+        color: var(--retro-secondary-light);
+        transform: translate(-0.2em, -0.2em);
+        box-shadow: 0.6em 0.6em 0 var(--retro-shadow-dark);
+        text-shadow: 2px 2px 0 rgba(0, 0, 0, 0.8);
+    }
+
+    .edit-profile-button:hover::before {
+        left: 100%;
+    }
+
+    .edit-profile-button:active {
+        transform: translate(0.15em, 0.15em);
+        box-shadow: 0.2em 0.2em 0 var(--retro-shadow-dark);
+    }
+
+    .edit-profile-button.cancel { /* Unique class name for cancel button */
+        background-color: var(--retro-shadow-dark); /* Darker background for cancel */
+        color: var(--retro-secondary-light);
+    }
+
+    .edit-profile-button.cancel:hover {
+        background-color: var(--retro-accent-red); /* Red on hover for cancel */
+        color: var(--retro-secondary-light);
+    }
+
+    /* --- Responsive Adjustments --- */
+    @media (max-width: 768px) {
+        .edit-profile-page-container {
+            padding: 1rem;
+        }
+        .edit-profile-box {
+            padding: 1.5em;
+            border-radius: 10px;
+            box-shadow:
+                0 0 0 0.1em var(--retro-shadow-dark),
+                0 0 0 0.2em var(--retro-secondary-light),
+                0 0.3em 0 0 var(--retro-accent-red),
+                0 0.3em 0 0.1em var(--retro-shadow-dark);
+        }
+        .edit-profile-title { font-size: 1.8em; margin-bottom: 0.8em; }
+        .edit-profile-input-group { margin-bottom: 1em; }
+        .edit-profile-label { font-size: 0.85em; }
+        .edit-profile-input, .edit-profile-textarea { padding: 0.7em 0.8em; font-size: 0.9em; }
+        .edit-profile-file-input-wrapper { flex-direction: column; align-items: flex-start; gap: 8px; }
+        .edit-profile-file-button { width: 100%; text-align: center; padding: 0.5em 0.8em; }
+        .edit-profile-file-name { width: 100%; }
+        .edit-profile-action-buttons { flex-direction: column; gap: 0.6rem; }
+        .edit-profile-button { font-size: 1em; padding: 0.7em 1.5em; max-width: unset; min-width: unset; width: 100%; }
+    }
+
+    @media (max-width: 480px) {
+        .edit-profile-page-container {
+            padding: 0.5rem;
+        }
+        .edit-profile-box {
+            padding: 1em;
+            border-radius: 8px;
+        }
+        .edit-profile-title { font-size: 1.5em; margin-bottom: 0.6em; }
+        .edit-profile-input-group { margin-bottom: 0.8em; }
+        .edit-profile-label { font-size: 0.8em; }
+        .edit-profile-input, .edit-profile-textarea { padding: 0.6em 0.7em; font-size: 0.85em; }
+        .edit-profile-file-button { font-size: 0.75em; padding: 0.4em 0.7em; }
+        .edit-profile-file-name { font-size: 0.8em; padding: 0.5em 0.8em; }
+        .edit-profile-button { font-size: 0.9em; padding: 0.6em 1.2em; }
+    }
+</style>
+
+<div class="edit-profile-page-container">
+    <div class="edit-profile-box">
+        <h1 class="edit-profile-title">EDIT PROFILE</h1>
+        <form action="/profile/edit" method="POST" enctype="multipart/form-data">
+            <!-- Using a hidden input for method override if your Express app uses method-override -->
+            <!-- <input type="hidden" name="_method" value="PUT"> -->
+
+            <div class="edit-profile-input-group">
+                <label for="name" class="edit-profile-label">Name:</label>
+                <input type="text" id="name" name="name" class="edit-profile-input" value="<%= user.name || '' %>" placeholder="Your full name" required>
+            </div>
+            <div class="edit-profile-input-group">
+                <label for="username" class="edit-profile-label">Username (lowercase only):</label>
+                <input type="text" id="username" name="username" class="edit-profile-input" value="<%= user.username || '' %>" placeholder="your_unique_username" pattern="[a-z0-9_]+" title="Lowercase letters, numbers, and underscores only" required>
+            </div>
+            <div class="edit-profile-input-group">
+                <label for="bio" class="edit-profile-label">Bio (max 150 characters):</label>
+                <textarea id="bio" name="bio" class="edit-profile-textarea" rows="3" maxlength="150" placeholder="Tell us about yourself..."><%= user.bio || '' %></textarea>
+                <div class="edit-profile-char-count" id="bioCharCount">0 / 150</div>
+            </div>
+            <div class="edit-profile-input-group">
+                <label for="email" class="edit-profile-label">Email:</label>
+                <input type="email" id="email" name="email" class="edit-profile-input" value="<%= user.email || '' %>" placeholder="your_email@example.com" required>
+            </div>
+            <div class="edit-profile-input-group">
+                <label for="pfp" class="edit-profile-label">Profile Picture:</label>
+                <div class="edit-profile-file-input-wrapper">
+                    <input type="file" id="pfp" name="pfp" accept="image/*">
+                    <label for="pfp" class="edit-profile-file-button">Choose File</label>
+                    <span id="pfpFileName" class="edit-profile-file-name"><%= user.avatar ? user.avatar.split('/').pop() : 'No file chosen' %></span>
+                </div>
+            </div>
+            <div class="edit-profile-input-group">
+                <label for="password" class="edit-profile-label">New Password (optional):</label>
+                <input type="password" id="password" name="password" class="edit-profile-input" placeholder="Leave blank to keep current password">
+            </div>
+            
+            <div class="edit-profile-action-buttons">
+                <button type="submit" class="edit-profile-button">Save</button>
+                <a href="/profile" class="edit-profile-button cancel">Cancel</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        // Bio character counter
+        const bioTextarea = document.getElementById('bio');
+        const bioCharCount = document.getElementById('bioCharCount');
+        const maxBioLength = bioTextarea.maxLength;
+
+        const updateBioCharCount = () => {
+            const currentLength = bioTextarea.value.length;
+            bioCharCount.textContent = `${currentLength} / ${maxBioLength}`;
+        };
+
+        if (bioTextarea && bioCharCount) {
+            bioTextarea.addEventListener('input', updateBioCharCount);
+            updateBioCharCount(); // Set initial count
+        }
+
+        // Profile Picture file name display
+        const pfpInput = document.getElementById('pfp');
+        const pfpFileNameSpan = document.getElementById('pfpFileName');
+
+        if (pfpInput && pfpFileNameSpan) {
+            pfpInput.addEventListener('change', () => {
+                if (pfpInput.files.length > 0) {
+                    pfpFileNameSpan.textContent = pfpInput.files[0].name;
+                } else {
+                    // If no file selected, revert to current avatar name or 'No file chosen'
+                    pfpFileNameSpan.textContent = '<%= user.avatar ? user.avatar.split('/').pop() : "No file chosen" %>';
+                }
+            });
+        }
+    });
+</script>

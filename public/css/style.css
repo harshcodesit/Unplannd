@@ -4,11 +4,13 @@
               --text-color: #FFFFFF;
               --text-color-translucent: rgba(255, 255, 255, 0.85);
               --active-text-color: #2F9C95; /* Text color for active link */
+               --font-primary: "Inter", sans-serif;
+        --font-heading-retro: 'Press Start 2P', cursive;
           }
 
           body {
               margin: 0;
-              font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+              font-family: var(--font-heading-retro);
               background-color: var(--primary-bg);
               color: var(--text-color);
               min-height: 100vh;
@@ -26,7 +28,7 @@
     .box{
         width: 100%;
         background-color: wheat;
-        font-family: "Inter", sans-serif;
+        font-family: var(--font-heading-retro);
         font-size: 1em;
         background: wheat;
         color: #000;

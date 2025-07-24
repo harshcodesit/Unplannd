@@ -1,159 +1,107 @@
-const express = require("express");
-const mongoose = require("mongoose");
-const dotenv = require("dotenv");
-const bodyParser = require("body-parser");
-const cookieParser = require("cookie-parser");
-const session = require("express-session");
-const methodOverride = require("method-override");
-const path = require("path");
-const ejsMate = require("ejs-mate");
 
+
+require('dotenv').config();
+const express = require('express');
 const app = express();
+const path = require('path'); // IMPORTANT: Require path module here
 
-app.set("view engine", "ejs");
-app.set("views", path.join(__dirname, "views"));
-app.use(express.urlencoded({extended : true}));
-app.use(methodOverride("_method"));
+// Database, Session, Passport, and Flash Imports
+const connectDB = require('./config/db');
+const session = require('express-session');
+const passport = require('passport');
+const flash = require('connect-flash');
+const ejsMate = require('ejs-mate');
+
+// Route Imports
+const authRoutes = require('./routes/authRoutes'); // We'll mount this at root now
+// const glimmerRoutes = require('./routes/glimmerRoutes');
+
+// --- DATABASE CONNECTION ---
+connectDB();
+
+// --- EJS MATE TEMPLATING ENGINE SETUP ---
 app.engine('ejs', ejsMate);
-app.use(express.static(path.join(__dirname, "/public")));
+app.set('view engine', 'ejs');
+// ADJUST THIS LINE IF YOUR LAYOUT IS 'views/layouts/boilerplate.ejs'
+// If your layout is 'views/layouts/boilerplate.ejs', you might need to adjust ejs-mate or ensure the path is correct.
+// For now, assuming your main layout is still views/layout.ejs as previously discussed, or your EJS files specify 'layout'
+// If you want to use 'layouts/boilerplate', you'd need a base EJS file at views/layouts/boilerplate.ejs
+app.set('views', path.join(__dirname, 'views'));
 
+// --- MIDDLEWARE ---
 
+// Express body parser
+app.use(express.urlencoded({ extended: true }));
+app.use(express.json());
 
-app.get("/",(req,res)=>{
- res.render("hub/index.ejs")
-});
-app.get("/hub",(req,res)=>{
- res.render("hub/index.ejs")
-});
+// Express session middleware
+app.use(
+    session({
+        secret: process.env.SESSION_SECRET,
+        resave: false,
+        saveUninitialized: false,
+        cookie: {
+            maxAge: 1000 * 60 * 60 * 24
+        }
+    })
+);
 
-app.get("/trail",(req,res)=>{
- res.render("grid/search.ejs")
-});
+// Passport middleware
+app.use(passport.initialize());
+app.use(passport.session());
 
-app.get("/launch",(req,res)=>{
- res.render("grid/launch.ejs")
-});
-app.get("/testt",(req,res)=>{
- res.render("grid/grid.ejs")
-});
-app.get("/sparks",(req,res)=>{
- res.render("trail/sparks.ejs")
-});
-app.get("/footprints",(req,res)=>{
- res.render("trail/footprints.ejs")
-});
-app.get("/review",(req,res)=>{
- res.render("review/review.ejs")
-});
+// Passport Config
+require('./config/passport')(passport);
 
-app.get("/dekh",(req,res)=>{
- res.render("aura/test.ejs")
-});
-app.get("/manage",(req,res)=>{
- res.render("manage/manage.ejs")
-});
-app.get("/aura",(req,res)=>{
+// Connect flash middleware
+app.use(flash());
 
-    res.render("aura/aura.ejs", {
-  user: {
-    name: "Dipesh Verma",
-    title: "Full Stack Event Organizer",
-    image: "/uploads/profile-dipesh.jpg",
-    bio: "Passionate about creating unforgettable local experiences. 🚀",
-    sparks: 24,
-    footprints: 376,
-    rating: 4.9,
-    online: true,
-    social: {
-      github: "https://github.com/dipeshverma",
-      linkedin: "https://linkedin.com/in/dipeshverma",
-      twitter: "https://twitter.com/dipesh_codes"
-    }
-  },
-  reviews: [
-    {
-      reviewer: "Harsh Codesit",
-      rating: 5,
-      text: "Absolutely loved the rooftop event. Super well managed!",
-      date: "2025-07-19"
-    },
-    {
-      reviewer: "Neha Sharma",
-      rating: 4,
-      text: "Creative themes and great crowd. Would join again.",
-      date: "2025-07-15"
-    },
-    {
-      reviewer: "Neha Sharma",
-      rating: 4,
-      text: "Creative themes and great crowd. Would join again.",
-      date: "2025-07-15"
-    },
-    {
-      reviewer: "Neha Sharma",
-      rating: 4,
-      text: "Creative themes and great crowd. Would join again.",
-      date: "2025-07-15"
-    },
-    {
-      reviewer: "Neha Sharma",
-      rating: 4,
-      text: "Creative themes and great crowd. Would join again.",
-      date: "2025-07-15"
-    }
-    // add up to 5
-  ]
-});
-// profile.ejs in /views folder
+// Global variables for flash messages and user
+app.use((req, res, next) => {
+    res.locals.success_msg = req.flash('success_msg');
+    res.locals.error_msg = req.flash('error_msg');
+    res.locals.error = req.flash('error');
+    res.locals.user = req.user || null;
+    next();
 });
 
+// Set static folder (for CSS, JS, images, uploads)
+// IMPORTANT: Make sure your 'public' folder exists at the root of your project
+// Also, ensure 'public/uploads/avatars' exists for Multer!
+app.use(express.static(path.join(__dirname, 'public')));
 
 
+// --- ROUTES ---
+// Mount your routers here. authRoutes now uses direct paths like /login, /register
+app.use('/', authRoutes); // Mount authRoutes directly to the root path
+// app.use('/glimmers', glimmerRoutes); // Uncomment when you create glimmerRoutes
 
+// Basic Home Route (accessible whether logged in or out)
+app.get('/', (req, res) => {
+    res.render('index', { title: 'Welcome to Unplann\'d' });
+});
+app.get('/test', (req, res) => {
+    res.render('aura/test', { title: 'Welcome to Unplann\'d' });
+});
 
+// Protected Dashboard Route (requires login)
+const { ensureAuthenticated } = require('./middleware/authMiddleware');
+app.get('/dashboard', ensureAuthenticated, (req, res) => {
+    res.render('hub/index', {
+        user: req.user,
+        title: 'Dashboard'
+    });
+});
 
+// --- ERROR HANDLING (404 Not Found) ---
+app.use((req, res, next) => {
+    res.status(404).render('error/404', { title: 'Page Not Found' });
+});
 
+// --- START SERVER ---
+const PORT = process.env.PORT || 3000;
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-app.listen(8080, ()=>{
-    console.log("port is listening")
+app.listen(PORT, () => {
+    console.log(`Server running on port ${PORT}`);
+    console.log(`Access at: http://localhost:${PORT}`);
 });
