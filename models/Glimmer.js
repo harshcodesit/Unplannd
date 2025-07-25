@@ -1,59 +1,80 @@
-// glimmergrid-mvp/controllers/glimmerController.js
-const Glimmer = require('../models/Glimmer');
-const User = require('../models/User'); // Required for populating creator/participants
-const Review = require('../models/Review'); // Required for populating reviews
+// glimmergrid-mvp/models/Glimmer.js
+const mongoose = require('mongoose');
+const Schema = mongoose.Schema;
 
-// --- Render Glimmers Index Page ---
-exports.index = async (req, res) => {
-    try {
-        const glimmers = await Glimmer.find({})
-                                      .populate('creator', 'username name avatarUrl') // Populate creator's basic info
-                                      .sort({ createdAt: -1 }); // Show newest first
+// IMPORTANT: Do NOT directly require User or Review here if they also require Glimmer.
+// Use mongoose.model() inside middleware to avoid circular dependencies.
 
-        res.render('glimmers/index', {
-            title: 'All Glimmers',
-            glimmers: glimmers,
-            user: req.user // Pass user object for conditional display in navbar/layouts
-        });
-    } catch (err) {
-        console.error("Error fetching glimmers:", err);
-        req.flash('error_msg', 'Could not load glimmers.');
-        res.redirect('/hub'); // Redirect to new homepage (HUB)
-    }
-};
-
-// --- Render Single Glimmer Page ---
-exports.show = async (req, res) => {
-    try {
-        const glimmer = await Glimmer.findById(req.params.id)
-                                    .populate('creator', 'username name avatarUrl') // Populate creator details
-                                    .populate('participants', 'username name avatarUrl') // Populate participants details
-                                    .populate({ // Populate reviews for this glimmer, and the reviewer's basic info
-                                        path: 'reviews',
-                                        populate: {
-                                            path: 'reviewer',
-                                            select: 'username name avatarUrl'
-                                        }
-                                    });
-
-        if (!glimmer) {
-            req.flash('error_msg', 'Glimmer not found.');
-            return res.redirect('/glimmers');
+const GlimmerSchema = new Schema({
+    title: {
+        type: String,
+        required: [true, 'Glimmer title is required'],
+        trim: true,
+        minlength: [3, 'Title must be at least 3 characters long']
+    },
+    description: {
+        type: String,
+        required: [true, 'Glimmer description is required'],
+        trim: true,
+        minlength: [10, 'Description must be at least 10 characters long']
+    },
+    image: { // This could be a URL for a placeholder or uploaded image
+        type: String,
+        default: '/images/default-glimmer.png' // A default image path
+    },
+    location: {
+        type: String,
+        trim: true
+    },
+    startDate: {
+        type: Date,
+        required: [true, 'Start date is required']
+    },
+    endDate: {
+        type: Date,
+        // Optional: Add validation to ensure endDate is after startDate
+    },
+    creator: { // Reference to the User who created this Glimmer
+        type: Schema.Types.ObjectId,
+        ref: 'User',
+        required: true
+    },
+    participants: [ // Array of Users participating in this Glimmer
+        {
+            type: Schema.Types.ObjectId,
+            ref: 'User'
         }
-
-        res.render('glimmers/show', {
-            title: glimmer.title,
-            glimmer: glimmer,
-            user: req.user // Pass user object
-        });
-    } catch (err) {
-        console.error("Error fetching single glimmer:", err);
-        // Check for CastError (invalid ID format)
-        if (err.name === 'CastError') {
-            req.flash('error_msg', 'Invalid Glimmer ID.');
-            return res.redirect('/glimmers');
+    ],
+    status: {
+        type: String,
+        enum: ['Open', 'Full', 'Completed', 'Cancelled'], // Define possible statuses
+        default: 'Open'
+    },
+    reviews: [ // Reviews posted about this Glimmer
+        {
+            type: Schema.Types.ObjectId,
+            ref: 'Review' // Reference the Review model
         }
-        req.flash('error_msg', 'Could not load glimmer details.');
-        res.redirect('/glimmers');
+    ]
+}, {
+    timestamps: true // Adds createdAt and updatedAt fields
+});
+
+// Middleware to delete associated reviews when a Glimmer is deleted
+GlimmerSchema.post('findOneAndDelete', async function (doc) {
+    if (doc) {
+        console.log(`[Glimmer Model Middleware] Deleting reviews for glimmer: ${doc._id}`);
+        // Use mongoose.model() to get Review model to avoid circular dependency
+        const Review = mongoose.model('Review');
+        await Review.deleteMany({
+            _id: {
+                $in: doc.reviews // Delete reviews whose IDs are in the glimmer's reviews array
+            }
+        });
+
+        // OPTIONAL: Future enhancement to update overallRating of users
+        // whose reviews were just deleted. This is handled by Review's post-delete hook already.
     }
-};
+});
+
+module.exports = mongoose.model('Glimmer', GlimmerSchema);

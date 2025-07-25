@@ -340,7 +340,7 @@
 <nav class="navbar-retro">
     <div class="navbar__left">
         <div class="navbar__icon">✨</div>
-        <a href="/" class="navbar__company-name">Glimmer</a>
+        <a href="/hub" class="navbar__company-name">UNPLANN'D</a>
     </div>
 
     <div class="hamburger-menu" id="hamburgerMenu">
@@ -355,18 +355,18 @@
         </div>
         
         <div class="navbar__item dropdown" data-dropdown-parent>
-            <a href="/grid" class="navbar__link" data-link="grid">GRID</a>
+            <a href="/grid/search" class="navbar__link" data-link="grid">GRID</a>
             <div class="dropdown-menu">
-                <a href="/grid/glimmers-around" class="dropdown-item" data-link="glimmers-around">Glimmers Around</a>
-                <a href="/grid/launch-glimmer" class="dropdown-item" data-link="launch-glimmer">Launch Glimmer</a>
+                <a href="/grid/search" class="dropdown-item" data-link="search">SEARCH GLIMMER</a>
+                <a href="/grid/launch" class="dropdown-item" data-link="launch">HOST GLIMMER</a>
             </div>
         </div>
         
         <div class="navbar__item dropdown" data-dropdown-parent>
-            <a href="/trail" class="navbar__link" data-link="trail">TRAIL</a>
+            <a href="/trail/sparks" class="navbar__link" data-link="trail">TRAIL</a>
             <div class="dropdown-menu">
-                <a href="/trail/sparks" class="dropdown-item" data-link="sparks">Sparks</a>
-                <a href="/trail/footprints" class="dropdown-item" data-link="footprints">Footprints</a>
+                <a href="/trail/sparks" class="dropdown-item" data-link="sparks">SPARKS</a>
+                <a href="/trail/footprints" class="dropdown-item" data-link="footprints">FOOTPRINTS</a>
             </div>
         </div>
         
@@ -374,6 +374,17 @@
             <a href="/aura" class="navbar__link" data-link="aura">AURA</a>
         </div>
         
+        <!-- Conditional rendering for Auth links -->
+        <% if (user) { %>
+            <div class="navbar__item">
+                <a href="/logout" class="navbar__link" data-link="logout">LOGOUT</a>
+            </div>
+        <% } else { %>
+            <div class="navbar__item">
+                <a href="/login" class="navbar__link" data-link="login">LOGIN</a>
+            </div>
+        <% } %>
+
         <div class="navbar__indicator" id="navIndicator"></div>
     </div>
 </nav>
@@ -420,7 +431,8 @@
             document.querySelectorAll('.navbar__link, .dropdown-item').forEach(link => {
                 const linkHref = link.getAttribute('href');
 
-                if (currentPath === linkHref) {
+                // Check for exact match or if currentPath starts with linkHref (for parent links like /grid, /trail)
+                if (currentPath === linkHref || (linkHref !== '/' && currentPath.startsWith(linkHref))) {
                     link.classList.add('active');
                     activeLinkFound = true;
 
@@ -516,24 +528,16 @@
             dropdownParents.forEach(parent => {
                 const parentLink = parent.querySelector('.navbar__link');
                 // Remove existing listeners to re-add correctly (simple re-initialization)
-                parentLink.removeEventListener('click', (e) => {}); // This is a rough way, better is to use flag or specific listeners
-                parent.removeEventListener('mouseenter', () => {});
-                parent.removeEventListener('mouseleave', () => {});
+                // This is a rough way, better is to use a flag or specific listeners
+                // For simplicity in this direct rewrite, we'll assume a page refresh
+                // or more complex JS re-init on resize would handle this.
+                // For production, consider debouncing resize and more robust event management.
 
                 if (window.innerWidth > 768) {
-                    parent.addEventListener('mouseenter', () => parent.classList.add('show'));
-                    parent.addEventListener('mouseleave', () => parent.classList.remove('show'));
                     // Ensure dropdowns are hidden if resized from mobile
                     parent.classList.remove('show'); 
-                } else {
-                    parentLink.addEventListener('click', (e) => {
-                        e.preventDefault();
-                        parent.classList.toggle('show');
-                        dropdownParents.forEach(otherParent => {
-                            if (otherParent !== parent) otherParent.classList.remove('show');
-                        });
-                    });
-                }
+                } 
+                // Click listeners for mobile are always active, hover for desktop
             });
 
             // Ensure mobile menu is hidden on resize if it's no longer mobile width
