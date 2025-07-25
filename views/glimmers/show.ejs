@@ -1,0 +1,485 @@
+<%- layout('layouts/boilerplate') %>
+<style>
+    /* --- Root Variables for Theme Consistency --- */
+    :root {
+        --retro-bg: wheat; /* Main background and outer box */
+        --retro-text: #1F2937; /* Dark text for contrast */
+        --retro-accent-red: #d1451e; /* From box shadow, button hover */
+        --retro-accent-yellow: #FFD93D; /* From previous accent, price underline */
+        --retro-primary-teal: #2F9C95; /* From your card background */
+        --retro-secondary-light: #fff; /* From box shadow white */
+        --retro-shadow-dark: #000; /* From box shadow black */
+        --retro-shadow-light: rgba(0, 0, 0, 0.2); /* For softer elements, box-shadow opacity */
+
+        /* Fonts */
+        --font-primary: "Inter", sans-serif;
+        --font-heading-retro: 'Press Start 2P', cursive; /* For titles and buttons */
+
+        /* Transitions */
+        --transition-fast: 0.2s ease;
+        --transition-medium: 0.3s ease;
+        --transition-slow: 0.6s ease;
+    }
+
+    /* --- General Body Styling --- */
+    body {
+        background-color: var(--retro-bg);
+        font-family: var(--font-primary);
+        color: var(--retro-text);
+        margin: 0;
+        padding: 0;
+        min-height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: flex-start; /* Align to top for longer content */
+        box-sizing: border-box;
+    }
+
+    img {
+        image-rendering: pixelated;
+        image-rendering: -moz-crisp-edges;
+        image-rendering: -o-crisp-edges;
+        image-rendering: -webkit-optimize-contrast;
+        -ms-interpolation-mode: nearest-neighbor;
+    }
+
+    /* --- Glimmer Detail Container --- */
+    .glimmer-detail-container {
+        width: 100%;
+        max-width: 900px; /* Max width for the detail page */
+        background-color: var(--retro-primary-teal);
+        padding: 2.5em;
+        border-radius: 15px;
+        box-shadow:
+            0 0 0 0.15em var(--retro-shadow-dark),
+            0 0 0 0.3em var(--retro-secondary-light),
+            0 0 0 0.45em var(--retro-shadow-dark),
+            0 0.6em 0 0 var(--retro-accent-red),
+            0 0.6em 0 0.15em var(--retro-shadow-dark);
+        margin: 2rem auto;
+        box-sizing: border-box;
+        text-shadow: 1px 1px 0 rgba(0, 0, 0, 0.3);
+        animation: detailEntry 0.8s ease-out;
+    }
+
+    @keyframes detailEntry {
+        0% { opacity: 0; transform: translateY(30px) scale(0.95); }
+        100% { opacity: 1; transform: translateY(0) scale(1); }
+    }
+
+    .glimmer-detail-container h1 {
+        font-family: var(--font-heading-retro);
+        color: var(--retro-text);
+        text-align: center;
+        margin-bottom: 1em;
+        font-size: 2.2em;
+        text-shadow: 3px 3px 0 rgba(0, 0, 0, 0.5); /* Corrected typo from 33px to 3px */
+        padding-bottom: 0.5em;
+        border-bottom: 3px dashed var(--retro-accent-yellow);
+    }
+
+    .glimmer-image-gallery {
+        display: flex;
+        overflow-x: auto; /* Enable horizontal scrolling for multiple images */
+        gap: 1em;
+        padding-bottom: 1em; /* Space for scrollbar */
+        margin-bottom: 1.5em;
+        border: 2px solid var(--retro-shadow-dark);
+        border-radius: 10px;
+        background-color: rgba(0, 0, 0, 0.1);
+        padding: 1em;
+    }
+
+    .glimmer-image-gallery img {
+        flex-shrink: 0; /* Prevent images from shrinking */
+        width: 250px; /* Fixed width for gallery images */
+        height: 180px; /* Fixed height for gallery images */
+        object-fit: cover;
+        border: 2px solid var(--retro-shadow-dark);
+        border-radius: 8px;
+        box-shadow: 0.2em 0.2em 0 rgba(0, 0, 0, 0.2);
+        transition: transform var(--transition-fast);
+    }
+
+    .glimmer-image-gallery img:hover {
+        transform: translateY(-5px) scale(1.02);
+    }
+
+    .glimmer-info-section {
+        background-color: var(--retro-secondary-light);
+        padding: 1.5em;
+        border-radius: 10px;
+        border: 2px solid var(--retro-shadow-dark);
+        box-shadow: 0.3em 0.3em 0 rgba(0, 0, 0, 0.2);
+        margin-bottom: 1.5em;
+    }
+
+    .glimmer-info-section p {
+        font-family: var(--font-primary);
+        font-size: 1em;
+        line-height: 1.6;
+        margin-bottom: 1em;
+        color: var(--retro-text);
+        text-shadow: none; /* Remove shadow for body text for readability */
+    }
+
+    .glimmer-info-section strong {
+        font-family: var(--font-heading-retro);
+        color: var(--retro-accent-red);
+        font-size: 1.1em;
+        text-shadow: 1px 1px 0 rgba(0, 0, 0, 0.3);
+    }
+
+    .glimmer-info-section ul {
+        list-style: none;
+        padding: 0;
+        margin: 1em 0;
+    }
+
+    .glimmer-info-section ul li {
+        font-family: var(--font-primary);
+        font-size: 0.95em;
+        margin-bottom: 0.5em;
+        display: flex;
+        align-items: center;
+        gap: 0.8em;
+        color: var(--retro-text);
+        text-shadow: none;
+    }
+
+    .glimmer-info-section ul li svg {
+        width: 1.2em;
+        height: 1.2em;
+        fill: var(--retro-primary-teal); /* Teal icons */
+        flex-shrink: 0;
+    }
+
+    /* --- Map Section --- */
+    .glimmer-map-section {
+        background-color: var(--retro-secondary-light);
+        padding: 1.5em;
+        border-radius: 10px;
+        border: 2px solid var(--retro-shadow-dark);
+        box-shadow: 0.3em 0.3em 0 rgba(0, 0, 0, 0.2);
+        margin-bottom: 1.5em;
+        text-align: center;
+    }
+
+    .glimmer-map-section h2 {
+        font-family: var(--font-heading-retro);
+        font-size: 1.5em;
+        color: var(--retro-text);
+        text-shadow: 2px 2px 0 rgba(0, 0, 0, 0.4);
+        margin-bottom: 1em;
+    }
+
+    .map-iframe-container {
+        position: relative;
+        width: 100%;
+        padding-bottom: 56.25%; /* 16:9 Aspect Ratio */
+        height: 0;
+        overflow: hidden;
+        border: 2px solid var(--retro-shadow-dark);
+        border-radius: 8px;
+        box-shadow: 0.2em 0.2em 0 rgba(0, 0, 0, 0.2);
+    }
+
+    .map-iframe-container iframe {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        border: none;
+    }
+
+    .map-privacy-message {
+        font-family: var(--font-primary);
+        font-size: 0.9em;
+        color: var(--retro-accent-red);
+        margin-top: 1em;
+        text-shadow: none;
+        font-weight: 600;
+    }
+
+    /* --- Action Buttons --- */
+    .glimmer-actions {
+        display: flex;
+        justify-content: center;
+        gap: 1.5em;
+        margin-top: 2em;
+        flex-wrap: wrap; /* Allow buttons to wrap */
+    }
+
+    .glimmer-action-button {
+        position: relative;
+        background: var(--retro-accent-red);
+        color: var(--retro-secondary-light);
+        font-family: var(--font-heading-retro);
+        font-size: 1em;
+        font-weight: 700;
+        padding: 0.8em 1.5em;
+        border: 0.25em solid var(--retro-shadow-dark);
+        border-radius: 0.5em;
+        box-shadow: 0.4em 0.4em 0 var(--retro-shadow-dark);
+        cursor: pointer;
+        transition: all var(--transition-fast);
+        overflow: hidden;
+        text-transform: uppercase;
+        letter-spacing: 0.1em;
+        text-shadow: 2px 2px 0 rgba(0, 0, 0, 0.6);
+        text-decoration: none;
+        display: inline-block;
+    }
+
+    .glimmer-action-button::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(
+            90deg,
+            transparent 0%,
+            rgba(255, 255, 255, 0.3) 50%,
+            transparent 100%
+        );
+        transition: left var(--transition-medium);
+        z-index: 1;
+    }
+
+    .glimmer-action-button:hover {
+        background: var(--retro-shadow-dark);
+        color: var(--retro-accent-yellow);
+        transform: translate(-0.2em, -0.2em);
+        box-shadow: 0.6em 0.6em 0 var(--retro-accent-red);
+        text-shadow: 2px 2px 0 rgba(0, 0, 0, 0.8);
+    }
+
+    .glimmer-action-button:active {
+        transform: translate(0.15em, 0.15em);
+        box-shadow: 0.2em 0.2em 0 var(--retro-shadow-dark);
+    }
+
+    .glimmer-action-button:disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
+        background-color: #ccc;
+        box-shadow: none;
+        transform: none;
+        text-shadow: none;
+    }
+    .glimmer-action-button:disabled:hover {
+        background-color: #ccc;
+        color: var(--retro-text);
+    }
+
+    /* Responsive Adjustments */
+    @media (max-width: 992px) {
+        .glimmer-detail-container {
+            padding: 2em;
+            margin: 1.5rem auto;
+        }
+        .glimmer-detail-container h1 {
+            font-size: 2em;
+        }
+        .glimmer-image-gallery img {
+            width: 200px;
+            height: 150px;
+        }
+        .glimmer-info-section {
+            padding: 1.2em;
+        }
+        .glimmer-info-section p, .glimmer-info-section ul li {
+            font-size: 0.9em;
+        }
+        .glimmer-map-section h2 {
+            font-size: 1.3em;
+        }
+        .glimmer-action-button {
+            font-size: 0.9em;
+            padding: 0.7em 1.2em;
+        }
+    }
+
+    @media (max-width: 768px) {
+        .glimmer-detail-container {
+            width: 95%;
+            padding: 1.5em;
+            margin: 1rem auto;
+            box-shadow:
+                0 0 0 0.1em var(--retro-shadow-dark),
+                0 0 0 0.2em var(--retro-secondary-light),
+                0 0 0 0.3em var(--retro-shadow-dark),
+                0 0.4em 0 0 var(--retro-accent-red),
+                0 0.4em 0 0.1em var(--retro-shadow-dark);
+        }
+        .glimmer-detail-container h1 {
+            font-size: 1.8em;
+        }
+        .glimmer-image-gallery {
+            flex-wrap: wrap; /* Allow images to wrap */
+            justify-content: center;
+        }
+        .glimmer-image-gallery img {
+            width: 180px;
+            height: 130px;
+        }
+        .glimmer-info-section {
+            padding: 1em;
+        }
+        .glimmer-info-section p, .glimmer-info-section ul li {
+            font-size: 0.85em;
+        }
+        .glimmer-map-section h2 {
+            font-size: 1.1em;
+        }
+        .glimmer-action-button {
+            font-size: 0.8em;
+            padding: 0.6em 1em;
+        }
+        .glimmer-actions {
+            flex-direction: column; /* Stack buttons vertically */
+            gap: 1em;
+        }
+        .glimmer-action-button {
+            width: 100%; /* Full width when stacked */
+        }
+    }
+
+    @media (max-width: 480px) {
+        .glimmer-detail-container {
+            padding: 1em;
+            margin: 0.5rem auto;
+        }
+        .glimmer-detail-container h1 {
+            font-size: 1.5em;
+        }
+        .glimmer-image-gallery img {
+            width: 150px;
+            height: 100px;
+        }
+        .glimmer-info-section p, .glimmer-info-section ul li {
+            font-size: 0.8em;
+        }
+        .glimmer-map-section h2 {
+            font-size: 1em;
+        }
+        .glimmer-action-button {
+            font-size: 0.75em;
+            padding: 0.5em 0.8em;
+        }
+    }
+</style>
+
+<body>
+    <div class="glimmer-detail-container">
+        <h1><%= glimmer.title.toUpperCase() %></h1>
+
+        <% if (glimmer.image && glimmer.image.length > 0) { %>
+            <div class="glimmer-image-gallery">
+                <% glimmer.image.forEach(img => { %>
+                    <img src="<%= img.url %>" alt="<%= glimmer.title %> Image">
+                <% }) %>
+            </div>
+        <% } else { %>
+            <div class="glimmer-image-gallery">
+                <img src="/images/default-glimmer.png" alt="Default Glimmer Image">
+            </div>
+        <% } %>
+
+        <div class="glimmer-info-section">
+            <p><strong>DESCRIPTION:</strong> <%= glimmer.description %></p>
+            <ul>
+                <li>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-user">
+                        <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/>
+                        <circle cx="12" cy="7" r="4"/>
+                    </svg>
+                    <strong>HOST:</strong> <a href="/users/<%= glimmer.creator._id %>/profile" style="text-decoration: underline; color: var(--retro-text);"><%= glimmer.creator ? glimmer.creator.username.toUpperCase() : 'N/A' %></a>
+                </li>
+                <li>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-calendar">
+                        <rect width="18" height="18" x="3" y="4" rx="2" ry="2"/>
+                        <line x1="16" x2="16" y1="2" y2="6"/>
+                        <line x1="8" x2="8" y1="2" y2="6"/>
+                        <line x1="3" x2="21" y1="10" y2="10"/>
+                    </svg>
+                    <strong>DATE:</strong> <%= glimmer.startDate.toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' }) %>
+                </li>
+                <li>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-clock">
+                        <circle cx="12" cy="12" r="10"/>
+                        <polyline points="12 6 12 12 16 14"/>
+                    </svg>
+                    <strong>TIME:</strong> <%= glimmer.startDate.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true }) %>
+                </li>
+                <li>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-map-pin">
+                        <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/>
+                        <circle cx="12" cy="9" r="3"/>
+                    </svg>
+                    <strong>LOCATION:</strong> <%= glimmer.locationName.toUpperCase() %>
+                </li>
+            </ul>
+        </div>
+
+        <div class="glimmer-map-section">
+            <h2>GLIMMER LOCATION</h2>
+            <div class="map-iframe-container">
+                <% 
+                    // Use the displayLatitude and displayLongitude passed from the controller
+                    const mapLat = displayLatitude;
+                    const mapLon = displayLongitude;
+                    // Google Maps Embed API URL structure
+                    // Replace YOUR_GOOGLE_MAPS_API_KEY with your actual API key
+                    const googleMapsApiKey = 'YOUR_GOOGLE_MAPS_API_KEY'; 
+                    const mapSrc = `https://www.google.com/maps/embed/v1/place?key=${googleMapsApiKey}&q=${mapLat},${mapLon}&zoom=15`;
+                %>
+                <iframe
+                    width="600"
+                    height="450"
+                    style="border:0"
+                    loading="lazy"
+                    allowfullscreen
+                    src="<%= mapSrc %>">
+                </iframe>
+            </div>
+            <% if (!showActualLocation) { %>
+                <p class="map-privacy-message">
+                    This is an approximate location to protect the host's privacy.
+                    The exact location will be revealed upon accepted request.
+                </p>
+            <% } %>
+        </div>
+
+        <div class="glimmer-actions">
+            <% if (user && glimmer.creator && user._id.equals(glimmer.creator._id)) { %>
+                <!-- Host Actions -->
+                <a href="/glimmers/<%= glimmer._id %>/edit" class="glimmer-action-button">EDIT GLIMMER</a>
+                <a href="/glimmers/<%= glimmer._id %>/requests" class="glimmer-action-button">VIEW REQUESTS</a>
+                <form action="/glimmers/<%= glimmer._id %>?_method=DELETE" method="POST" style="display:inline;">
+                    <button type="submit" class="glimmer-action-button" onclick="return confirm('Are you sure you want to delete this glimmer? This action cannot be undone!');">DELETE GLIMMER</button>
+                </form>
+            <% } else if (user) { %>
+                <!-- Logged-in User Actions (not host) -->
+                <% 
+                    const isParticipant = glimmer.participants.some(p => p.equals(user._id));
+                %>
+                <% if (isParticipant) { %>
+                    <button type="button" class="glimmer-action-button" disabled>YOU ARE PARTICIPATING</button>
+                <% } else if (hasPendingRequest) { %>
+                    <button type="button" class="glimmer-action-button" disabled>REQUEST PENDING</button>
+                <% } else { %>
+                    <form action="/glimmers/<%= glimmer._id %>/requests" method="POST" style="display:inline;">
+                        <button type="submit" class="glimmer-action-button">REQUEST TO JOIN</button>
+                    </form>
+                <% } %>
+            <% } else { %>
+                <!-- Not Logged In Actions -->
+                <a href="/login" class="glimmer-action-button">LOGIN TO JOIN</a>
+            <% } %>
+        </div>
+    </div>
+</body>

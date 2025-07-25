@@ -1,4 +1,4 @@
-<% layout("/layouts/boilerplate") %>
+<%- layout('layouts/boilerplate') %>
 <style>
     /* --- Root Variables for Theme Consistency --- */
     :root {
@@ -60,7 +60,7 @@
         box-sizing: border-box;
     }
 
-    /* --- Event Details Section --- */
+    /* --- Event Details Section (Simplified for this page) --- */
     .event-details-section {
         width: 100%;
         max-width: 900px; /* Wider for details */
@@ -136,23 +136,6 @@
         flex-shrink: 0;
     }
 
-    /* Revised Description Text */
-    .event-description-box {
-        background-color: var(--retro-bg); /* Wheat background for description */
-        border: 2px solid var(--retro-shadow-dark);
-        border-radius: 8px;
-        padding: 1.5em 2em; /* Increased padding */
-        margin: 2em auto 0; /* More space from date/time */
-        text-align: justify; /* Justify text for a blockier look */
-        box-shadow: 0.35em 0.35em 0 rgba(0, 0, 0, 0.3); /* Stronger shadow */
-        color: var(--retro-text);
-        font-family: var(--font-primary);
-        font-size: 1em; /* Slightly larger font size for readability */
-        line-height: 1.8; /* Increased line height */
-        max-width: 700px;
-        box-sizing: border-box;
-    }
-
     /* --- Requests Section --- */
     .requests-section {
         width: 100%;
@@ -183,6 +166,9 @@
     }
 
     .requests-list {
+        list-style: none; /* Remove default list styling */
+        padding: 0;
+        margin: 0;
         display: flex;
         flex-direction: column; /* Stack requests vertically */
         gap: 1.2em; /* Space between request cards */
@@ -250,6 +236,14 @@
         margin: 0;
         text-shadow: 1px 1px 0 rgba(0, 0, 0, 0.2);
         word-break: break-word;
+    }
+
+    .request-card .requester-info .requested-date {
+        font-family: var(--font-primary);
+        font-size: 0.8em;
+        color: rgba(0, 0, 0, 0.7);
+        text-shadow: none;
+        margin-top: 0.2em;
     }
 
     .request-card .request-actions {
@@ -337,6 +331,19 @@
         box-shadow: 0.1em 0.1em 0 var(--retro-shadow-dark);
     }
 
+    .action-button:disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
+        background-color: #ccc;
+        box-shadow: none;
+        transform: none;
+        text-shadow: none;
+    }
+    .action-button:disabled:hover {
+        background-color: #ccc;
+        color: var(--retro-text);
+    }
+
     .no-requests-message {
         color: var(--retro-text);
         text-align: center;
@@ -374,11 +381,6 @@
         .event-details-section .detail-item svg {
             width: 1.1em;
             height: 1.1em;
-        }
-        .event-description-box {
-            font-size: 0.9em;
-            padding: 1.2em 1.5em;
-            margin-top: 1.5em;
         }
         .requests-section h2 {
             font-size: 1.5em;
@@ -435,12 +437,6 @@
             width: 1em;
             height: 1em;
         }
-        .event-description-box {
-            font-size: 0.85em;
-            margin-top: 1em;
-            padding: 1em 1.2em;
-            box-shadow: 0.25em 0.25em 0 rgba(0, 0, 0, 0.3);
-        }
         .requests-section {
             padding: 1em;
         }
@@ -481,93 +477,71 @@
 
 <body>
     <div class="event-management-page-container">
+        <!-- Simplified Event Details Section -->
         <div class="event-details-section">
-            <h1>Retro Gaming Tournament 2025</h1>
+            <h1><%= glimmer.title.toUpperCase() %></h1>
             <p class="detail-item">
                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-calendar-days">
                     <path d="M8 2v4"/><path d="M16 2v4"/><rect width="18" height="18" x="3" y="4" rx="2"/><path d="M3 10h18"/><path d="M8 14h.01"/><path d="M12 14h.01"/><path d="M16 14h.01"/><path d="M8 18h.01"/><path d="M12 18h.01"/><path d="M16 18h.01"/>
                 </svg>
-                AUG 15, 2025
+                <%= glimmer.startDate.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) %>
             </p>
             <p class="detail-item">
                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-clock">
                     <circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>
                 </svg>
-                19:00 IST
+                <%= glimmer.startDate.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true }) %>
             </p>
-            <div class="event-description-box">
-                <p>
-                    Prepare for the ultimate challenge! Join us for an epic showdown in classic 8-bit titles. This year, we're featuring intense tournaments for Street Fighter II, the maze-chasing frenzy of Pac-Man, and the barrel-dodging adventure of Donkey Kong. Whether you're a seasoned arcade veteran or a rising star, bring your A-game. Awesome pixel-themed prizes await the champions, along with bragging rights and retro glory! Don't miss out on a night of nostalgic fun and fierce competition.
-                </p>
-            </div>
         </div>
 
         <div class="requests-section">
-            <h2>Glimmer Requests</h2>
-            <div class="requests-list">
-                <% const requests = [
-                    {
-                        id: 'req1',
-                        pfp: "https://images.unsplash.com/photo-1535713875002-d1d0cfd492da?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8M3x8dXNlciUyMHByb2ZpbGV8ZW58MHx8MHx8fDA%3D&auto=format&fit=crop&w=800&q=60",
-                        name: "PixelatedPanda"
-                    },
-                    {
-                        id: 'req2',
-                        pfp: "https://images.unsplash.com/photo-1573496359142-b8d87734b35b?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTJ8fHVzZXIlMjBwcm9maWxlfGVufDB8fDB8fHww&auto=format&fit=crop&w=800&q=60",
-                        name: "ArcadeAce"
-                    },
-                    {
-                        id: 'req3',
-                        pfp: "https://images.unsplash.com/photo-1544005313-94ddf0286df2?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTB8fHVzZXIlMjBwcm9maWxlfGVufDB8fDB8fHww&auto=format&fit=crop&w=800&q=60",
-                        name: "ByteBrawler"
-                    },
-                     {
-                        id: 'req4',
-                        pfp: "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTl8fHVzZXIlMjBwcm9maWxlfGVufDB8fDB8fHww&auto=format&fit=crop&w=800&q=60",
-                        name: "GamerGuru"
-                    },
-                    {
-                        id: 'req5',
-                        pfp: "https://images.unsplash.com/photo-1502823403499-6ccfcf4fbcd6?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MzB8fHVzZXIlMjBwcm9maWxlfGVufDB8fDB8fHww&auto=format&fit=crop&w=800&q=60",
-                        name: "JoystickJunkie"
-                    }
-                ]; %>
-
+            <h2>GLIMMER REQUESTS</h2>
+            <ul class="requests-list">
                 <% if (requests && requests.length > 0) { %>
                     <% requests.forEach(function(request) { %>
-                        <div class="request-card" data-request-id="<%= request.id %>">
+                        <li class="request-card" data-request-id="<%= request._id %>">
                             <div class="pfp-container">
-                                <img src="<%= request.pfp || '/images/default-avatar.png' %>" alt="<%= request.name %>'s Profile Picture">
+                                <img src="<%= request.requester.avatarUrl || '/images/default-avatar.png' %>" alt="<%= request.requester.username %>'s Profile Picture">
                             </div>
                             <div class="requester-info">
-                                <span class="name"><%= request.name %></span>
+                                <span class="name"><%= request.requester.username.toUpperCase() %></span>
+                                <span class="requested-date">Requested on: <%= request.requestedAt.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) %></span>
                             </div>
                             <div class="request-actions">
-                                <a href="/users/<%= request.id %>/profile" class="action-button view-profile" aria-label="View <%= request.name %>'s Profile">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-user">
-                                        <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>
-                                    </svg>
-                                    <span>Profile</span>
-                                </a>
-                                <button type="button" class="action-button accept" onclick="handleRequest('<%= request.id %>', 'accept')" aria-label="Accept Request">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-check">
-                                        <path d="M20 6 9 17 4 12"/>
-                                    </svg>
-                                    <span>Accept</span>
-                                </button>
-                                <button type="button" class="action-button reject" onclick="handleRequest('<%= request.id %>', 'reject')" aria-label="Reject Request">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-x">
-                                        <path d="M18 6 6 18"/><path d="m6 6 12 12"/>
-                                    </svg>
-                                    <span>Reject</span>
-                                </button>
+                                
+                                <% if (request.status === 'pending') { %>
+                                    <form action="/glimmers/<%= glimmer._id %>/requests/<%= request._id %>/accept?_method=PATCH" method="POST" style="display:inline;">
+                                        <button type="submit" class="action-button accept" aria-label="Accept Request">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-check">
+                                                <path d="M20 6 9 17 4 12"/>
+                                            </svg>
+                                            <span>Accept</span>
+                                        </button>
+                                    </form>
+                                    <form action="/glimmers/<%= glimmer._id %>/requests/<%= request._id %>/reject?_method=PATCH" method="POST" style="display:inline;">
+                                        <button type="submit" class="action-button reject" aria-label="Reject Request">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-x">
+                                                <path d="M18 6 6 18"/><path d="m6 6 12 12"/>
+                                            </svg>
+                                            <span>Reject</span>
+                                        </button>
+                                    </form>
+                                <% } else { %>
+                                    <button type="button" class="action-button" disabled>
+                                        <%= request.status.toUpperCase() %>
+                                    </button>
+                                <% } %>
                             </div>
-                        </div>
+                        </li>
                     <% }); %>
                 <% } else { %>
-                    <p class="no-requests-message">No new requests for this glimmer.</p>
+                    <p class="no-requests-message">No join requests for this Glimmer yet.</p>
                 <% } %>
-            </div>
+            </ul>
+        </div>
+
+        <div class="glimmer-actions" style="margin-top: 3em;">
+            <a href="/glimmers/<%= glimmer._id %>" class="glimmer-action-button">BACK TO GLIMMER</a>
         </div>
     </div>
 
@@ -575,43 +549,5 @@
     <script src="https://unpkg.com/lucide@latest"></script>
     <script>
         lucide.createIcons(); // Initialize Lucide icons
-
-        // Dummy function to simulate handling requests
-        function handleRequest(requestId, action) {
-            console.log(`Request ID: ${requestId}, Action: ${action}`);
-            const requestCard = document.querySelector(`.request-card[data-request-id="${requestId}"]`);
-            if (requestCard) {
-                // In a real application, you'd send an AJAX request here
-                // On success, you'd remove the card from the DOM or update its status
-                alert(`${action.charAt(0).toUpperCase() + action.slice(1)} request for ${requestId}`);
-                requestCard.remove(); // Remove the card for demo purposes
-            }
-            // You might also check if no more requests are left and display the "no requests" message
-            checkNoRequests();
-        }
-
-        // Function to show/hide "No new requests" message
-        function checkNoRequests() {
-            const requestsList = document.querySelector('.requests-list');
-            let noRequestsMessage = document.querySelector('.no-requests-message');
-
-            // If there are no request cards remaining
-            if (requestsList.children.length === 0) {
-                if (!noRequestsMessage) { // Only add if it doesn't exist
-                    const messageP = document.createElement('p');
-                    messageP.className = 'no-requests-message';
-                    messageP.textContent = 'No new requests for this glimmer.';
-                    requestsList.parentNode.appendChild(messageP);
-                }
-            } else {
-                // If there are request cards, ensure the "no requests" message is removed if it exists
-                if (noRequestsMessage) {
-                    noRequestsMessage.remove();
-                }
-            }
-        }
-
-        // Initial check on page load to ensure correct message display
-        checkNoRequests();
     </script>
 </body>
