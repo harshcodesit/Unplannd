@@ -201,6 +201,25 @@
         fill: var(--retro-secondary-light);
     }
 
+    /* Styles for disabled upload button */
+    .custom-file-upload.disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
+        background: #ccc; /* Greyed out background */
+        box-shadow: none;
+        transform: none;
+    }
+    .custom-file-upload.disabled:hover {
+        background: #ccc; /* Maintain greyed out on hover */
+        color: var(--retro-text);
+        transform: none;
+        box-shadow: none;
+    }
+    .custom-file-upload.disabled svg {
+        fill: var(--retro-text);
+    }
+
+
     /* Image Preview Container */
     #image-preview-container {
         display: flex;
@@ -323,7 +342,7 @@
         transition: all var(--transition-fast);
         overflow: hidden;
         text-transform: uppercase;
-        letter-spacing: 0.1em; /* More letter spacing */
+        letter-spacing: 0.1em;
         text-shadow: 2px 2px 0 rgba(0, 0, 0, 0.6); /* Stronger shadow for button text */
         text-decoration: none; /* In case it's an <a> acting as button */
         box-sizing: border-box; /* Ensure padding is included in width */
@@ -549,7 +568,7 @@
             </div>
 
             <div class="form-group-retro">
-                <label for="images">Event Images</label>
+                <label for="images">Event Images (Max 5)</label>
                 <div class="file-input-wrapper">
                     <input type="file" id="images" name="event[images]" accept="image/*" multiple>
                     <label for="images" class="custom-file-upload">
@@ -566,6 +585,9 @@
                 </div>
                 <div id="image-preview-container">
                     </div>
+                <div class="invalid-feedback" id="image-upload-feedback" style="display: none;">
+                    You can upload a maximum of 5 images.
+                </div>
             </div>
 
             <button type="submit" class="launch-button">Launch Glimmer</button>
@@ -578,6 +600,7 @@
     <script>
         // IMPORTANT: Replace 'YOUR_GOOGLE_MAPS_API_KEY' with your actual Google Maps Embed API Key
         const GOOGLE_MAPS_API_KEY = 'YOUR_GOOGLE_MAPS_API_KEY'; 
+        const MAX_IMAGES = 5; // Define maximum number of images
 
         // Function to get current geolocation and populate hidden fields AND update map preview
         async function populateCoordinates() {
@@ -618,8 +641,8 @@
                         }
                         mapStatusMessage.textContent = errorMessage;
                         mapStatusMessage.style.color = 'var(--retro-accent-red)'; // Red for error
-                        feedbackDiv.style.display = 'block'; // Show form validation feedback
-                        feedbackDiv.textContent = "Location coordinates are required. " + errorMessage; // Update specific feedback
+                        feedbackDiv.style.display = 'block';
+                        feedbackDiv.textContent = "Location coordinates are required. " + errorMessage;
                     },
                     { enableHighAccuracy: true, timeout: 10000, maximumAge: 0 } // Increased timeout
                 );
@@ -643,6 +666,7 @@
                 const latitudeInput = document.getElementById('latitude');
                 const longitudeInput = document.getElementById('longitude');
                 const locationCoordsFeedback = document.getElementById('location-coords-feedback');
+                const imageUploadFeedback = document.getElementById('image-upload-feedback');
 
                 // Check if coordinates are populated before allowing form submission
                 if (!latitudeInput.value || !longitudeInput.value) {
@@ -653,6 +677,25 @@
                 } else {
                     locationCoordsFeedback.style.display = 'none';
                 }
+
+                // Check image count before submission
+                // Ensure at least one image is uploaded
+                if (uploadedFiles.items.length === 0) {
+                    event.preventDefault();
+                    event.stopPropagation();
+                    imageUploadFeedback.textContent = "At least one image is required.";
+                    imageUploadFeedback.style.display = 'block';
+                } else if (uploadedFiles.items.length > MAX_IMAGES) {
+                    // This case should ideally be prevented by the change listener,
+                    // but it's a good fallback for robust validation.
+                    event.preventDefault();
+                    event.stopPropagation();
+                    imageUploadFeedback.textContent = `You can upload a maximum of ${MAX_IMAGES} images.`;
+                    imageUploadFeedback.style.display = 'block';
+                } else {
+                    imageUploadFeedback.style.display = 'none';
+                }
+
 
                 if (!form.checkValidity()) {
                     event.preventDefault();
@@ -666,13 +709,32 @@
         const imageInput = document.getElementById('images');
         const imagePreviewContainer = document.getElementById('image-preview-container');
         const uploadedFiles = new DataTransfer(); // To manage files programmatically
+        const customFileUploadLabel = document.querySelector('.custom-file-upload');
+        const imageUploadFeedback = document.getElementById('image-upload-feedback');
+
+
+        // Function to update the file input and the upload button's enabled/disabled state
+        function updateFileInputAndButton() {
+            imageInput.files = uploadedFiles.files; // Keep the actual input's files array updated
+            if (uploadedFiles.items.length >= MAX_IMAGES) {
+                imageInput.disabled = true; // Disable the file input
+                customFileUploadLabel.classList.add('disabled'); // Add disabled style to label
+                imageUploadFeedback.textContent = `Maximum of ${MAX_IMAGES} images reached. Remove some to upload more.`;
+                imageUploadFeedback.style.display = 'block';
+            } else {
+                imageInput.disabled = false; // Enable the file input
+                customFileUploadLabel.classList.remove('disabled'); // Remove disabled style
+                imageUploadFeedback.style.display = 'none'; // Hide feedback if below limit
+            }
+        }
 
         imageInput.addEventListener('change', function(event) {
             const files = event.target.files;
             
             for (let i = 0; i < files.length; i++) {
                 const file = files[i];
-                if (file.type.startsWith('image/')) {
+                // Only add if it's an image and we haven't reached the max limit
+                if (file.type.startsWith('image/') && uploadedFiles.items.length < MAX_IMAGES) {
                     uploadedFiles.items.add(file); // Add to our managed list
 
                     const reader = new FileReader();
@@ -688,10 +750,18 @@
                         imagePreviewContainer.appendChild(previewItem);
                     };
                     reader.readAsDataURL(file);
+                } else if (uploadedFiles.items.length >= MAX_IMAGES) {
+                    // If trying to add more than allowed, show feedback and stop
+                    imageUploadFeedback.textContent = `You can upload a maximum of ${MAX_IMAGES} images.`;
+                    imageUploadFeedback.style.display = 'block';
+                    break; // Stop processing further files from this selection
                 }
             }
-            // Update the actual input's files with our managed list
-            imageInput.files = uploadedFiles.files;
+            // Update the actual input's files with our managed list and button state
+            updateFileInputAndButton();
+            // Clear the original file input value to allow re-uploading the same file if needed after removal
+            // This prevents the 'change' event from not firing if the same file is selected again
+            event.target.value = ''; 
         });
 
         imagePreviewContainer.addEventListener('click', function(event) {
@@ -707,10 +777,12 @@
                     }
                 }
                 
-                // Update the actual input's files
-                imageInput.files = uploadedFiles.files;
                 itemToRemove.remove(); // Remove from DOM
+                updateFileInputAndButton(); // Update input and button state after removal
             }
         });
+
+        // Initialize button state on page load
+        updateFileInputAndButton();
     </script>
 </body>
