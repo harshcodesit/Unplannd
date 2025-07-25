@@ -5,7 +5,7 @@
               --text-color-translucent: rgba(255, 255, 255, 0.85);
               --active-text-color: #2F9C95; /* Text color for active link */
                --font-primary: "Inter", sans-serif;
-        --font-heading-retro: 'Press Start 2P', cursive;
+        --font-heading-retros: 'Press Start 2P', cursive;
           }
 
           body {

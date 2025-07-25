@@ -1,4 +1,4 @@
-<% layout("/layouts/boilerplate") %>
+<%- layout("/layouts/boilerplate") %>
 <style>
     /* --- Root Variables for Theme Consistency --- */
     :root {
@@ -446,6 +446,14 @@
                 <textarea id="description" name="event[description]" rows="5" placeholder="Tell us about your epic event!" required></textarea>
                 <div class="invalid-feedback">
                     Please provide an event description.
+                </div>
+            </div>
+
+            <div class="form-group-retro">
+                <label for="location">Location</label>
+                <input type="text" id="location" name="event[location]" placeholder="e.g., Cyberpunk City Rooftop" required>
+                <div class="invalid-feedback">
+                    Please provide a location for the event.
                 </div>
             </div>
 

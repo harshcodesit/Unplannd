@@ -18,13 +18,29 @@ const GlimmerSchema = new Schema({
         trim: true,
         minlength: [10, 'Description must be at least 10 characters long']
     },
-    image: { // This could be a URL for a placeholder or uploaded image
+    // Updated to support multiple images with Cloudinary-like structure
+    image: [
+        {
+            url: String,
+            filename: String
+        }
+    ],
+    // New fields for location mechanism
+    locationName: { // Human-readable name for the location (e.g., "Central Park Amphitheater")
         type: String,
-        default: '/images/default-glimmer.png' // A default image path
-    },
-    location: {
-        type: String,
+        required: [true, 'Location name is required'],
         trim: true
+    },
+    geometry: { // GeoJSON Point for actual precise coordinates [longitude, latitude]
+        type: {
+            type: String,
+            enum: ['Point'], // 'geometry.type' must be 'Point'
+            required: true
+        },
+        coordinates: {
+            type: [Number], // Stored as [longitude, latitude] for MongoDB GeoJSON
+            required: true
+        }
     },
     startDate: {
         type: Date,
@@ -59,6 +75,10 @@ const GlimmerSchema = new Schema({
 }, {
     timestamps: true // Adds createdAt and updatedAt fields
 });
+
+// Create a 2dsphere index for the geometry field.
+// This index is crucial for performing efficient geospatial queries (e.g., $near, $geoWithin).
+GlimmerSchema.index({ geometry: '2dsphere' });
 
 // Middleware to delete associated reviews when a Glimmer is deleted
 GlimmerSchema.post('findOneAndDelete', async function (doc) {

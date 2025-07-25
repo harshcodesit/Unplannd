@@ -86,7 +86,9 @@ app.use('/glimmers', glimmerRoutes); // Handles /glimmers and /glimmers/:id
 app.use('/grid', gridRoutes); // Handles /grid/search, /grid/launch
 app.use('/trail', trailRoutes); // Handles /trail/sparks, /trail/footprints
 
-
+app.get("/test",(req,res)=>{
+    res.render("aura/test")
+})
 // --- ERROR HANDLING (404 Not Found) ---
 // This middleware runs if no routes above have handled the request.
 app.use((req, res, next) => {

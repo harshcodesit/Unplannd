@@ -1,19 +1,22 @@
 // glimmergrid-mvp/routes/gridRoutes.js
 const express = require('express');
 const router = express.Router();
-const gridController = require('../controllers/gridController');
-const { ensureAuthenticated } = require('../middleware/authMiddleware'); // Needed for protected routes
+const glimmerController = require('../controllers/glimmerController'); // Import glimmerController
+const { ensureAuthenticated } = require('../middleware/authMiddleware');
 
 // @route   GET /grid/search
-// @desc    Render the Search Glimmer page
+// @desc    Display a list of all glimmers (acting as the search page for now)
 // @access  Public
-router.get('/search', gridController.renderSearchGlimmerPage);
+router.get('/search', glimmerController.index); // Renders glimmers/index.ejs
 
 // @route   GET /grid/launch
-// @desc    Render the Host Glimmer (Launch) page
-// @access  Private (only logged-in users can host)
-router.get('/launch', ensureAuthenticated, gridController.renderLaunchGlimmerPage);
-
-// Add POST route for creating glimmer here later: router.post('/launch', ensureAuthenticated, ...)
+// @desc    Render the form to launch a new glimmer
+// @access  Private
+router.get('/launch', ensureAuthenticated, (req, res) => {
+    res.render('glimmers/launch', {
+        title: 'Launch New Glimmer',
+        user: req.user // Pass user object
+    });
+});
 
 module.exports = router;

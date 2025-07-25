@@ -1,4 +1,4 @@
-<% layout("/layouts/boilerplate") %>
+<%- layout("/layouts/boilerplate") %>
 <style>
     /* --- Root Variables for Theme Consistency --- */
     :root {
@@ -12,7 +12,7 @@
         --retro-shadow-light: rgba(0, 0, 0, 0.2); /* For softer elements, box-shadow opacity */
 
         /* Fonts */
-        --font-primary: 'Press Start 2P', cursive;
+        --font-primary: "Inter", sans-serif;
         --font-heading-retro: 'Press Start 2P', cursive; /* For titles and buttons */
 
         /* Transitions */
@@ -238,6 +238,7 @@
     }
 
     .feature-text {
+        font-family: var(--font-primary); /* Reverted to Inter */
         font-size: 0.8em; /* Slightly reduced font size */
         font-weight: 400;
         color: var(--retro-text);
@@ -302,7 +303,7 @@
 
     .price-period {
         display: block;
-        font-family: var(--font-primary); /* Use normal font for "to join" */
+        font-family: var(--font-primary); /* Reverted to Inter */
         font-size: 0.4em;
         font-weight: 600;
         color: rgba(0, 0, 0, 0.7); /* Darker for readability */
@@ -358,10 +359,6 @@
         box-shadow: 0.4em 0.4em 0 var(--retro-shadow-dark);
         /* Adjusted text-shadow on hover for button */
         text-shadow: 1px 1px 0 rgba(0, 0, 0, 0.6); /* Slightly more pronounced when active */
-    }
-
-    .card-button:hover::before {
-        left: 100%;
     }
 
     .card-button:active {
@@ -511,73 +508,186 @@
 <body>
     <div class="events-page-container">
         <div class="retro-events-box">
-            <% for (let i=0;i<=6;i++) {%>
-                <div class="retro-event-card">
-                    <div class="card-image-container">
-                        <img src="https://media.istockphoto.com/id/505964108/photo/couples-dancing-and-drinking-at-evening-party.jpg?s=612x612&w=0&k=20&c=_pNpYuOdBQSwbCTMxvlWy6vQAlb4h_X3RJyU2bACGH0=" alt="Party Image">
-                    </div>
-                    <div class="card-body-section">
-                        <div class="card-title">
-                            <h2>The Rooftop Meeting <%= i + 1 %></h2>
+            <% if (glimmers && glimmers.length > 0) { %>
+                <% glimmers.forEach(glimmer => { %>
+                    <div class="retro-event-card">
+                        <div class="card-image-container">
+                            <img src="<%= glimmer.image || '/images/default-glimmer.png' %>" alt="<%= glimmer.title %>">
                         </div>
-                        <div class="feature-grid">
-                            <div class="feature-item">
-                                <div class="feature-icon">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-venetian-mask">
-                                        <path d="M18 11c-1.5 0-2.5.5-3 2"/>
-                                        <path d="M4 6a2 2 0 0 0-2 2v4a5 5 0 0 0 5 5 8 8 0 0 1 5 2 8 8 0 0 1 5-2 5 5 0 0 0 5-5V8a2 2 0 0 0-2-2h-3a8 8 0 0 0-5 2 8 8 0 0 0-5-2z"/>
-                                        <path d="M6 11c1.5 0 2.5.5 3 2"/>
-                                    </svg>
+                        <div class="card-body-section">
+                            <div class="card-title">
+                                <h2><%= glimmer.title.toUpperCase() %></h2>
+                            </div>
+                            <div class="feature-grid">
+                                <div class="feature-item">
+                                    <div class="feature-icon">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-venetian-mask">
+                                            <path d="M18 11c-1.5 0-2.5.5-3 2"/>
+                                            <path d="M4 6a2 2 0 0 0-2 2v4a5 5 0 0 0 5 5 8 8 0 0 1 5 2 8 8 0 0 1 5-2 5 5 0 0 0 5-5V8a2 2 0 0 0-2-2h-3a8 8 0 0 0-5 2 8 8 0 0 0-5-2z"/>
+                                            <path d="M6 11c1.5 0 2.5.5 3 2"/>
+                                        </svg>
+                                    </div>
+                                    <span class="feature-text"><%= glimmer.creator ? glimmer.creator.name.toUpperCase() : 'UNKNOWN HOST' %></span> 
                                 </div>
-                                <span class="feature-text">Dipesh Verma</span> 
-                                 <!-- name of the host -->
+
+                                <div class="feature-item">
+                                    <div class="feature-icon">
+                                        <svg viewBox="0 0 24 24">
+                                            <path d="M12,17.56L16.07,16.43L16.62,10.33H9.38L9.2,8.3H16.8L17,6.31H7L7.56,12.32H14.45L14.22,14.9L12,15.5L9.78,14.9L9.64,13.24H7.64L7.93,16.43L12,17.56M4.07,3H19.93L18.5,19.2L12,21L5.5,19.2L4.07,3Z"/>
+                                        </svg>
+                                    </div>
+                                    <span class="feature-text">RATING: <%= glimmer.creator && glimmer.creator.overallRating !== undefined ? glimmer.creator.overallRating.toFixed(1) : 'N/A' %></span>
+                                </div>
+
+                                <div class="feature-item">
+                                    <div class="feature-icon">
+                                        <svg viewBox="0 0 24 24">
+                                            <path d="M18.5,4L19.66,8.35L18.7,8.61C18.25,7.74 17.79,6.87 17.26,6.43C16.73,6 16.11,6 15.5,6H13V16.5C13,17 13,17.5 13.33,17.75C13.67,18 14.33,18 15,18V19H9V18C9.67,18 10.33,18 10.67,17.75C11,17.5 11,17 11,16.5V6H8.5C7.89,6 7.27,6 6.74,6.43C6.21,6.87 5.75,7.74 5.3,8.61L4.34,8.35L5.5,4H18.5Z"/>
+                                        </svg>
+                                    </div>
+                                    <span class="feature-text"><%= glimmer.startDate.toLocaleDateString('en-US', { day: '2-digit', month: '2-digit', year: '2-digit' }) %></span>
+                                </div>
+
+                                <div class="feature-item">
+                                    <div class="feature-icon">
+                                        <svg viewBox="0 0 24 24">
+                                            <path d="M9.19,6.35C8.41,7.13 7.75,8.05 7.25,9H5V11H7.12C7.05,11.32 7,11.66 7,12C7,12.34 7.05,12.68 7.12,13H5V15H7.25C7.75,15.95 8.41,16.87 9.19,17.65L7.77,19.07L9.88,21.18L11.3,19.77C11.85,20.03 12.41,20.2 13,20.31V23H15V20.31C15.59,20.2 16.15,20.03 16.7,19.77L18.12,21.18L20.23,19.07L18.81,17.65C19.59,16.87 20.25,15.95 20.75,15H23V13H20.88C20.95,12.68 21,12.34 21,12C21,11.66 20.95,11.32 20.88,11H23V9H20.75C20.25,8.05 19.59,7.13 18.81,6.35L20.23,4.93L18.12,2.82L16.7,4.23C16.15,3.97 15.59,3.8 15,3.69V1H13V3.69C12.41,3.8 11.85,3.97 11.3,4.23L9.88,2.82L7.77,4.93L9.19,6.35M13,17A5,5 0 0,1 8,12A5,5 0 0,1 13,7A5,5 0 0,1 18,12A5,5 0 0,1 13,17Z"/>
+                                        </svg>
+                                    </div>
+                                    <span class="feature-text"><%= glimmer.startDate.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true }) %></span>
+                                </div>
                             </div>
 
-                            <div class="feature-item">
-                                <div class="feature-icon">
-                                    <svg viewBox="0 0 24 24">
-                                        <path d="M12,17.56L16.07,16.43L16.62,10.33H9.38L9.2,8.3H16.8L17,6.31H7L7.56,12.32H14.45L14.22,14.9L12,15.5L9.78,14.9L9.64,13.24H7.64L7.93,16.43L12,17.56M4.07,3H19.93L18.5,19.2L12,21L5.5,19.2L4.07,3Z"/>
-                                    </svg>
+                            <div class="card-actions">
+                                <div class="price">
+                                    <span class="price-currency">$</span>0
+                                    <span class="price-period">TO JOIN</span>
                                 </div>
-                                <span class="feature-text">Rating : 4.8</span>
-                                <!-- rating of the host -->
+                                <a href="/glimmers/<%= glimmer._id %>" class="card-button">Get Tickets</a>
                             </div>
-
-                            <div class="feature-item">
-                                <div class="feature-icon">
-                                    <svg viewBox="0 0 24 24">
-                                        <path d="M18.5,4L19.66,8.35L18.7,8.61C18.25,7.74 17.79,6.87 17.26,6.43C16.73,6 16.11,6 15.5,6H13V16.5C13,17 13,17.5 13.33,17.75C13.67,18 14.33,18 15,18V19H9V18C9.67,18 10.33,18 10.67,17.75C11,17.5 11,17 11,16.5V6H8.5C7.89,6 7.27,6 6.74,6.43C6.21,6.87 5.75,7.74 5.3,8.61L4.34,8.35L5.5,4H18.5Z"/>
-                                    </svg>
-                                </div>
-                                <span class="feature-text">27/05/25</span>
-                                <!-- date of the glimmer  -->
-                            </div>
-
-                            <div class="feature-item">
-                                <div class="feature-icon">
-                                    <svg viewBox="0 0 24 24">
-                                        <path d="M9.19,6.35C8.41,7.13 7.75,8.05 7.25,9H5V11H7.12C7.05,11.32 7,11.66 7,12C7,12.34 7.05,12.68 7.12,13H5V15H7.25C7.75,15.95 8.41,16.87 9.19,17.65L7.77,19.07L9.88,21.18L11.3,19.77C11.85,20.03 12.41,20.2 13,20.31V23H15V20.31C15.59,20.2 16.15,20.03 16.7,19.77L18.12,21.18L20.23,19.07L18.81,17.65C19.59,16.87 20.25,15.95 20.75,15H23V13H20.88C20.95,12.68 21,12.34 21,12C21,11.66 20.95,11.32 20.88,11H23V9H20.75C20.25,8.05 19.59,7.13 18.81,6.35L20.23,4.93L18.12,2.82L16.7,4.23C16.15,3.97 15.59,3.8 15,3.69V1H13V3.69C12.41,3.8 11.85,3.97 11.3,4.23L9.88,2.82L7.77,4.93L9.19,6.35M13,17A5,5 0 0,1 8,12A5,5 0 0,1 13,7A5,5 0 0,1 18,12A5,5 0 0,1 13,17Z"/>
-                                    </svg>
-                                </div>
-                                <span class="feature-text">3:00 AM</span>
-                                <!-- time of glimmer -->
-                            </div>
-                        </div>
-
-                        <div class="card-actions">
-                            <div class="price">
-                                <span class="price-currency">$</span>0
-                                <span class="price-period">to join</span>
-                                <!-- price hardcode for mvp -->
-                            </div>
-                            <a href="#" class="card-button">Get Tickets</a>
-                            <!-- redirects to the glimmer details page -->
                         </div>
                     </div>
-                </div>
-            <% }%>
+                <% }) %>
+            <% } else { %>
+                <!-- Hardcoded sample glimmers when no real glimmers are available -->
+                <% 
+                    const sampleGlimmers = [
+                        {
+                            _id: 'sample1', // Dummy ID for link
+                            title: 'The Rooftop Meeting 1',
+                            image: 'https://media.istockphoto.com/id/505964108/photo/couples-dancing-and-drinking-at-evening-party.jpg?s=612x612&w=0&k=20&c=_pNpYuOdBQSwbCTMxvlWy6vQAlb4h_X3RJyU2bACGH0=',
+                            creator: { name: 'Dipesh Verma', overallRating: 4.8 },
+                            startDate: new Date('22025-05-27T03:00:00') // Example date/time
+                        },
+                        {
+                            _id: 'sample2',
+                            title: 'The Rooftop Meeting 2',
+                            image: 'https://media.istockphoto.com/id/505964108/photo/couples-dancing-and-drinking-at-evening-party.jpg?s=612x612&w=0&k=20&c=_pNpYuOdBQSwbCTMxvlWy6vQAlb4h_X3RJyU2bACGH0=',
+                            creator: { name: 'Jane Doe', overallRating: 4.5 },
+                            startDate: new Date('22025-06-10T19:00:00')
+                        },
+                        {
+                            _id: 'sample3',
+                            title: 'The Rooftop Meeting 3',
+                            image: 'https://media.istockphoto.com/id/505964108/photo/couples-dancing-and-drinking-at-evening-party.jpg?s=612x612&w=0&k=20&c=_pNpYuOdBQSwbCTMxvlWy6vQAlb4h_X3RJyU2bACGH0=',
+                            creator: { name: 'John Smith', overallRating: 4.2 },
+                            startDate: new Date('22025-07-01T10:00:00')
+                        },
+                        {
+                            _id: 'sample4',
+                            title: 'The Rooftop Meeting 4',
+                            image: 'https://media.istockphoto.com/id/505964108/photo/couples-dancing-and-drinking-at-evening-party.jpg?s=612x612&w=0&k=20&c=_pNpYuOdBQSwbCTMxvlWy6vQAlb4h_X3RJyU2bACGH0=',
+                            creator: { name: 'Alice Brown', overallRating: 4.9 },
+                            startDate: new Date('22025-08-05T14:00:00')
+                        },
+                        {
+                            _id: 'sample5',
+                            title: 'The Rooftop Meeting 5',
+                            image: 'https://media.istockphoto.com/id/505964108/photo/couples-dancing-and-drinking-at-evening-party.jpg?s=612x612&w=0&k=20&c=_pNpYuOdBQSwbCTMxvlWy6vQAlb4h_X3RJyU2bACGH0=',
+                            creator: { name: 'Bob White', overallRating: 4.6 },
+                            startDate: new Date('22025-09-20T20:00:00')
+                        },
+                        {
+                            _id: 'sample6',
+                            title: 'The Rooftop Meeting 6',
+                            image: 'https://media.istockphoto.com/id/505964108/photo/couples-dancing-and-drinking-at-evening-party.jpg?s=612x612&w=0&k=20&c=_pNpYuOdBQSwbCTMxvlWy6vQAlb4h_X3RJyU2bACGH0=',
+                            creator: { name: 'Charlie Green', overallRating: 4.3 },
+                            startDate: new Date('22025-10-12T11:00:00')
+                        },
+                        {
+                            _id: 'sample7',
+                            title: 'The Rooftop Meeting 7',
+                            image: 'https://media.istockphoto.com/id/505964108/photo/couples-dancing-and-drinking-at-evening-party.jpg?s=612x612&w=0&k=20&c=_pNpYuOdBQSwbCTMxvlWy6vQAlb4h_X3RJyU2bACGH0=',
+                            creator: { name: 'Diana Blue', overallRating: 4.7 },
+                            startDate: new Date('22025-11-25T17:00:00')
+                        }
+                    ];
+                %>
+                <% sampleGlimmers.forEach((glimmer, i) => { %>
+                    <div class="retro-event-card">
+                        <div class="card-image-container">
+                            <img src="<%= glimmer.image %>" alt="<%= glimmer.title %>">
+                        </div>
+                        <div class="card-body-section">
+                            <div class="card-title">
+                                <h2><%= glimmer.title.toUpperCase() %></h2>
+                            </div>
+                            <div class="feature-grid">
+                                <div class="feature-item">
+                                    <div class="feature-icon">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-venetian-mask">
+                                            <path d="M18 11c-1.5 0-2.5.5-3 2"/>
+                                            <path d="M4 6a2 2 0 0 0-2 2v4a5 5 0 0 0 5 5 8 8 0 0 1 5 2 8 8 0 0 1 5-2 5 5 0 0 0 5-5V8a2 2 0 0 0-2-2h-3a8 8 0 0 0-5 2 8 8 0 0 0-5-2z"/>
+                                            <path d="M6 11c1.5 0 2.5.5 3 2"/>
+                                        </svg>
+                                    </div>
+                                    <span class="feature-text"><%= glimmer.creator.name.toUpperCase() %></span> 
+                                </div>
+
+                                <div class="feature-item">
+                                    <div class="feature-icon">
+                                        <svg viewBox="0 0 24 24">
+                                            <path d="M12,17.56L16.07,16.43L16.62,10.33H9.38L9.2,8.3H16.8L17,6.31H7L7.56,12.32H14.45L14.22,14.9L12,15.5L9.78,14.9L9.64,13.24H7.64L7.93,16.43L12,17.56M4.07,3H19.93L18.5,19.2L12,21L5.5,19.2L4.07,3Z"/>
+                                        </svg>
+                                    </div>
+                                    <span class="feature-text">RATING: <%= glimmer.creator.overallRating.toFixed(1) %></span>
+                                </div>
+
+                                <div class="feature-item">
+                                    <div class="feature-icon">
+                                        <svg viewBox="0 0 24 24">
+                                            <path d="M18.5,4L19.66,8.35L18.7,8.61C18.25,7.74 17.79,6.87 17.26,6.43C16.73,6 16.11,6 15.5,6H13V16.5C13,17 13,17.5 13.33,17.75C13.67,18 14.33,18 15,18V19H9V18C9.67,18 10.33,18 10.67,17.75C11,17.5 11,17 11,16.5V6H8.5C7.89,6 7.27,6 6.74,6.43C6.21,6.87 5.75,7.74 5.3,8.61L4.34,8.35L5.5,4H18.5Z"/>
+                                        </svg>
+                                    </div>
+                                    <span class="feature-text"><%= glimmer.startDate.toLocaleDateString('en-US', { day: '2-digit', month: '2-digit', year: '2-digit' }) %></span>
+                                </div>
+
+                                <div class="feature-item">
+                                    <div class="feature-icon">
+                                        <svg viewBox="0 0 24 24">
+                                            <path d="M9.19,6.35C8.41,7.13 7.75,8.05 7.25,9H5V11H7.12C7.05,11.32 7,11.66 7,12C7,12.34 7.05,12.68 7.12,13H5V15H7.25C7.75,15.95 8.41,16.87 9.19,17.65L7.77,19.07L9.88,21.18L11.3,19.77C11.85,20.03 12.41,20.2 13,20.31V23H15V20.31C15.59,20.2 16.15,20.03 16.7,19.77L18.12,21.18L20.23,19.07L18.81,17.65C19.59,16.87 20.25,15.95 20.75,15H23V13H20.88C20.95,12.68 21,12.34 21,12C21,11.66 20.95,11.32 20.88,11H23V9H20.75C20.25,8.05 19.59,7.13 18.81,6.35L20.23,4.93L18.12,2.82L16.7,4.23C16.15,3.97 15.59,3.8 15,3.69V1H13V3.69C12.41,3.8 11.85,3.97 11.3,4.23L9.88,2.82L7.77,4.93L9.19,6.35M13,17A5,5 0 0,1 8,12A5,5 0 0,1 13,7A5,5 0 0,1 18,12A5,5 0 0,1 13,17Z"/>
+                                        </svg>
+                                    </div>
+                                    <span class="feature-text"><%= glimmer.startDate.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true }) %></span>
+                                </div>
+                            </div>
+
+                            <div class="card-actions">
+                                <div class="price">
+                                    <span class="price-currency">$</span>0
+                                    <span class="price-period">TO JOIN</span>
+                                </div>
+                                <!-- For sample glimmers, link to a placeholder or a generic message -->
+                                <a href="#" class="card-button">GET TICKETS</a> 
+                            </div>
+                        </div>
+                    </div>
+                <% }) %>
+            <% } %>
         </div>
     </div>
 
-    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Inter:wght@400;500;700;800&display=swap" rel="stylesheet">
+    <!-- Ensure Press Start 2P and Inter fonts are loaded in your main boilerplate.ejs or style.css -->
+    <!-- Example in boilerplate.ejs: -->
+    <!-- <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Inter:wght@400;500;700;800&display=swap" rel="stylesheet"> -->
 </body>

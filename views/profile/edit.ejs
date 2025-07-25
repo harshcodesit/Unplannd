@@ -1,0 +1,394 @@
+<%- layout('layouts/boilerplate') %>
+
+<style>
+    /* Root CSS Variables for the Retro Theme (assuming these are defined elsewhere or inherited) */
+    :root {
+        --retro-bg: wheat; /* Main background from your box */
+        --retro-text: #1F2937; /* Dark text for contrast */
+        --retro-accent-red: #d1451e; /* From box shadow */
+        --retro-accent-yellow: #FFD93D; /* From previous accent */
+        --retro-primary-teal: #2F9C95; /* From your card background */
+        --retro-secondary-light: #fff; /* From box shadow white */
+        --retro-shadow-dark: #000; /* From box shadow black */
+        --retro-shadow-light: rgba(0, 0, 0, 0.2); /* For softer elements */
+        --font-heading-retro: "Press Start 2P", cursive; /* Define the retro font */
+        --transition-fast: 0.2s ease; /* Define a fast transition variable */
+    }
+
+    /* Specific styles for the profile edit page to match the retro theme */
+
+    .profile-edit-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: calc(100vh - var(--navbar-height, 80px) - var(--footer-height, 60px)); /* Adjust based on your navbar/footer height */
+        padding: 20px;
+        box-sizing: border-box;
+        background-color: var(--retro-bg); /* Use the retro background */
+        overflow: hidden; /* Hide any overflow from patterns */
+        position: relative;
+    }
+
+    /* Global pixel background pattern for the whole page */
+    .profile-edit-container::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-image:
+            linear-gradient(0deg, transparent 9px, rgba(0, 0, 0, 0.08) 10px),
+            linear-gradient(90deg, transparent 9px, rgba(0, 0, 0, 0.08) 10px);
+        background-size: 10px 10px;
+        opacity: 0.5; /* More visible pixel grid */
+        z-index: 0;
+        pointer-events: none; /* Allow clicks to pass through */
+    }
+
+    .profile-edit-card {
+        background-color: var(--retro-primary-teal); /* Teal background for the card */
+        border: 6px solid var(--retro-shadow-dark); /* THICKER, stronger dark border */
+        border-radius: 20px; /* MORE ROUNDED CORNERS */
+        box-shadow: 0.8em 0.8em 0 var(--retro-accent-red); /* LARGER, more prominent 3D shadow */
+        padding: 3rem; /* More padding for a substantial feel */
+        max-width: 500px; /* Slightly wider card for more inputs */
+        width: 100%;
+        text-align: center;
+        position: relative;
+        overflow: hidden;
+        z-index: 1; /* Ensure card is above global pattern */
+    }
+
+    /* Scanline effect for the card */
+    .profile-edit-card::after {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: repeating-linear-gradient(
+            to bottom,
+            transparent 0px,
+            transparent 1px,
+            rgba(0, 0, 0, 0.1) 2px,
+            rgba(0, 0, 0, 0.2) 3px,
+            transparent 4px,
+            transparent 5px
+        );
+        pointer-events: none;
+        opacity: 0.3; /* Subtle scanlines */
+        z-index: 2; /* Above content, below text */
+    }
+
+    .profile-edit-content {
+        position: relative;
+        z-index: 3; /* Ensure content is above scanlines */
+    }
+
+    .profile-edit-card-title {
+        font-family: var(--font-heading-retro); /* Retro font for title */
+        color: var(--retro-accent-yellow); /* Yellow title */
+        font-size: 2.8em; /* LARGER title */
+        margin-bottom: 2rem;
+        text-shadow: 4px 4px 0 var(--retro-shadow-dark); /* HEAVIER text shadow for pixel effect */
+        letter-spacing: 2px; /* Add some letter spacing */
+    }
+
+    .form-label-retro {
+        font-family: var(--font-heading-retro); /* Retro font for labels */
+        color: var(--retro-secondary-light); /* White labels */
+        font-size: 1em; /* Slightly larger labels */
+        margin-bottom: 0.8rem;
+        display: block;
+        text-align: left;
+        text-shadow: 2px 2px 0 rgba(0, 0, 0, 0.4); /* Stronger text shadow */
+        letter-spacing: 1px;
+        line-height: 1.2; /* Adjust line height for pixel font */
+    }
+
+    .form-control-retro {
+        background-color: var(--retro-bg); /* Wheat background for input fields */
+        border: 3px solid var(--retro-shadow-dark); /* THICKER dark border */
+        border-radius: 12px; /* MORE ROUNDED INPUTS */
+        padding: 1em 1.2em; /* More padding */
+        color: var(--retro-text); /* Dark text color */
+        font-family: var(--font-heading-retro); /* PRESS START 2P FOR INPUTS */
+        font-size: 1.1em; /* Slightly larger input text */
+        width: 100%;
+        box-sizing: border-box;
+        margin-bottom: 1.5rem;
+        transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
+        box-shadow: 0.3em 0.3em 0 var(--retro-shadow-dark); /* More pronounced 3D effect */
+        letter-spacing: 0.5px; /* Add some letter spacing for readability */
+    }
+
+    .form-control-retro:focus {
+        border-color: var(--retro-accent-yellow); /* Yellow border on focus */
+        box-shadow: 0.3em 0.3em 0 var(--retro-accent-red); /* Red shadow on focus */
+        outline: none;
+    }
+
+    /* Custom style for file input (pfp) to match theme */
+    .form-control-file-retro {
+        background-color: var(--retro-bg);
+        border: 3px solid var(--retro-shadow-dark);
+        border-radius: 12px;
+        padding: 0.8em 1em; /* Slightly less padding for file input */
+        color: var(--retro-text);
+        font-family: var(--font-heading-retro);
+        font-size: 0.9em; /* Slightly smaller font for file input */
+        width: 100%;
+        box-sizing: border-box;
+        margin-bottom: 1.5rem;
+        box-shadow: 0.3em 0.3em 0 var(--retro-shadow-dark);
+        cursor: pointer;
+    }
+    .form-control-file-retro::-webkit-file-upload-button {
+        background-color: var(--retro-accent-red);
+        color: var(--retro-secondary-light);
+        font-family: var(--font-heading-retro);
+        font-size: 0.8em;
+        padding: 0.5em 1em;
+        border: 2px solid var(--retro-shadow-dark);
+        border-radius: 8px;
+        cursor: pointer;
+        transition: all var(--transition-fast);
+        margin-right: 10px;
+        box-shadow: 0.2em 0.2em 0 var(--retro-shadow-dark);
+    }
+    .form-control-file-retro::-webkit-file-upload-button:hover {
+        background-color: var(--retro-accent-yellow);
+        color: var(--retro-text);
+        transform: translateY(-2px);
+        box-shadow: 0.3em 0.3em 0 var(--retro-shadow-dark);
+    }
+
+    /* --- Avatar Preview Styling --- */
+    .avatar-preview-container {
+        width: 120px; /* Size of the circular preview */
+        height: 120px;
+        border-radius: 50%; /* Makes it a circle */
+        border: 4px solid var(--retro-accent-yellow); /* Yellow border */
+        box-shadow: 0.3em 0.3em 0 var(--retro-shadow-dark); /* 3D effect */
+        overflow: hidden; /* Hide parts of the image outside the circle */
+        margin: 0 auto 1.5rem; /* Center and add margin below */
+        display: flex; /* Use flex to center image inside */
+        justify-content: center;
+        align-items: center;
+        background-color: var(--retro-bg); /* Background if image doesn't fill */
+    }
+
+    .avatar-preview-container img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover; /* Cover the container without distortion */
+        display: block; /* Remove extra space below image */
+        image-rendering: pixelated; /* Optional: for a pixel art effect */
+    }
+    /* --- End New --- */
+
+
+    .btn-retro-primary {
+        background-color: var(--retro-accent-red); /* Red button */
+        color: var(--retro-secondary-light); /* White text */
+        font-family: var(--font-heading-retro); /* Retro font */
+        font-size: 1.3em; /* LARGER button text */
+        padding: 1em 2em; /* More padding */
+        border: 4px solid var(--retro-shadow-dark); /* THICKER dark border */
+        border-radius: 15px; /* MORE ROUNDED BUTTONS */
+        box-shadow: 0.5em 0.5em 0 var(--retro-shadow-dark); /* STRONGER 3D shadow */
+        cursor: pointer;
+        transition: all var(--transition-fast);
+        width: 100%;
+        margin-top: 1.5rem;
+        text-shadow: 2px 2px 0 rgba(0, 0, 0, 0.5); /* Text shadow for button */
+        letter-spacing: 1px;
+    }
+
+    .btn-retro-primary:hover {
+        background-color: var(--retro-accent-yellow); /* Yellow on hover */
+        color: var(--retro-text); /* Dark text on hover */
+        transform: translateY(-5px); /* More pronounced lift effect */
+        box-shadow: 0.7em 0.7em 0 var(--retro-shadow-dark); /* Even larger shadow on hover */
+    }
+
+    .btn-retro-primary:active {
+        transform: translateY(0); /* Press down effect */
+        box-shadow: 0.2em 0.2em 0 var(--retro-shadow-dark); /* Smaller shadow when pressed */
+    }
+
+    .back-link-section {
+        margin-top: 2rem;
+        padding-top: 2rem;
+        border-top: 4px dashed var(--retro-accent-yellow); /* THICKER dashed separator */
+    }
+
+    .back-link-section p {
+        color: var(--retro-secondary-light); /* White text */
+        font-family: var(--font-heading-retro); /* PRESS START 2P FOR PARAGRAPH */
+        font-size: 0.9em; /* Adjusted size for readability with pixel font */
+        margin-bottom: 1rem;
+        text-shadow: 1px 1px 0 rgba(0, 0, 0, 0.3);
+        line-height: 1.4; /* Adjust line height for pixel font */
+        letter-spacing: 0.5px;
+    }
+
+    .back-link-section a {
+        color: var(--retro-accent-yellow); /* Yellow link */
+        text-decoration: none;
+        font-weight: bold;
+        transition: color var(--transition-fast);
+        font-family: var(--font-heading-retro); /* Retro font for link */
+        font-size: 1.1em;
+        text-shadow: 1px 1px 0 rgba(0, 0, 0, 0.3);
+        letter-spacing: 0.5px;
+    }
+
+    .back-link-section a:hover {
+        color: var(--retro-accent-red); /* Red on hover */
+        text-decoration: underline;
+    }
+
+    /* Basic validation feedback styling */
+    .was-validated .form-control-retro:invalid,
+    .was-validated .form-control-file-retro:invalid {
+        border-color: var(--retro-accent-red);
+        box-shadow: 0.3em 0.3em 0 var(--retro-accent-red);
+    }
+    .was-validated .form-control-retro:valid,
+    .was-validated .form-control-file-retro:valid {
+        border-color: #28a745; /* Bootstrap green for valid */
+    }
+    .invalid-feedback-retro {
+        color: var(--retro-accent-red);
+        font-family: var(--font-heading-retro); /* PRESS START 2P FOR FEEDBACK */
+        font-size: 0.8em; /* Adjusted size for readability */
+        text-align: left;
+        margin-top: 0.25rem;
+        display: none; /* Hidden by default */
+        line-height: 1.2;
+        letter-spacing: 0.5px;
+    }
+    .was-validated .form-control-retro:invalid + .invalid-feedback-retro,
+    .was-validated .form-control-file-retro:invalid + .invalid-feedback-retro {
+        display: block; /* Show on invalid */
+    }
+
+    /* Responsive adjustments for smaller screens */
+    @media (max-width: 576px) {
+        .profile-edit-card {
+            padding: 2rem;
+            box-shadow: 0.6em 0.6em 0 var(--retro-accent-red); /* Slightly smaller shadow */
+        }
+        .profile-edit-card-title {
+            font-size: 2.2em; /* Smaller title on very small screens */
+        }
+        .form-control-retro, .form-control-file-retro {
+            font-size: 1em; /* Smaller input text */
+            padding: 0.8em 1em;
+        }
+        .btn-retro-primary {
+            font-size: 1.1em; /* Smaller button text */
+            padding: 0.8em 1.5em;
+        }
+        .back-link-section p, .back-link-section a {
+            font-size: 0.85em; /* Smaller text for back link section */
+        }
+        /* Adjust preview for small screens */
+        .avatar-preview-container {
+            width: 100px;
+            height: 100px;
+        }
+    }
+</style>
+
+<div class="profile-edit-container">
+    <div class="profile-edit-card">
+        <div class="profile-edit-content">
+            <h1 class="profile-edit-card-title">EDIT AURA</h1>
+            <form action="/profile/edit" method="POST" class="needs-validation" novalidate enctype="multipart/form-data">
+                <div class="mb-3">
+                    <label class="form-label-retro" for="name">NAME</label>
+                    <input class="form-control-retro" type="text" id="name" name="name" required value="<%= user.name %>">
+                    <div class="invalid-feedback-retro">
+                        PLEASE ENTER YOUR NAME.
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label-retro" for="username">USERNAME</label>
+                    <input class="form-control-retro" type="text" id="username" name="username" required value="<%= user.username %>">
+                    <div class="invalid-feedback-retro">
+                        PLEASE CHOOSE A USERNAME.
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label-retro" for="email">EMAIL</label>
+                    <input class="form-control-retro" type="email" id="email" name="email" required value="<%= user.email %>">
+                    <div class="invalid-feedback-retro">
+                        PLEASE ENTER A VALID EMAIL ADDRESS.
+                    </div>
+                </div>
+
+                <div class="avatar-preview-container" id="avatarPreviewContainer">
+                    <img id="avatarPreview" src="<%= user.avatarUrl || '/images/default-avatar.png' %>" alt="Profile Picture Preview">
+                </div>
+                <div class="mb-3">
+                    <label class="form-label-retro" for="avatar">NEW PROFILE PICTURE (OPTIONAL)</label>
+                    <input class="form-control-file-retro" type="file" id="avatar" name="avatar" accept="image/*">
+                    <div class="invalid-feedback-retro">
+                        PLEASE UPLOAD A PROFILE PICTURE.
+                    </div>
+                </div>
+
+                <button class="btn-retro-primary" type="submit">UPDATE AURA</button>
+            </form>
+
+            <div class="back-link-section">
+                <p>WANT TO CHANGE PASSWORD?</p>
+                <a href="/profile/change-password">CHANGE PASSWORD HERE</a>
+                <p class="mt-3">GO BACK TO YOUR AURA?</p>
+                <a href="/aura">VIEW AURA</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Client-side validation for the form
+    (function () {
+        'use strict';
+
+        var forms = document.querySelectorAll('.needs-validation');
+        const avatarInput = document.getElementById('avatar');
+        const avatarPreview = document.getElementById('avatarPreview');
+
+        // Event listener for avatar input to show preview
+        avatarInput.addEventListener('change', function() {
+            if (this.files && this.files[0]) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    avatarPreview.src = e.target.result;
+                };
+                reader.readAsDataURL(this.files[0]);
+            } else {
+                // If no file is selected, revert to current or default placeholder
+                avatarPreview.src = "<%= user.avatarUrl || '/images/default-avatar.png' %>";
+            }
+        });
+
+        Array.prototype.slice.call(forms)
+            .forEach(function (form) {
+                form.addEventListener('submit', function (event) {
+                    if (!form.checkValidity()) {
+                        event.preventDefault();
+                        event.stopPropagation();
+                    }
+                    form.classList.add('was-validated');
+                }, false);
+            });
+    })();
+</script>
