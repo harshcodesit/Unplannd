@@ -81,7 +81,7 @@ app.get('/', (req, res) => {
     res.render('hub/index', { title: 'Welcome to Unplann\'d' });
 });
 app.get('/test', (req, res) => {
-    res.render('aura/test', { title: 'Welcome to Unplann\'d' });
+    res.render('aura/aura', { title: 'Welcome to Unplann\'d' });
 });
 
 // Protected Dashboard Route (requires login)

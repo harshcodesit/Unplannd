@@ -1,60 +1,59 @@
-// glimmergrid-mvp/models/Glimmer.js
-const mongoose = require('mongoose');
-const Schema = mongoose.Schema;
+// glimmergrid-mvp/controllers/glimmerController.js
+const Glimmer = require('../models/Glimmer');
+const User = require('../models/User'); // Required for populating creator/participants
+const Review = require('../models/Review'); // Required for populating reviews
 
-const glimmerSchema = new Schema({
-    title: {
-        type: String,
-        required: true,
-        trim: true
-    },
-    description: {
-        type: String,
-        required: true
-    },
-    datetime: {
-        type: Date, // Use Date type for date and time
-        required: true
-    },
-    category: {
-        type: String,
-        required: true,
-        enum: ['Music Jam', 'Pop-up Meetup', 'Idea Circle', 'Workshop', 'Sporting Event', 'Art Session', 'Other'], // Define allowed categories
-        trim: true
-    },
-    tags: [String], // Array of strings for tags
-    host: {
-        type: Schema.Types.ObjectId,
-        ref: 'User', // Reference to the User who created this glimmer
-        required: true
-    },
-    location: {
-        type: {
-            type: String, // GeoJSON Type - 'Point'
-            enum: ['Point'],
-            default: 'Point',
-            required: true
-        },
-        coordinates: { // GeoJSON coordinates [longitude, latitude]
-            type: [Number],
-            required: true,
-            index: '2dsphere' // Essential for geospatial queries
+// --- Render Glimmers Index Page ---
+exports.index = async (req, res) => {
+    try {
+        const glimmers = await Glimmer.find({})
+                                      .populate('creator', 'username name avatarUrl') // Populate creator's basic info
+                                      .sort({ createdAt: -1 }); // Show newest first
+
+        res.render('glimmers/index', {
+            title: 'All Glimmers',
+            glimmers: glimmers,
+            user: req.user // Pass user object for conditional display in navbar/layouts
+        });
+    } catch (err) {
+        console.error("Error fetching glimmers:", err);
+        req.flash('error_msg', 'Could not load glimmers.');
+        res.redirect('/hub'); // Redirect to new homepage (HUB)
+    }
+};
+
+// --- Render Single Glimmer Page ---
+exports.show = async (req, res) => {
+    try {
+        const glimmer = await Glimmer.findById(req.params.id)
+                                    .populate('creator', 'username name avatarUrl') // Populate creator details
+                                    .populate('participants', 'username name avatarUrl') // Populate participants details
+                                    .populate({ // Populate reviews for this glimmer, and the reviewer's basic info
+                                        path: 'reviews',
+                                        populate: {
+                                            path: 'reviewer',
+                                            select: 'username name avatarUrl'
+                                        }
+                                    });
+
+        if (!glimmer) {
+            req.flash('error_msg', 'Glimmer not found.');
+            return res.redirect('/glimmers');
         }
-    },
-    imageUrl: { // URL for the glimmer's cover image
-        type: String,
-        default: '/images/default-glimmer.png' // Default image if none uploaded
-    },
-    joinedUsers: [{
-        type: Schema.Types.ObjectId,
-        ref: 'User' // Users who have been accepted to join this glimmer
-    }]
-}, {
-    timestamps: true
-});
 
-// Create a 2dsphere index for the location.coordinates field.
-// This is crucial for efficient geospatial queries like $geoNear.
-glimmerSchema.index({ 'location.coordinates': '2dsphere' });
-
-module.exports = mongoose.model('Glimmer', glimmerSchema);
+        res.render('glimmers/show', {
+            title: glimmer.title,
+            glimmer: glimmer,
+            user: req.user // Pass user object
+        });
+    } catch (err) {
+        console.error("Error fetching single glimmer:", err);
+        // Check for CastError (invalid ID format)
+        if (err.name === 'CastError') {
+            req.flash('error_msg', 'Invalid Glimmer ID.');
+            return res.redirect('/glimmers');
+        }
+        req.flash('error_msg', 'Could not load glimmer details.');
+        res.redirect('/glimmers');
+    }
+};

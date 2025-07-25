@@ -1,13 +1,15 @@
 // glimmergrid-mvp/controllers/authController.js
 const passport = require('passport');
 const User = require('../models/User');
+const Glimmer = require('../models/Glimmer'); // Import Glimmer model
+const Review = require('../models/Review');   // Import Review model
 const upload = require('../config/multerConfig'); // Import multer configuration
 
 // --- Render Login Page ---
 exports.renderLoginPage = (req, res) => {
     res.render('auth/login', {
         title: 'Login',
-        oldInput: { username: '' } // For preserving input on error (if you add this to login.ejs)
+        oldInput: { username: '' } // For preserving input on error
     });
 };
 
@@ -16,7 +18,7 @@ exports.renderRegisterPage = (req, res) => {
     res.render('auth/register', {
         title: 'Sign Up',
         errors: [],
-        oldInput: { name: '', username: '', email: '', password: '', passwordConfirm: '' } // Changed password2 to passwordConfirm
+        oldInput: { name: '', username: '', email: '', password: '', passwordConfirm: '' }
     });
 };
 
@@ -33,7 +35,7 @@ exports.registerUser = (req, res, next) => {
         }
 
         const { name, username, email, password, passwordConfirm } = req.body;
-        const avatarUrl = req.file ? `/uploads/avatars/${req.file.filename}` : undefined; // Get avatar URL if file uploaded
+        const avatarUrl = req.file ? `/uploads/avatars/${req.file.filename}` : undefined;
 
         let errors = [];
 
@@ -48,7 +50,7 @@ exports.registerUser = (req, res, next) => {
             errors.push({ msg: 'Password must be at least 6 characters.' });
         }
 
-        // Validate username format (if you use this regex in client-side, ensure consistency)
+        // Validate username format
         const usernameRegex = /^[a-zA-Z0-9_]{3,20}$/;
         if (!usernameRegex.test(username)) {
             errors.push({ msg: 'Username can only contain letters, numbers, and underscores, and be 3-20 characters long.' });
@@ -59,7 +61,6 @@ exports.registerUser = (req, res, next) => {
         if (!emailRegex.test(email)) {
             errors.push({ msg: 'Please enter a valid email address.' });
         }
-
 
         if (errors.length > 0) {
             return res.render('auth/register', {
@@ -97,19 +98,16 @@ exports.registerUser = (req, res, next) => {
                 newUser.avatarUrl = avatarUrl;
             }
 
-            // User.register method handles checking if the email (usernameField) already exists
-            // and also handles hashing the password.
             const registeredUser = await User.register(newUser, password);
 
-            // If registration is successful, log the user in immediately
             req.login(registeredUser, (loginErr) => {
                 if (loginErr) {
                     console.error("Login after registration error:", loginErr);
                     req.flash('error_msg', 'Registration successful, but automatic login failed. Please try logging in.');
-                    return res.redirect('/login'); // Corrected redirect
+                    return res.redirect('/login');
                 }
                 req.flash('success_msg', 'You are now registered and logged in!');
-                res.redirect('/dashboard');
+                res.redirect('/hub'); // Redirect to new homepage (HUB)
             });
 
         } catch (dbErr) {
@@ -124,8 +122,6 @@ exports.registerUser = (req, res, next) => {
     });
 };
 
-
-// --- Login User ---
 // --- Login User ---
 exports.loginUser = (req, res, next) => {
     passport.authenticate('local', (err, user, info) => {
@@ -135,8 +131,7 @@ exports.loginUser = (req, res, next) => {
             return res.redirect('/login');
         }
         if (!user) {
-            // Authentication failed, Passport's default behavior handles failureFlash and redirect
-            req.flash('error_msg', info.message || 'Invalid username or password.'); // Use info.message for specific errors
+            req.flash('error_msg', info.message || 'Invalid username or password.');
             return res.redirect('/login');
         }
 
@@ -147,10 +142,9 @@ exports.loginUser = (req, res, next) => {
                 return res.redirect('/login');
             }
 
-            // Check if there's a stored URL to redirect to
-            const redirectUrl = req.session.returnTo || '/dashboard'; // Use '/dashboard' as fallback
+            const redirectUrl = req.session.returnTo || '/hub'; // Use '/hub' as fallback
             if (req.session.returnTo) {
-                delete req.session.returnTo; // Clean up the session variable
+                delete req.session.returnTo;
             }
             req.flash('success_msg', 'You are now logged in!');
             res.redirect(redirectUrl);
@@ -165,33 +159,44 @@ exports.logoutUser = (req, res, next) => {
             return next(err);
         }
         req.flash('success_msg', 'You are logged out');
-        res.redirect('/login'); // Corrected redirect
+        res.redirect('/login');
     });
 };
 
-// --- Render Profile Page ---
-exports.renderProfilePage = async (req, res) => {
+// --- Render Aura (Profile) Page ---
+exports.renderAuraPage = async (req, res) => { // Renamed from renderProfilePage
     try {
+        // 1. Find the user and populate hosted/joined glimmers
         const user = await User.findById(req.user._id)
-                                .populate('hostedGlimmers')
-                                .populate('joinedGlimmers');
+                                .populate('hostedGlimmers') // Populate to get count of hosted events
+                                .populate('joinedGlimmers'); // Populate to get count of joined events
 
         if (!user) {
-            req.flash('error_msg', 'User profile not found.');
-            return res.redirect('/dashboard');
+            req.flash('error_msg', 'User aura not found.');
+            return res.redirect('/hub'); // Redirect to new homepage
         }
 
-        res.render('profile/view', { // Assuming views/profile/view.ejs based on common naming or your structure
-            title: 'My Profile',
-            user: user
+        // 2. Get IDs of glimmers hosted by this user
+        const hostedGlimmerIds = user.hostedGlimmers.map(glimmer => glimmer._id);
+
+        // 3. Find reviews for glimmers hosted by this user (reviews RECEIVED)
+        const receivedReviews = await Review.find({ glimmer: { $in: hostedGlimmerIds } })
+                                            .populate('reviewer', 'username name avatarUrl') // Who wrote the review
+                                            .populate('glimmer', 'title') // Which glimmer it's for
+                                            .sort({ createdAt: -1 }) // Newest first
+                                            .limit(5); // Last 5 reviews
+
+        res.render('aura/aura', { // Updated EJS path
+            title: `${user.username}'s Aura`, // Updated title
+            user: user, // Pass the fully populated user object
+            receivedReviews: receivedReviews // Pass the received reviews
         });
     } catch (err) {
-        console.error("Error rendering profile page:", err);
-        req.flash('error_msg', 'Could not load profile information.');
-        res.redirect('/dashboard');
+        console.error("Error rendering aura page:", err);
+        req.flash('error_msg', 'Could not load aura information.');
+        res.redirect('/hub'); // Redirect to new homepage
     }
 };
-
 
 // --- Render Edit Profile Page ---
 exports.renderEditProfilePage = async (req, res) => {
@@ -199,9 +204,9 @@ exports.renderEditProfilePage = async (req, res) => {
         const user = await User.findById(req.user._id);
         if (!user) {
             req.flash('error_msg', 'User not found for editing.');
-            return res.redirect('/dashboard');
+            return res.redirect('/hub');
         }
-        res.render('profile/edit', {
+        res.render('profile/edit', { // This EJS path remains 'profile/edit' for now
             title: 'Edit Profile',
             user: user,
             errors: []
@@ -209,19 +214,19 @@ exports.renderEditProfilePage = async (req, res) => {
     } catch (err) {
         console.error("Error rendering edit profile page:", err);
         req.flash('error_msg', 'Could not load profile for editing.');
-        res.redirect('/dashboard');
+        res.redirect('/hub');
     }
 };
 
 // --- Update User Profile ---
 exports.updateProfile = (req, res, next) => {
-    upload(req, res, async (err) => { // Use multer upload middleware
+    upload(req, res, async (err) => {
         if (err) {
             console.error("Multer Upload Error:", err);
             req.flash('error_msg', err.message || 'Error uploading file.');
             return res.render('profile/edit', {
                 title: 'Edit Profile',
-                user: req.user, // Still pass the user for the form
+                user: req.user,
                 errors: [{ msg: err.message || 'Error uploading file.' }]
             });
         }
@@ -229,7 +234,6 @@ exports.updateProfile = (req, res, next) => {
         const { name, username, email } = req.body;
         let errors = [];
 
-        // Basic validation for name and email
         if (!name || !username || !email) {
             errors.push({ msg: 'Name, Username, and Email are required.' });
         }
@@ -242,12 +246,11 @@ exports.updateProfile = (req, res, next) => {
             errors.push({ msg: 'Username can only contain letters, numbers, and underscores, and be 3-20 characters long.' });
         }
 
-
         if (errors.length > 0) {
             req.flash('error_msg', 'Please correct the errors.');
             return res.render('profile/edit', {
                 title: 'Edit Profile',
-                user: { ...req.user.toObject(), name, username, email }, // Pass updated values for display
+                user: { ...req.user.toObject(), name, username, email },
                 errors
             });
         }
@@ -256,10 +259,9 @@ exports.updateProfile = (req, res, next) => {
             const user = await User.findById(req.user._id);
             if (!user) {
                 req.flash('error_msg', 'User not found.');
-                return res.redirect('/dashboard');
+                return res.redirect('/hub');
             }
 
-            // Check for duplicate email if changing
             if (email !== user.email) {
                 const existingUserWithEmail = await User.findOne({ email: email });
                 if (existingUserWithEmail && existingUserWithEmail._id.toString() !== user._id.toString()) {
@@ -267,7 +269,6 @@ exports.updateProfile = (req, res, next) => {
                 }
             }
 
-            // Check for duplicate username if changing
             if (username !== user.username) {
                 const existingUserWithUsername = await User.findOne({ username: username });
                 if (existingUserWithUsername && existingUserWithUsername._id.toString() !== user._id.toString()) {
@@ -285,21 +286,21 @@ exports.updateProfile = (req, res, next) => {
             }
 
             user.name = name;
-            user.username = username; // Update username
-            user.email = email; // Update email
+            user.username = username;
+            user.email = email;
 
-            if (req.file) { // If a new avatar was uploaded, update the URL
+            if (req.file) {
                 user.avatarUrl = `/uploads/avatars/${req.file.filename}`;
             }
 
             await user.save();
 
             req.flash('success_msg', 'Profile updated successfully!');
-            res.redirect('/profile'); // Corrected redirect
+            res.redirect('/aura'); // Redirect to new aura page
         } catch (dbErr) {
             console.error("Error updating profile:", dbErr);
             let msg = 'Error updating profile. Please try again.';
-            if (dbErr.code === 11000) { // MongoDB duplicate key error
+            if (dbErr.code === 11000) {
                 if (dbErr.keyPattern && dbErr.keyPattern.email) {
                     msg = 'That email is already registered to another account.';
                 } else if (dbErr.keyPattern && dbErr.keyPattern.username) {
@@ -350,7 +351,7 @@ exports.changePassword = async (req, res) => {
     try {
         await req.user.changePassword(currentPassword, newPassword);
         req.flash('success_msg', 'Password changed successfully!');
-        res.redirect('/dashboard');
+        res.redirect('/aura'); // Redirect to new aura page
     } catch (err) {
         console.error("Error changing password:", err);
         req.flash('error_msg', err.message || 'Error changing password. Check your current password.');

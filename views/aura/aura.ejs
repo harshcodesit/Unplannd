@@ -1,7 +1,7 @@
-<% layout('layouts/boilerplate') %>
+<%- layout('layouts/boilerplate') %>
 
 <style>
-    /* Root CSS Variables for the Retro Theme */
+    /* Root CSS Variables for the Retro Theme (ensure these are in your main style.css) */
     :root {
         --retro-bg: wheat; /* Main background from your box */
         --retro-text: #1F2937; /* Dark text for contrast */
@@ -11,6 +11,9 @@
         --retro-secondary-light: #fff; /* From box shadow white */
         --retro-shadow-dark: #000; /* From box shadow black */
         --retro-shadow-light: rgba(0, 0, 0, 0.2); /* For softer elements */
+        --transition-fast: 0.2s ease-in-out; /* Define if not already */
+        --font-heading-retro: 'Press Start 2P', cursive; /* Ensure this is defined */
+        --font-primary: 'Inter', sans-serif; /* Assuming Inter for body text */
     }
 
     /* --- General Layout --- */
@@ -18,21 +21,21 @@
         display: flex;
         justify-content: center; /* Center the entire content */
         align-items: flex-start; /* Align items to the top if they have different heights */
-        padding: 2rem;
+        padding: 1.5rem; /* Slightly reduced padding */
         background-color: var(--retro-bg);
-        font-family: "Press Start 2P", cursive; /* Retro font for headings/titles */
+        font-family: var(--font-primary); /* Default to Inter for general text */
         color: var(--retro-text);
         min-height: 100vh;
         flex-wrap: wrap; /* Allow wrapping for responsiveness */
-        gap: 2rem; /* Gap between main sections (profile card and reviews) */
+        gap: 1.5rem; /* Reduced gap between main sections (profile card and reviews) */
     }
 
     /* --- Retro Profile Card --- */
     .retro-profile-card {
-        width: 380px; /* Slightly wider to accommodate content better */
+        width: 360px; /* Slightly more compact width */
         background: var(--retro-primary-teal);
-        border-radius: 15px; /* From your card */
-        padding: 1rem; /* Slightly reduced padding */
+        border-radius: 15px;
+        padding: 1.2rem; /* Reduced padding for compactness */
         box-shadow: 0px 0px 0 var(--retro-shadow-dark);
         border: 2px solid var(--retro-shadow-dark);
         transition: all 0.3s ease;
@@ -72,13 +75,13 @@
     /* Profile Image and Online Indicator */
     .profile-image-container {
         position: relative;
-        width: 120px; /* Slightly smaller for compactness */
-        height: 120px;
+        width: 100px; /* Slightly smaller for compactness */
+        height: 100px;
         border-radius: 50%;
         overflow: hidden;
         border: 3px solid var(--retro-accent-yellow);
         box-shadow: 0 4px 10px var(--retro-shadow-light);
-        margin-bottom: 1rem;
+        margin-bottom: 0.8rem; /* Reduced margin */
         background-color: var(--retro-secondary-light); /* Background if image isn't perfect circle */
         transition: transform 0.3s ease;
     }
@@ -98,80 +101,121 @@
     /* Profile Text */
     .profile-info {
         text-align: center;
-        margin-bottom: 1.5rem;
+        margin-bottom: 1rem; /* Reduced margin */
     }
 
     .profile-info h3 { 
-        font-size: 1.4rem; /* More compact */
+        font-size: 1.3rem; /* More compact */
         font-weight: 700;
         color: var(--retro-text);
-        margin-bottom: 0.2rem;
+        margin-bottom: 0.1rem; /* Reduced margin */
         text-shadow: 2px 2px 0 rgba(0, 0, 0, 0.4);
-        font-family: "Press Start 2P", cursive;
+        font-family: var(--font-heading-retro); /* Press Start 2P */
     }
 
     .profile-info p { /* For email and username */
-        font-size: 0.95rem; /* More compact */
+        font-size: 0.9rem; /* More compact */
         color: var(--retro-text);
-        margin-bottom: 0.5rem;
-        font-family: "Inter", sans-serif;
+        margin-bottom: 0.3rem; /* Reduced margin */
+        font-family: var(--font-primary); /* Inter */
         text-shadow: none;
         word-break: break-all; /* Important for long emails/usernames */
+    }
+
+    /* Stats Section */
+    .profile-stats {
+        display: flex;
+        justify-content: space-around;
+        width: 100%;
+        margin-top: 0.8rem; /* Reduced margin */
+        padding-top: 0.8rem; /* Reduced padding */
+        border-top: 0.15em dashed rgba(0, 0, 0, 0.15);
+        color: var(--retro-text);
+        font-family: var(--font-primary); /* Inter */
+        text-shadow: none;
+    }
+
+    .stat-item {
+        text-align: center;
+        flex: 1;
+        padding: 0 0.4rem; /* Reduced padding */
+    }
+
+    .stat-item strong {
+        display: block;
+        font-size: 1.1rem; /* Slightly smaller numbers */
+        color: var(--retro-accent-yellow); /* Yellow for numbers */
+        font-family: var(--font-heading-retro); /* Press Start 2P for numbers */
+        text-shadow: 1px 1px 0 rgba(0, 0, 0, 0.3);
+    }
+
+    .stat-item span {
+        font-size: 0.75rem; /* Slightly smaller text */
+        display: block;
+        margin-top: 0.1rem; /* Reduced margin */
+        line-height: 1.2;
+    }
+    
+    .overall-rating-stars {
+        color: var(--retro-accent-yellow);
+        font-size: 1.1em; /* Slightly smaller stars */
+        letter-spacing: 1px; /* Reduced letter spacing */
+        text-shadow: none;
     }
 
     /* Action Buttons */
     .profile-action-buttons {
         display: flex;
-        flex-direction: row; /* Changed to row for side-by-side */
-        gap: 0.8rem; /* Space between buttons */
-        margin-top: 1rem;
-        padding-top: 1rem;
-        border-top: 0.15em dashed rgba(0, 0, 0, 0.15); /* Dashed line separator */
-        width: 100%; /* Ensure it spans full width */
-        justify-content: center; /* Center buttons horizontally */
-        align-items: center; /* Align buttons vertically if they had different heights */
-        flex-wrap: wrap; /* Allow buttons to wrap to next line on small screens */
+        flex-direction: row; /* Already horizontal */
+        gap: 0.6rem; /* Reduced gap between buttons */
+        margin-top: 0.8rem; /* Reduced margin */
+        padding-top: 0.8rem; /* Reduced padding */
+        border-top: 0.15em dashed rgba(0, 0, 0, 0.15);
+        width: 100%;
+        justify-content: center;
+        align-items: center;
+        flex-wrap: wrap; /* Allow buttons to wrap for responsiveness */
     }
 
     .btn-retro-profile {
-        display: inline-flex; /* Use flex to center text within button */
+        display: inline-flex;
         align-items: center;
         justify-content: center;
-        min-width: 150px; /* Reduced min-width to allow more flexibility */
-        background-color: var(--retro-accent-red); /* Primary action color */
-        color: var(--retro-secondary-light); /* White text */
-        font-family: "Press Start 2P", cursive;
-        font-size: 1.1em; /* Slightly larger font */
-        padding: 0.8em 1.5em; /* Generous padding */
-        border: 4px solid var(--retro-shadow-dark);
-        border-radius: 15px;
-        box-shadow: 0.5em 0.5em 0 var(--retro-shadow-dark); /* Prominent 3D shadow */
+        min-width: 120px; /* More compact min-width */
+        background-color: var(--retro-accent-red);
+        color: var(--retro-secondary-light);
+        font-family: var(--font-heading-retro);
+        font-size: 0.9em; /* Slightly smaller font for buttons */
+        padding: 0.6em 1em; /* Reduced padding */
+        border: 3px solid var(--retro-shadow-dark); /* Slightly thinner border */
+        border-radius: 12px; /* Slightly less rounded */
+        box-shadow: 0.4em 0.4em 0 var(--retro-shadow-dark); /* Slightly less prominent shadow */
         cursor: pointer;
         transition: all 0.2s ease;
-        text-shadow: 2px 2px 0 rgba(0, 0, 0, 0.5);
-        letter-spacing: 1px;
-        text-decoration: none; /* Remove underline for links */
-        box-sizing: border-box; /* Include padding/border in width */
+        text-shadow: 1px 1px 0 rgba(0, 0, 0, 0.5); /* Slightly less prominent text shadow */
+        letter-spacing: 0.5px; /* Reduced letter spacing */
+        text-decoration: none;
+        box-sizing: border-box;
     }
 
     .btn-retro-profile:hover {
-        background-color: var(--retro-accent-yellow); /* Change color on hover */
-        color: var(--retro-text); /* Dark text on hover */
-        transform: translateY(-5px); /* Lift effect */
-        box-shadow: 0.7em 0.7em 0 var(--retro-shadow-dark); /* Enhanced shadow on hover */
+        background-color: var(--retro-accent-yellow);
+        color: var(--retro-text);
+        transform: translateY(-3px); /* Less pronounced lift effect */
+        box-shadow: 0.5em 0.5em 0 var(--retro-shadow-dark); /* Less pronounced shadow on hover */
     }
 
     .btn-retro-profile:active {
-        transform: translateY(0); /* "Press down" effect */
-        box-shadow: 0.2em 0.2em 0 var(--retro-shadow-dark); /* Reduced shadow when active */
+        transform: translateY(0);
+        box-shadow: 0.1em 0.1em 0 var(--retro-shadow-dark); /* Even more subtle active shadow */
     }
 
     /* --- Review Section --- */
     .retro-review-section {
-        width: 380px; /* Consistent width with profile card */
+        width: 360px; /* Consistent compact width with profile card */
         background: var(--retro-primary-teal);
         border-radius: 15px;
-        padding: 1.5rem;
+        padding: 1.2rem; /* Reduced padding */
         box-shadow:
             0 0 0 0.15em var(--retro-shadow-dark),
             0 0 0 0.3em var(--retro-secondary-light),
@@ -181,166 +225,201 @@
         text-shadow: 1px 1px 0 rgba(0, 0, 0, 0.3);
         display: flex;
         flex-direction: column;
-        animation: bounceIn 1s ease-out 0.2s backwards; /* Staggered entry */
+        animation: bounceIn 1s ease-out 0.2s backwards;
     }
 
     .retro-review-section h2 {
-        font-family: "Press Start 2P", cursive;
-        font-size: 1.2rem;
+        font-family: var(--font-heading-retro);
+        font-size: 1.1rem; /* Slightly smaller heading */
         color: var(--retro-text);
-        margin-bottom: 1rem;
-        padding-bottom: 0.5rem;
+        margin-bottom: 0.8rem; /* Reduced margin */
+        padding-bottom: 0.4rem; /* Reduced padding */
         border-bottom: 2px dashed var(--retro-accent-yellow);
         text-align: center;
         text-shadow: 2px 2px 0 rgba(0, 0, 0, 0.4);
     }
 
     .retro-review-item {
-        background: var(--retro-secondary-light); /* Light background for review items */
+        background: var(--retro-secondary-light);
         border: 2px solid var(--retro-shadow-dark);
-        border-radius: 8px; /* Slightly less rounded */
-        padding: 0.8rem 1rem;
-        margin-bottom: 1rem;
-        box-shadow: 0.2em 0.2em 0 rgba(0, 0, 0, 0.2);
+        border-radius: 8px;
+        padding: 0.7rem 0.9rem; /* Reduced padding */
+        margin-bottom: 0.8rem; /* Reduced margin */
+        box-shadow: 0.15em 0.15em 0 rgba(0, 0, 0, 0.2); /* More subtle shadow */
         transition: transform 0.2s ease, box-shadow 0.2s ease;
     }
 
     .retro-review-item:hover {
-        transform: translateY(-3px) translateX(3px); /* Subtle shift on hover */
-        box-shadow: 0.3em 0.3em 0 rgba(0, 0, 0, 0.3);
+        transform: translateY(-2px) translateX(2px); /* More subtle shift on hover */
+        box-shadow: 0.2em 0.2em 0 rgba(0, 0, 0, 0.3);
     }
 
     .retro-review-header {
         display: flex;
         justify-content: space-between;
         align-items: center;
-        font-size: 0.85rem;
-        margin-bottom: 0.4rem;
+        font-size: 0.8rem; /* Slightly smaller font */
+        margin-bottom: 0.3rem; /* Reduced margin */
         color: var(--retro-text);
         font-weight: 600;
-        font-family: "Inter", sans-serif;
+        font-family: var(--font-primary);
         text-shadow: none;
     }
 
     .retro-review-stars {
         color: var(--retro-accent-yellow);
-        letter-spacing: 1px;
-        font-size: 1.1em; /* Slightly larger stars */
+        letter-spacing: 0.5px; /* Reduced letter spacing */
+        font-size: 1em; /* Slightly smaller stars */
         text-shadow: none;
     }
 
     .retro-review-text {
-        font-size: 0.8rem;
+        font-size: 0.75rem; /* Slightly smaller font */
         color: var(--retro-text);
         line-height: 1.4;
-        margin-bottom: 0.4rem;
-        font-family: "Inter", sans-serif;
+        margin-bottom: 0.3rem; /* Reduced margin */
+        font-family: var(--font-primary);
         text-shadow: none;
     }
 
     .retro-review-date {
-        font-size: 0.7rem;
+        font-size: 0.65rem; /* Slightly smaller font */
         color: var(--retro-text);
         text-align: right;
-        font-family: "Inter", sans-serif;
+        font-family: var(--font-primary);
         text-shadow: none;
     }
 
     .no-reviews-message {
         color: var(--retro-text);
         text-align: center;
-        padding: 1rem;
+        padding: 0.8rem; /* Reduced padding */
         font-style: italic;
-        font-family: "Inter", sans-serif;
+        font-family: var(--font-primary);
         text-shadow: none;
     }
 
     /* --- Responsive Adjustments --- */
     @media (max-width: 850px) {
         .profile-page-container {
-            flex-direction: column; /* Stack vertically on smaller screens */
-            align-items: center; /* Center items when stacked */
+            flex-direction: column;
+            align-items: center;
+            padding: 1rem; /* More compact padding for smaller screens */
+            gap: 1rem; /* More compact gap */
         }
         .retro-profile-card,
         .retro-review-section {
-            width: 90%; /* Max width for cards */
-            max-width: 380px; /* Limit max width */
+            width: 95%; /* Take more width on smaller screens */
+            max-width: 360px; /* Consistent max width */
+            padding: 1rem; /* More compact padding */
         }
     }
 
     @media (max-width: 480px) {
         .profile-page-container {
-            padding: 1rem;
+            padding: 0.8rem;
         }
         .retro-profile-card,
         .retro-review-section {
-            padding: 1rem;
-            width: 100%; /* Take full width on very small screens */
+            padding: 0.8rem;
+            width: 100%;
         }
         .profile-info h3 {
-            font-size: 1.2rem;
+            font-size: 1.1rem;
         }
         .profile-action-buttons {
             flex-direction: column; /* Stack buttons vertically on very small screens */
+            gap: 0.5rem; /* Reduced gap */
         }
         .btn-retro-profile {
-            min-width: unset; /* Remove min-width to allow full width */
-            width: 100%; /* Take full width when stacked */
+            min-width: unset;
+            width: 100%;
+            font-size: 0.8em; /* Even smaller font */
+            padding: 0.5em 0.8em; /* Even smaller padding */
         }
     }
 </style>
 
-<body>
-    <div class="profile-page-container">
-        <div class="retro-profile-card">
-            <div class="profile-image-container">
-                <!-- Hardcoded avatar path -->
-                <img src="/images/default-avatar.png" alt="Profile Image" />
-            </div>
+<!-- Helper function to render stars -->
+<%
+    function renderStars(rating) {
+        let stars = '';
+        // Ensure rating is a number and within bounds
+        const safeRating = Math.max(0, Math.min(5, parseFloat(rating) || 0)); 
+        for (let i = 0; i < 5; i++) {
+            if (i < Math.floor(safeRating)) {
+                stars += '⭐'; // Full star
+            } else if (i < safeRating) {
+                stars += '🌟'; // Half star (or a different emoji for partial)
+            } else {
+                stars += '☆'; // Empty star
+            }
+        }
+        return stars;
+    }
+%>
 
-            <div class="profile-info">
-                <h3>JOHN DOE</h3>
-                <p>@JOHNDOE123</p>
-                <p>JOHN.DOE@EXAMPLE.COM</p>
-            </div>
+<div class="profile-page-container">
+    <div class="retro-profile-card">
+        <div class="profile-image-container">
+            <!-- Added null/undefined check for user before accessing properties -->
+            <img src="<%= (user && user.avatarUrl) ? user.avatarUrl : '/images/default-avatar.png' %>" alt="<%= (user && user.username) ? user.username : 'Default' %> Profile Image" />
+        </div>
 
-            <div class="profile-action-buttons">
-                <!-- Hardcoded links for testing -->
-                <a href="/edit-profile-test" class="btn-retro-profile">EDIT PROFILE</a>
-                <a href="/logout" class="btn-retro-profile">LOGOUT</a>
+        <div class="profile-info">
+            <h3><%= (user && user.name) ? user.name.toUpperCase() : 'N/A' %></h3>
+            <p>@<%= (user && user.username) ? user.username.toUpperCase() : 'N/A' %></p>
+            <p><%= (user && user.email) ? user.email.toUpperCase() : 'N/A' %></p>
+        </div>
+
+        <div class="profile-stats">
+            <div class="stat-item">
+                <strong><%= (user && user.hostedGlimmers) ? user.hostedGlimmers.length : 0 %></strong>
+                <span>SPARKS</span>
+            </div>
+            <div class="stat-item">
+                <strong><%= (user && user.joinedGlimmers) ? user.joinedGlimmers.length : 0 %></strong>
+                <span>FOOTPRINTS</span>
+            </div>
+            <div class="stat-item">
+                <strong><%= (user && user.overallRating !== undefined) ? user.overallRating.toFixed(1) : '0.0' %></strong>
+                <span class="overall-rating-stars"><%= renderStars((user && user.overallRating) ? user.overallRating : 0) %></span>
+                <span>(<%= (user && user.numReviewsReceived !== undefined) ? user.numReviewsReceived : 0 %> Reviews)</span>
             </div>
         </div>
 
-        <div class="retro-review-section">
-            <h2>Recent Reviews</h2>
-            <!-- Hardcoded reviews for testing -->
-            <div class="retro-review-item">
-                <div class="retro-review-header">
-                    <span>ANONYMOUS</span>
-                    <span class="retro-review-stars">⭐⭐⭐⭐⭐</span>
-                </div>
-                <div class="retro-review-text">
-                    GREAT EXPERIENCE! HIGHLY RECOMMENDED.
-                </div>
-                <div class="retro-review-date">
-                    JULY 24, 2025
-                </div>
-            </div>
-            <div class="retro-review-item">
-                <div class="retro-review-header">
-                    <span>GLIMMER_FAN</span>
-                    <span class="retro-review-stars">⭐⭐⭐⭐</span>
-                </div>
-                <div class="retro-review-text">
-                    FUN EVENT, A BIT CROWDED.
-                </div>
-                <div class="retro-review-date">
-                    JULY 15, 2025
-                </div>
-            </div>
-            <p class="no-reviews-message" style="display: none;">No reviews available for this user yet.</p>
+        <div class="profile-action-buttons">
+            <a href="/profile/edit" class="btn-retro-profile">EDIT PROFILE</a>
+            <a href="/profile/change-password" class="btn-retro-profile">CHANGE PASSWORD</a>
+            <a href="/logout" class="btn-retro-profile">LOGOUT</a>
         </div>
     </div>
 
-    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
-</body>
+    <div class="retro-review-section">
+        <h2>RECENT REVIEWS RECEIVED</h2>
+        <% if (receivedReviews && receivedReviews.length > 0) { %>
+            <% receivedReviews.forEach(review => { %>
+                <div class="retro-review-item">
+                    <div class="retro-review-header">
+                        <!-- Displaying who wrote the review -->
+                        <span>FROM: <a href="/aura/<%= review.reviewer ? review.reviewer.username : '#' %>" class="text-retro-link"><%= (review.reviewer && review.reviewer.name) ? review.reviewer.name.toUpperCase() : 'ANONYMOUS' %></a></span>
+                        <span class="retro-review-stars"><%= renderStars(review.rating) %></span>
+                    </div>
+                    <div class="retro-review-text">
+                        <%= review.comment ? review.comment.toUpperCase() : 'NO COMMENT PROVIDED.' %>
+                    </div>
+                    <div class="retro-review-date">
+                        FOR GLIMMER: <a href="/glimmers/<%= review.glimmer ? review.glimmer._id : '#' %>" class="text-retro-link"><%= (review.glimmer && review.glimmer.title) ? review.glimmer.title.toUpperCase() : 'UNKNOWN GLIMMER' %></a><br>
+                        <%= review.createdAt ? review.createdAt.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' }).toUpperCase() : 'UNKNOWN DATE' %>
+                    </div>
+                </div>
+            <% }) %>
+        <% } else { %>
+            <p class="no-reviews-message">NO REVIEWS RECEIVED FOR YOUR HOSTED GLIMMERS YET.</p>
+        <% } %>
+    </div>
+</div>
+
+<!-- Ensure Press Start 2P and Inter fonts are loaded in your main boilerplate.ejs or style.css -->
+<!-- Example in boilerplate.ejs: -->
+<!-- <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Inter:wght@400;600;700&display=swap" rel="stylesheet"> -->
