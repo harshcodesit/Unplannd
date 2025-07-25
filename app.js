@@ -78,7 +78,7 @@ app.use('/', authRoutes); // Mount authRoutes directly to the root path
 
 // Basic Home Route (accessible whether logged in or out)
 app.get('/', (req, res) => {
-    res.render('index', { title: 'Welcome to Unplann\'d' });
+    res.render('hub/index', { title: 'Welcome to Unplann\'d' });
 });
 app.get('/test', (req, res) => {
     res.render('aura/test', { title: 'Welcome to Unplann\'d' });

@@ -7,6 +7,7 @@ module.exports = {
             // req.isAuthenticated() is a method added by Passport.js
             return next(); // User is authenticated, proceed to the next middleware/route handler
         }
+         req.session.returnTo = req.originalUrl;
         // If not authenticated, store a flash message and redirect to the login page
         req.flash('error_msg', 'Please log in to view that resource');
         res.redirect('/login');

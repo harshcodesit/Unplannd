@@ -1,0 +1,66 @@
+<div id="toast-container"></div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const toastContainer = document.getElementById('toast-container');
+
+        /**
+         * Creates and displays a toast message.
+         * @param {string} message The message to display.
+         * @param {string} type The type of message (e.g., 'success', 'error', 'danger').
+         */
+        function createToast(message, type) {
+            const toastDiv = document.createElement('div');
+            // Add custom classes for styling in style.css
+            toastDiv.className = `custom-toast toast fade bg-${type} text-white border-0`;
+            toastDiv.setAttribute('role', 'alert');
+            toastDiv.setAttribute('aria-live', 'assertive');
+            toastDiv.setAttribute('aria-atomic', 'true');
+
+            // Determine close button color based on toast type background
+            const btnCloseColorClass = (type === 'success' || type === 'info') ? 'btn-close-dark' : 'btn-close-white';
+
+            toastDiv.innerHTML = `
+                <div class="d-flex align-items-center">
+                    <div class="toast-body flex-grow-1">
+                        ${message}
+                    </div>
+                    <button type="button" class="btn-close ${btnCloseColorClass} me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+                </div>
+            `;
+
+            toastContainer.appendChild(toastDiv);
+
+            // Trigger reflow to enable CSS transition for fade-in
+            toastDiv.offsetWidth; // This forces the browser to re-calculate styles
+
+            toastDiv.classList.add('show'); // Add 'show' class to make it visible with fade-in
+
+            // Auto-hide after 2 seconds (2000ms)
+            setTimeout(() => {
+                toastDiv.classList.remove('show');
+                // Listen for transition end to remove element after fade-out
+                toastDiv.addEventListener('transitionend', () => toastDiv.remove(), { once: true });
+            }, 2000);
+
+            // Close button functionality
+            toastDiv.querySelector('.btn-close').addEventListener('click', () => {
+                toastDiv.classList.remove('show');
+                toastDiv.addEventListener('transitionend', () => toastDiv.remove(), { once: true });
+            });
+        }
+
+        // Check for messages and create toasts based on res.locals (from app.js)
+        <% if (success_msg && success_msg.length > 0) { %>
+            createToast('<%= success_msg %>', 'success');
+        <% } %>
+
+        <% if (error_msg && error_msg.length > 0) { %>
+            createToast('<%= error_msg %>', 'danger');
+        <% } %>
+
+        <% if (error && error.length > 0) { %>
+            createToast('<%= error %>', 'danger'); // For Passport's generic 'error' flash
+        <% } %>
+    });
+</script>

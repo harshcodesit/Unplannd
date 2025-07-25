@@ -45,6 +45,6 @@ const userSchema = new Schema({
 // Apply the passport-local-mongoose plugin to the schema.
 // We keep 'email' as the usernameField for authentication by email.
 // If you wanted to authenticate by username, you would change this to 'username'.
-userSchema.plugin(passportLocalMongoose, { usernameField: 'email' });
+userSchema.plugin(passportLocalMongoose, { usernameField: 'username' });
 
 module.exports = mongoose.model('User', userSchema);

@@ -49,3 +49,93 @@
 
 
     
+
+    /* --- Custom Toast Messages (for flash messages) --- */
+
+#toast-container {
+    position: fixed;
+    top: 20px;       /* Keep 20px from the top */
+    left: 50%;       /* Center horizontally */
+    transform: translateX(-50%); /* Adjust for its own width to truly center */
+    z-index: 1080;   /* Ensure it's on top of almost everything */
+    display: flex;
+    flex-direction: column; /* Stack multiple toasts vertically */
+    gap: 10px;       /* Space between stacked toasts */
+    align-items: center; /* Center toasts themselves if they vary in width */
+    max-width: 90%; /* Prevent container from going too wide on small screens */
+}
+.custom-toast {
+    /* pointer-events: auto; /* Re-enable clicks for individual toasts */
+    min-width: 280px;
+    max-width: 400px; /* Max width to keep them from being too wide */
+    padding: 1rem 1.25rem;
+    border-radius: 0.5rem;
+    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.2); /* Soft shadow */
+    opacity: 0; /* Start invisible */
+    transform: translateY(-20px); /* Start slightly above for slide-in effect */
+    transition: opacity 0.3s ease-out, transform 0.3s ease-out; /* Animation for appearance/disappearance */
+    display: flex; /* For inner d-flex alignment */
+    align-items: center; /* Vertically align content */
+    font-family: var(--font-primary);
+}
+
+.custom-toast.show {
+    opacity: 1;
+    transform: translateY(0); /* Slide into view */
+}
+
+/* Retro specific toast colors & borders */
+.custom-toast.bg-success { /* For success messages */
+    background-color: var(--retro-primary-green); /* Example green from your palette */
+    border: 3px solid var(--retro-shadow-dark);
+    box-shadow: 0.4em 0.4em 0 var(--retro-shadow-dark); /* Retro 3D shadow */
+    color: var(--retro-text); /* Black/dark text for light background */
+}
+
+.custom-toast.bg-danger { /* For error messages */
+    background-color: var(--retro-accent-red); /* Red from your palette */
+    border: 3px solid var(--retro-shadow-dark);
+    box-shadow: 0.4em 0.4em 0 var(--retro-shadow-dark); /* Retro 3D shadow */
+    color: var(--retro-secondary-light); /* White/light text for dark background */
+}
+
+/* Inner elements for layout */
+.custom-toast .d-flex {
+    display: flex;
+    align-items: center;
+    width: 100%;
+}
+
+.custom-toast .toast-body {
+    flex-grow: 1; /* Takes up available space */
+    padding-right: 15px; /* Space for the close button */
+    font-size: 0.95em;
+}
+
+/* Close button styling */
+.custom-toast .btn-close {
+    background: transparent no-repeat center center;
+    background-size: 1em 1em;
+    border: 0;
+    border-radius: 0.25rem;
+    opacity: 0.8;
+    cursor: pointer;
+    padding: 0; /* Remove default button padding */
+    width: 1.5em; /* Make click target larger */
+    height: 1.5em; /* Make click target larger */
+    flex-shrink: 0; /* Don't allow button to shrink */
+    margin-left: auto; /* Push button to the right */
+}
+
+/* SVG icons for close buttons, adapted for retro colors */
+.custom-toast .btn-close-white { /* For toasts with dark backgrounds (e.g., danger/red) */
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='%23fff'%3e%3cpath d='M.293.293a1 1 0 0 1 1.414 0L8 6.586 14.293.293a1 1 0 1 1 1.414 1.414L9.414 8l6.293 6.293a1 1 0 0 1-1.414 1.414L8 9.414l-6.293 6.293a1 1 0 0 1-1.414-1.414L6.586 8 .293 1.707a1 1 0 0 1 0-1.414z'/%3e%3c/svg%3e");
+}
+
+.custom-toast .btn-close-dark { /* For toasts with light backgrounds (e.g., success/green) */
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='%23000'%3e%3cpath d='M.293.293a1 1 0 0 1 1.414 0L8 6.586 14.293.293a1 1 0 1 1 1.414 1.414L9.414 8l6.293 6.293a1 1 0 0 1-1.414 1.414L8 9.414l-6.293 6.293a1 1 0 0 1-1.414-1.414L6.586 8 .293 1.707a1 1 0 0 1 0-1.414z'/%3e%3c/svg%3e");
+}
+
+.custom-toast .btn-close:hover {
+    opacity: 1; /* Full opacity on hover */
+}

@@ -1,346 +1,560 @@
-<% layout('layouts/boilerplate') %>
-
+<% layout("/layouts/boilerplate") %>
 <style>
-    /* Root CSS Variables for the Retro Theme */
+    /* --- Root Variables for Theme Consistency --- */
     :root {
-        --retro-bg: wheat; /* Main background from your box */
+        --retro-bg: wheat; /* Main background and outer box */
         --retro-text: #1F2937; /* Dark text for contrast */
-        --retro-accent-red: #d1451e; /* From box shadow */
-        --retro-accent-yellow: #FFD93D; /* From previous accent */
+        --retro-accent-red: #d1451e; /* From box shadow, button hover */
+        --retro-accent-yellow: #FFD93D; /* From previous accent, price underline */
         --retro-primary-teal: #2F9C95; /* From your card background */
         --retro-secondary-light: #fff; /* From box shadow white */
         --retro-shadow-dark: #000; /* From box shadow black */
-        --retro-shadow-light: rgba(0, 0, 0, 0.2); /* For softer elements */
+        --retro-shadow-light: rgba(0, 0, 0, 0.2); /* For softer elements, box-shadow opacity */
+
+        /* Fonts */
+        --font-primary: "Inter", sans-serif;
+        --font-heading-retro: 'Press Start 2P', cursive; /* For titles and buttons */
+
+        /* Transitions */
+        --transition-fast: 0.2s ease;
+        --transition-medium: 0.3s ease;
+        --transition-slow: 0.6s ease;
     }
 
-    /* --- General Layout --- */
-    .profile-page-container {
-        display: flex;
-        justify-content: center; /* Center the entire content */
-        align-items: flex-start; /* Align items to the top if they have different heights */
-        padding: 2rem;
+    /* --- General Body Styling --- */
+    body {
         background-color: var(--retro-bg);
-        font-family: "Press Start 2P", cursive; /* Retro font for headings/titles */
+        font-family: var(--font-primary);
         color: var(--retro-text);
+        margin: 0;
+        padding: 0;
         min-height: 100vh;
-        flex-wrap: wrap; /* Allow wrapping for responsiveness */
-        gap: 2rem; /* Gap between main sections (profile card and reviews) */
-    }
-
-    /* --- Retro Profile Card --- */
-    .retro-profile-card {
-        width: 380px; /* Slightly wider to accommodate content better */
-        background: var(--retro-primary-teal);
-        border-radius: 15px; /* From your card */
-        padding: 1rem; /* Slightly reduced padding */
-        box-shadow: 0px 0px 0 var(--retro-shadow-dark);
-        border: 2px solid var(--retro-shadow-dark);
-        transition: all 0.3s ease;
-        position: relative;
-        overflow: hidden;
         display: flex;
-        flex-direction: column;
-        align-items: center; /* Center content horizontally */
-        box-shadow:
-            0 0 0 0.15em var(--retro-shadow-dark),
-            0 0 0 0.3em var(--retro-secondary-light),
-            0 0 0 0.45em var(--retro-shadow-dark),
-            0 0.5em 0 0 var(--retro-accent-red),
-            0 0.5em 0 0.15em var(--retro-shadow-dark); /* Applied from your .box */
-        text-shadow: 1px 1px 0 rgba(0, 0, 0, 0.3);
-        animation: bounceIn 0.8s ease-out; /* Add entry animation */
+        justify-content: center;
+        align-items: center; /* Center vertically to start */
+        box-sizing: border-box;
     }
 
-    .retro-profile-card:hover {
-        transform: translateY(-5px) rotate(0deg) scale(1.01); /* Lift effect and slight scale */
+    /* Pixelated image rendering for that retro feel */
+    img {
+        image-rendering: pixelated;
+        image-rendering: -moz-crisp-edges;
+        image-rendering: -o-crisp-edges;
+        image-rendering: -webkit-optimize-contrast;
+        -ms-interpolation-mode: nearest-neighbor;
+    }
+
+    /* --- Form Container: .retro-form-container --- */
+    .retro-form-container {
+        width: 100%;
+        max-width: 700px; /* Adjusted max-width for forms */
+        background-color: var(--retro-primary-teal); /* Teal background for the main form box */
+        padding: 2.5em; /* Ample padding inside the form */
+        border-radius: 15px;
         box-shadow:
             0 0 0 0.15em var(--retro-shadow-dark),
             0 0 0 0.3em var(--retro-secondary-light),
             0 0 0 0.45em var(--retro-shadow-dark),
-            0 0.8em 0 0 var(--retro-accent-red), /* More pronounced lift */
+            0 0.6em 0 0 var(--retro-accent-red), /* Prominent red 3D shadow */
+            0 0.6em 0 0.15em var(--retro-shadow-dark); /* Dark outline for 3D shadow */
+        
+        transition: transform var(--transition-fast) steps(1);
+        animation: formEntry 0.8s ease-out; /* Add an entry animation for the form */
+        margin: 2rem auto; /* Center the form and add vertical margin */
+        box-sizing: border-box;
+        text-shadow: 1px 1px 0 rgba(0, 0, 0, 0.3); /* General text shadow for form content */
+    }
+
+    @keyframes formEntry {
+        0% { opacity: 0; transform: translateY(30px) scale(0.95); }
+        100% { opacity: 1; transform: translateY(0) scale(1); }
+    }
+
+    .retro-form-container:hover {
+        transform: translateY(-0.2em); /* Subtle lift on hover */
+        box-shadow:
+            0 0 0 0.15em var(--retro-shadow-dark),
+            0 0 0 0.3em var(--retro-secondary-light),
+            0 0 0 0.45em var(--retro-shadow-dark),
+            0 0.8em 0 0 var(--retro-accent-red), /* More pronounced red 3D shadow */
             0 0.8em 0 0.15em var(--retro-shadow-dark);
     }
 
-    /* Animation for card entry */
-    @keyframes bounceIn {
-        0% { opacity: 0; transform: translateY(50px) scale(0.8); }
-        60% { opacity: 1; transform: translateY(-10px) scale(1.05); }
-        100% { transform: translateY(0) scale(1); }
+    .retro-form-container h1 {
+        font-family: var(--font-heading-retro);
+        color: var(--retro-text);
+        text-align: center;
+        margin-bottom: 1.5em;
+        font-size: 2em; /* Larger title */
+        text-shadow: 3px 3px 0 rgba(0, 0, 0, 0.5); /* Stronger shadow for heading */
+        padding-bottom: 0.5em;
+        border-bottom: 3px dashed var(--retro-accent-yellow); /* Yellow dashed underline */
     }
 
+    /* --- Form Groups --- */
+    .form-group-retro {
+        margin-bottom: 1.8em; /* Increased spacing between form groups */
+    }
 
-    /* Profile Image and Online Indicator */
-    .profile-image-container {
+    .form-group-retro label {
+        display: block;
+        font-family: var(--font-heading-retro); /* Retro font for labels */
+        font-size: 1em; /* Consistent label size */
+        color: var(--retro-secondary-light); /* White labels for contrast */
+        margin-bottom: 0.6em; /* Space between label and input */
+        text-shadow: 1px 1px 0 rgba(0, 0, 0, 0.4); /* Clear text shadow */
+    }
+
+    /* --- Input Fields (Text, Date, Time, Textarea) --- */
+    .form-group-retro input[type="text"],
+    .form-group-retro input[type="time"],
+    .form-group-retro input[type="date"],
+    .form-group-retro textarea {
+        width: 100%;
+        padding: 0.8em 1em; /* Increased padding for better touch targets */
+        border: 2px solid var(--retro-shadow-dark);
+        border-radius: 8px; /* Slightly rounded corners */
+        background-color: var(--retro-bg); /* Wheat background for inputs */
+        color: var(--retro-text);
+        font-family: var(--font-primary);
+        font-size: 1em;
+        box-sizing: border-box; /* Include padding in width */
+        box-shadow: 0.2em 0.2em 0 rgba(0, 0, 0, 0.2); /* Subtle inset-like shadow */
+        transition: all var(--transition-fast);
+    }
+
+    .form-group-retro input[type="text"]:focus,
+    .form-group-retro input[type="time"]:focus,
+    .form-group-retro input[type="date"]:focus,
+    .form-group-retro textarea:focus {
+        outline: none;
+        border-color: var(--retro-accent-red); /* Red border on focus */
+        box-shadow: 0 0 0 3px rgba(209, 69, 30, 0.5); /* Glowing red shadow on focus */
+        transform: translateY(-2px); /* Slight lift on focus */
+    }
+
+    .form-group-retro textarea {
+        min-height: 120px; /* Minimum height for description */
+        resize: vertical; /* Allow vertical resizing */
+    }
+
+    /* --- File Input (Images) --- */
+    .file-input-wrapper {
         position: relative;
-        width: 120px; /* Slightly smaller for compactness */
-        height: 120px;
-        border-radius: 50%;
-        overflow: hidden;
-        border: 3px solid var(--retro-accent-yellow);
-        box-shadow: 0 4px 10px var(--retro-shadow-light);
-        margin-bottom: 1rem;
-        background-color: var(--retro-secondary-light); /* Background if image isn't perfect circle */
-        transition: transform 0.3s ease;
+        display: inline-block;
+        width: 100%;
+        margin-bottom: 1em; /* Space below the button for input */
     }
 
-    .profile-image-container img {
+    .file-input-wrapper input[type="file"] {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        opacity: 0;
+        cursor: pointer;
+        z-index: 2; /* Ensure it's clickable */
+    }
+
+    .custom-file-upload {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.8em;
+        background: var(--retro-accent-yellow); /* Yellow background for upload button */
+        color: var(--retro-text);
+        font-family: var(--font-heading-retro);
+        font-size: 0.9em;
+        padding: 0.8em 1.2em;
+        border: 2px solid var(--retro-shadow-dark);
+        border-radius: 8px;
+        box-shadow: 0.3em 0.3em 0 var(--retro-shadow-dark);
+        cursor: pointer;
+        transition: all var(--transition-fast);
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        text-shadow: 1px 1px 0 rgba(0, 0, 0, 0.4);
+        pointer-events: none; /* Disable pointer events on the custom button, relying on the hidden input */
+    }
+
+    .file-input-wrapper:hover .custom-file-upload {
+        background: var(--retro-accent-red); /* Red on hover */
+        color: var(--retro-secondary-light); /* White text on hover */
+        transform: translate(-0.1em, -0.1em);
+        box-shadow: 0.4em 0.4em 0 var(--retro-shadow-dark);
+    }
+
+    .file-input-wrapper:active .custom-file-upload {
+        transform: translate(0.1em, 0.1em);
+        box-shadow: 0.15em 0.15em 0 var(--retro-shadow-dark);
+    }
+
+    .custom-file-upload svg {
+        width: 1.2em;
+        height: 1.2em;
+        fill: var(--retro-text);
+        transition: fill var(--transition-fast);
+    }
+
+    .file-input-wrapper:hover .custom-file-upload svg {
+        fill: var(--retro-secondary-light);
+    }
+
+    /* Image Preview Container */
+    #image-preview-container {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 1em;
+        margin-top: 1em;
+        border: 2px dashed rgba(0, 0, 0, 0.2);
+        padding: 1em;
+        border-radius: 8px;
+        background-color: rgba(0, 0, 0, 0.05); /* Slightly darker background for preview area */
+    }
+
+    .image-preview-item {
+        width: 100px;
+        height: 100px;
+        position: relative;
+        border: 2px solid var(--retro-shadow-dark);
+        border-radius: 5px;
+        overflow: hidden;
+        box-shadow: 0.1em 0.1em 0 rgba(0, 0, 0, 0.2);
+    }
+
+    .image-preview-item img {
         width: 100%;
         height: 100%;
         object-fit: cover;
-        display: block;
-        image-rendering: pixelated; /* Ensure pixelated look for images */
     }
 
-    .profile-image-container:hover {
-        transform: scale(1.05) rotate(2deg); /* Added slight rotation */
-    }
-
-    /* Profile Text */
-    .profile-info {
-        text-align: center;
-        margin-bottom: 1.5rem;
-    }
-
-    .profile-info h3 { 
-        font-size: 1.4rem; /* More compact */
-        font-weight: 700;
-        color: var(--retro-text);
-        margin-bottom: 0.2rem;
-        text-shadow: 2px 2px 0 rgba(0, 0, 0, 0.4);
-        font-family: "Press Start 2P", cursive;
-    }
-
-    .profile-info p { /* For email and username */
-        font-size: 0.95rem; /* More compact */
-        color: var(--retro-text);
-        margin-bottom: 0.5rem;
-        font-family: "Inter", sans-serif;
-        text-shadow: none;
-        word-break: break-all; /* Important for long emails/usernames */
-    }
-
-    /* Action Buttons */
-    .profile-action-buttons {
+    .image-preview-item .remove-image {
+        position: absolute;
+        top: 2px;
+        right: 2px;
+        background: var(--retro-accent-red);
+        color: var(--retro-secondary-light);
+        border: 1px solid var(--retro-shadow-dark);
+        border-radius: 50%;
+        width: 20px;
+        height: 20px;
         display: flex;
-        flex-direction: row; /* Changed to row for side-by-side */
-        gap: 0.8rem; /* Space between buttons */
-        margin-top: 1rem;
-        padding-top: 1rem;
-        border-top: 0.15em dashed rgba(0, 0, 0, 0.15); /* Dashed line separator */
-        width: 100%; /* Ensure it spans full width */
-        justify-content: center; /* Center buttons horizontally */
-        align-items: center; /* Align buttons vertically if they had different heights */
-        flex-wrap: wrap; /* Allow buttons to wrap to next line on small screens */
-    }
-
-    .btn-retro-profile {
-        display: inline-flex; /* Use flex to center text within button */
         align-items: center;
         justify-content: center;
-        min-width: 150px; /* Reduced min-width to allow more flexibility */
-        background-color: var(--retro-accent-red); /* Primary action color */
-        color: var(--retro-secondary-light); /* White text */
-        font-family: "Press Start 2P", cursive;
-        font-size: 1.1em; /* Slightly larger font */
-        padding: 0.8em 1.5em; /* Generous padding */
-        border: 4px solid var(--retro-shadow-dark);
-        border-radius: 15px;
-        box-shadow: 0.5em 0.5em 0 var(--retro-shadow-dark); /* Prominent 3D shadow */
+        font-size: 0.8em;
         cursor: pointer;
-        transition: all 0.2s ease;
-        text-shadow: 2px 2px 0 rgba(0, 0, 0, 0.5);
-        letter-spacing: 1px;
-        text-decoration: none; /* Remove underline for links */
-        box-sizing: border-box; /* Include padding/border in width */
+        opacity: 0.9;
+        transition: opacity var(--transition-fast);
+        font-family: var(--font-primary); /* For the 'X' */
+        font-weight: bold;
     }
 
-    .btn-retro-profile:hover {
-        background-color: var(--retro-accent-yellow); /* Change color on hover */
-        color: var(--retro-text); /* Dark text on hover */
-        transform: translateY(-5px); /* Lift effect */
-        box-shadow: 0.7em 0.7em 0 var(--retro-shadow-dark); /* Enhanced shadow on hover */
+    .image-preview-item .remove-image:hover {
+        opacity: 1;
+        background: var(--retro-shadow-dark);
     }
 
-    .btn-retro-profile:active {
-        transform: translateY(0); /* "Press down" effect */
-        box-shadow: 0.2em 0.2em 0 var(--retro-shadow-dark); /* Reduced shadow when active */
+    /* --- "Launch Glimmer" Button --- */
+    .launch-button {
+        display: block; /* Make it a block element to take full width */
+        width: 100%; /* Take full width */
+        margin-top: 2.5em; /* Spacing above the button */
+        position: relative;
+        background: var(--retro-accent-red); /* Red primary color for the button */
+        color: var(--retro-secondary-light);
+        font-family: var(--font-heading-retro);
+        font-size: 1.2em; /* Larger button text */
+        font-weight: 700;
+        padding: 0.8em 1.5em; /* More padding */
+        border: 0.25em solid var(--retro-shadow-dark); /* Thicker border */
+        border-radius: 0.5em; /* Slightly more rounded */
+        box-shadow: 0.4em 0.4em 0 var(--retro-shadow-dark); /* More pronounced shadow */
+        cursor: pointer;
+        transition: all var(--transition-fast);
+        overflow: hidden;
+        text-transform: uppercase;
+        letter-spacing: 0.1em; /* More letter spacing */
+        text-shadow: 2px 2px 0 rgba(0, 0, 0, 0.6); /* Stronger shadow for button text */
+        text-decoration: none; /* In case it's an <a> acting as button */
+        box-sizing: border-box; /* Ensure padding is included in width */
     }
 
-    /* --- Review Section --- */
-    .retro-review-section {
-        width: 380px; /* Consistent width with profile card */
-        background: var(--retro-primary-teal);
-        border-radius: 15px;
-        padding: 1.5rem;
-        box-shadow:
-            0 0 0 0.15em var(--retro-shadow-dark),
-            0 0 0 0.3em var(--retro-secondary-light),
-            0 0 0 0.45em var(--retro-shadow-dark),
-            0 0.5em 0 0 var(--retro-accent-red),
-            0 0.5em 0 0.15em var(--retro-shadow-dark);
-        text-shadow: 1px 1px 0 rgba(0, 0, 0, 0.3);
-        display: flex;
-        flex-direction: column;
-        animation: bounceIn 1s ease-out 0.2s backwards; /* Staggered entry */
+    .launch-button::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(
+            90deg,
+            transparent 0%,
+            rgba(255, 255, 255, 0.3) 50%, /* Stronger shimmer */
+            transparent 100%
+        );
+        transition: left var(--transition-medium); /* Medium shimmer transition */
+        z-index: 1;
     }
 
-    .retro-review-section h2 {
-        font-family: "Press Start 2P", cursive;
-        font-size: 1.2rem;
-        color: var(--retro-text);
-        margin-bottom: 1rem;
-        padding-bottom: 0.5rem;
-        border-bottom: 2px dashed var(--retro-accent-yellow);
-        text-align: center;
-        text-shadow: 2px 2px 0 rgba(0, 0, 0, 0.4);
+    .launch-button:hover {
+        background: var(--retro-shadow-dark); /* Dark background on hover */
+        color: var(--retro-accent-yellow); /* Yellow text on hover */
+        transform: translate(-0.2em, -0.2em); /* More pronounced lift */
+        box-shadow: 0.6em 0.6em 0 var(--retro-accent-red); /* Red shadow on hover */
+        text-shadow: 2px 2px 0 rgba(0, 0, 0, 0.8);
     }
 
-    .retro-review-item {
-        background: var(--retro-secondary-light); /* Light background for review items */
-        border: 2px solid var(--retro-shadow-dark);
-        border-radius: 8px; /* Slightly less rounded */
-        padding: 0.8rem 1rem;
-        margin-bottom: 1rem;
-        box-shadow: 0.2em 0.2em 0 rgba(0, 0, 0, 0.2);
-        transition: transform 0.2s ease, box-shadow 0.2s ease;
+    .launch-button:hover::before {
+        left: 100%;
     }
 
-    .retro-review-item:hover {
-        transform: translateY(-3px) translateX(3px); /* Subtle shift on hover */
-        box-shadow: 0.3em 0.3em 0 rgba(0, 0, 0, 0.3);
-    }
-
-    .retro-review-header {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        font-size: 0.85rem;
-        margin-bottom: 0.4rem;
-        color: var(--retro-text);
-        font-weight: 600;
-        font-family: "Inter", sans-serif;
-        text-shadow: none;
-    }
-
-    .retro-review-stars {
-        color: var(--retro-accent-yellow);
-        letter-spacing: 1px;
-        font-size: 1.1em; /* Slightly larger stars */
-        text-shadow: none;
-    }
-
-    .retro-review-text {
-        font-size: 0.8rem;
-        color: var(--retro-text);
-        line-height: 1.4;
-        margin-bottom: 0.4rem;
-        font-family: "Inter", sans-serif;
-        text-shadow: none;
-    }
-
-    .retro-review-date {
-        font-size: 0.7rem;
-        color: var(--retro-text);
-        text-align: right;
-        font-family: "Inter", sans-serif;
-        text-shadow: none;
-    }
-
-    .no-reviews-message {
-        color: var(--retro-text);
-        text-align: center;
-        padding: 1rem;
-        font-style: italic;
-        font-family: "Inter", sans-serif;
-        text-shadow: none;
+    .launch-button:active {
+        transform: translate(0.15em, 0.15em); /* Simulate press */
+        box-shadow: 0.2em 0.2em 0 var(--retro-shadow-dark);
     }
 
     /* --- Responsive Adjustments --- */
-    @media (max-width: 850px) {
-        .profile-page-container {
-            flex-direction: column; /* Stack vertically on smaller screens */
-            align-items: center; /* Center items when stacked */
+    @media (max-width: 992px) {
+        .retro-form-container {
+            padding: 2em;
+            margin: 1.5rem auto;
         }
-        .retro-profile-card,
-        .retro-review-section {
-            width: 90%; /* Max width for cards */
-            max-width: 380px; /* Limit max width */
+        .retro-form-container h1 {
+            font-size: 1.8em;
+            margin-bottom: 1em;
+        }
+        .form-group-retro label {
+            font-size: 0.95em;
+        }
+        .form-group-retro input,
+        .form-group-retro textarea {
+            padding: 0.7em 1em;
+            font-size: 0.95em;
+        }
+        .launch-button {
+            font-size: 1.1em;
+            padding: 0.7em 1.2em;
+        }
+    }
+
+    @media (max-width: 768px) {
+        body {
+            align-items: flex-start; /* Align to top when content is longer on smaller screens */
+        }
+        .retro-form-container {
+            width: 95%; /* Take more width on smaller screens */
+            padding: 1.5em;
+            margin: 1rem auto;
+            box-shadow:
+                0 0 0 0.1em var(--retro-shadow-dark),
+                0 0 0 0.2em var(--retro-secondary-light),
+                0 0 0 0.3em var(--retro-shadow-dark),
+                0 0.4em 0 0 var(--retro-accent-red),
+                0 0.4em 0 0.1em var(--retro-shadow-dark);
+        }
+        .retro-form-container h1 {
+            font-size: 1.5em;
+            margin-bottom: 1em;
+            text-shadow: 2px 2px 0 rgba(0, 0, 0, 0.5);
+        }
+        .form-group-retro {
+            margin-bottom: 1.5em;
+        }
+        .form-group-retro label {
+            font-size: 0.9em;
+        }
+        .form-group-retro input,
+        .form-group-retro textarea {
+            padding: 0.6em 0.8em;
+            font-size: 0.9em;
+            border-radius: 6px;
+        }
+        .custom-file-upload {
+            font-size: 0.85em;
+            padding: 0.7em 1em;
+            border-radius: 6px;
+        }
+        .launch-button {
+            font-size: 1em;
+            padding: 0.6em 1em;
+            border: 0.2em solid var(--retro-shadow-dark);
+            border-radius: 0.4em;
+            box-shadow: 0.3em 0.3em 0 var(--retro-shadow-dark);
+        }
+        .image-preview-item {
+            width: 80px;
+            height: 80px;
         }
     }
 
     @media (max-width: 480px) {
-        .profile-page-container {
-            padding: 1rem;
+        .retro-form-container {
+            padding: 1em;
+            margin: 0.5rem auto;
         }
-        .retro-profile-card,
-        .retro-review-section {
-            padding: 1rem;
-            width: 100%; /* Take full width on very small screens */
+        .retro-form-container h1 {
+            font-size: 1.2em;
+            margin-bottom: 0.8em;
+            text-shadow: 1.5px 1.5px 0 rgba(0, 0, 0, 0.5);
         }
-        .profile-info h3 {
-            font-size: 1.2rem;
+        .form-group-retro {
+            margin-bottom: 1.2em;
         }
-        .profile-action-buttons {
-            flex-direction: column; /* Stack buttons vertically on very small screens */
+        .form-group-retro label {
+            font-size: 0.8em;
         }
-        .btn-retro-profile {
-            min-width: unset; /* Remove min-width to allow full width */
-            width: 100%; /* Take full width when stacked */
+        .form-group-retro input,
+        .form-group-retro textarea {
+            padding: 0.5em 0.7em;
+            font-size: 0.85em;
+            border-radius: 5px;
+        }
+        .custom-file-upload {
+            font-size: 0.75em;
+            padding: 0.6em 0.8em;
+            border-radius: 5px;
+        }
+        .launch-button {
+            font-size: 0.9em;
+            padding: 0.5em 0.8em;
+            border: 0.15em solid var(--retro-shadow-dark);
+            border-radius: 0.3em;
+            box-shadow: 0.2em 0.2em 0 var(--retro-shadow-dark);
+        }
+        .image-preview-item {
+            width: 70px;
+            height: 70px;
         }
     }
 </style>
 
 <body>
-    <div class="profile-page-container">
-        <div class="retro-profile-card">
-            <div class="profile-image-container">
-                <!-- Hardcoded avatar path -->
-                <img src="/images/default-avatar.png" alt="Profile Image" />
+    <div class="retro-form-container">
+        <h1>Host Your Glimmer</h1>
+        <form action="/events" method="POST" enctype="multipart/form-data" novalidate class="needs-validation">
+            <div class="form-group-retro">
+                <label for="title">Event Title</label>
+                <input type="text" id="title" name="event[title]" placeholder="e.g., Pixel Party Night" required>
+                <div class="invalid-feedback">
+                    Please provide an event title.
+                </div>
             </div>
 
-            <div class="profile-info">
-                <h3>JOHN DOE</h3>
-                <p>@JOHNDOE123</p>
-                <p>JOHN.DOE@EXAMPLE.COM</p>
+            <div class="form-group-retro">
+                <label for="description">Event Description</label>
+                <textarea id="description" name="event[description]" rows="5" placeholder="Tell us about your epic event!" required></textarea>
+                <div class="invalid-feedback">
+                    Please provide an event description.
+                </div>
             </div>
 
-            <div class="profile-action-buttons">
-                <!-- Hardcoded links for testing -->
-                <a href="/edit-profile-test" class="btn-retro-profile">EDIT PROFILE</a>
-                <a href="/logout-test" class="btn-retro-profile">LOGOUT</a>
+            <div class="form-group-retro">
+                <label for="eventDate">Date</label>
+                <input type="date" id="eventDate" name="event[date]" required>
+                <div class="invalid-feedback">
+                    Please select a date for the event.
+                </div>
             </div>
-        </div>
 
-        <div class="retro-review-section">
-            <h2>Recent Reviews</h2>
-            <!-- Hardcoded reviews for testing -->
-            <div class="retro-review-item">
-                <div class="retro-review-header">
-                    <span>ANONYMOUS</span>
-                    <span class="retro-review-stars">⭐⭐⭐⭐⭐</span>
-                </div>
-                <div class="retro-review-text">
-                    GREAT EXPERIENCE! HIGHLY RECOMMENDED.
-                </div>
-                <div class="retro-review-date">
-                    JULY 24, 2025
+            <div class="form-group-retro">
+                <label for="eventTime">Time</label>
+                <input type="time" id="eventTime" name="event[time]" required>
+                <div class="invalid-feedback">
+                    Please select a time for the event.
                 </div>
             </div>
-            <div class="retro-review-item">
-                <div class="retro-review-header">
-                    <span>GLIMMER_FAN</span>
-                    <span class="retro-review-stars">⭐⭐⭐⭐</span>
+
+            <div class="form-group-retro">
+                <label for="images">Event Images</label>
+                <div class="file-input-wrapper">
+                    <input type="file" id="images" name="event[images]" accept="image/*" multiple>
+                    <label for="images" class="custom-file-upload">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-image-plus">
+                            <path d="M12 5v14"/>
+                            <path d="M5 12h14"/>
+                            <path d="M21 12V6a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v11a2 2 0 0 0 2 2h7"/>
+                            <circle cx="12" cy="12" r="1"/>
+                            <path d="m22 22-1-1"/>
+                            <path d="m21 17 1 1 1-1"/>
+                        </svg>
+                        Upload Images
+                    </label>
                 </div>
-                <div class="retro-review-text">
-                    FUN EVENT, A BIT CROWDED.
-                </div>
-                <div class="retro-review-date">
-                    JULY 15, 2025
-                </div>
+                <div id="image-preview-container">
+                    </div>
             </div>
-            <p class="no-reviews-message" style="display: none;">No reviews available for this user yet.</p>
-        </div>
+
+            <button type="submit" class="launch-button">Launch Glimmer</button>
+        </form>
     </div>
 
-    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+    <script src="https://kit.fontawesome.com/your-font-awesome-kit-code.js" crossorigin="anonymous"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Inter:wght@400;500;700;800&display=swap" rel="stylesheet">
+
+    <script>
+        // Simple client-side validation for demonstration (Bootstrap-like)
+        (function () {
+            'use strict';
+            const form = document.querySelector('.needs-validation');
+            form.addEventListener('submit', function (event) {
+                if (!form.checkValidity()) {
+                    event.preventDefault();
+                    event.stopPropagation();
+                }
+                form.classList.add('was-validated');
+            }, false);
+        })();
+
+        // Image Preview & Removal Logic
+        const imageInput = document.getElementById('images');
+        const imagePreviewContainer = document.getElementById('image-preview-container');
+        const uploadedFiles = new DataTransfer(); // To manage files programmatically
+
+        imageInput.addEventListener('change', function(event) {
+            const files = event.target.files;
+            
+            for (let i = 0; i < files.length; i++) {
+                const file = files[i];
+                if (file.type.startsWith('image/')) {
+                    uploadedFiles.items.add(file); // Add to our managed list
+
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        const previewItem = document.createElement('div');
+                        previewItem.className = 'image-preview-item';
+                        previewItem.dataset.name = file.name; // Store original file name for removal
+
+                        previewItem.innerHTML = `
+                            <img src="${e.target.result}" alt="Image Preview">
+                            <span class="remove-image">&times;</span>
+                        `;
+                        imagePreviewContainer.appendChild(previewItem);
+                    };
+                    reader.readAsDataURL(file);
+                }
+            }
+            // Update the actual input's files with our managed list
+            imageInput.files = uploadedFiles.files;
+        });
+
+        imagePreviewContainer.addEventListener('click', function(event) {
+            if (event.target.classList.contains('remove-image')) {
+                const itemToRemove = event.target.closest('.image-preview-item');
+                const fileName = itemToRemove.dataset.name;
+
+                // Remove from DataTransfer object
+                for (let i = 0; i < uploadedFiles.items.length; i++) {
+                    if (uploadedFiles.items[i].name === fileName) {
+                        uploadedFiles.items.remove(i);
+                        break;
+                    }
+                }
+                
+                // Update the actual input's files
+                imageInput.files = uploadedFiles.files;
+                itemToRemove.remove(); // Remove from DOM
+            }
+        });
+    </script>
 </body>

@@ -7,7 +7,7 @@ const upload = require('../config/multerConfig'); // Import multer configuration
 exports.renderLoginPage = (req, res) => {
     res.render('auth/login', {
         title: 'Login',
-        oldInput: { email: '' } // For preserving input on error (if you add this to login.ejs)
+        oldInput: { username: '' } // For preserving input on error (if you add this to login.ejs)
     });
 };
 
@@ -126,11 +126,35 @@ exports.registerUser = (req, res, next) => {
 
 
 // --- Login User ---
+// --- Login User ---
 exports.loginUser = (req, res, next) => {
-    passport.authenticate('local', {
-        successRedirect: '/dashboard',
-        failureRedirect: '/login', // Corrected redirect
-        failureFlash: true
+    passport.authenticate('local', (err, user, info) => {
+        if (err) {
+            console.error("Passport authentication error:", err);
+            req.flash('error_msg', 'An authentication error occurred.');
+            return res.redirect('/login');
+        }
+        if (!user) {
+            // Authentication failed, Passport's default behavior handles failureFlash and redirect
+            req.flash('error_msg', info.message || 'Invalid username or password.'); // Use info.message for specific errors
+            return res.redirect('/login');
+        }
+
+        req.logIn(user, (loginErr) => {
+            if (loginErr) {
+                console.error("Login session error:", loginErr);
+                req.flash('error_msg', 'Could not log in at this time. Please try again.');
+                return res.redirect('/login');
+            }
+
+            // Check if there's a stored URL to redirect to
+            const redirectUrl = req.session.returnTo || '/dashboard'; // Use '/dashboard' as fallback
+            if (req.session.returnTo) {
+                delete req.session.returnTo; // Clean up the session variable
+            }
+            req.flash('success_msg', 'You are now logged in!');
+            res.redirect(redirectUrl);
+        });
     })(req, res, next);
 };
 
