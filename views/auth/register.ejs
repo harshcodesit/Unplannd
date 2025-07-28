@@ -1,4 +1,4 @@
-<% layout('layouts/boilerplate') %>
+<%- layout('layouts/boilerplate') %>
 
 <style>
     /* Root CSS Variables for the Retro Theme (assuming these are defined elsewhere or inherited) */
@@ -314,6 +314,14 @@
         <div class="register-content">
             <h1 class="register-card-title">SIGN UP</h1>
             <form action="/register" method="POST" class="needs-validation" novalidate enctype="multipart/form-data">
+                <% if (typeof errors !== 'undefined' && errors.length > 0) { %>
+                    <% errors.forEach(error => { %>
+                        <div class="invalid-feedback-retro" style="display: block;">
+                            <%= error.msg %>
+                        </div>
+                    <% }) %>
+                <% } %>
+
                 <div class="mb-3">
                     <label class="form-label-retro" for="name">NAME</label>
                     <input class="form-control-retro" type="text" id="name" name="name" required value="<%= oldInput.name || '' %>">

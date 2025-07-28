@@ -1,11 +1,16 @@
 // glimmergrid-mvp/routes/hubRoutes.js
 const express = require('express');
-const router = express.Router();
-const hubController = require('../controllers/hubController'); // Ensure this path is correct
+// The router itself will be created inside the exported function
+// No direct hubController import here
 
-// @route   GET /
-// @desc    Render the main homepage (HUB)
-// @access  Public
-router.get('/', hubController.renderHomePage); // Ensure 'renderHomePage' is the correct function name
+// Export a function that accepts hubController as an argument
+module.exports = (hubController) => {
+    const router = express.Router();
 
-module.exports = router;
+    // @route   GET /
+    // @desc    Render the main homepage (HUB)
+    // @access  Public
+    router.get('/', hubController.renderHomePage); // No catchAsync needed if controller is not async
+
+    return router; // Return the configured router
+};

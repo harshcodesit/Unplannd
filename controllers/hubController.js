@@ -1,9 +1,9 @@
 // glimmergrid-mvp/controllers/hubController.js
-exports.renderHomePage = (req, res) => { // Renamed from renderDashboardPage
-    // This controller function will render the new homepage (HUB).
-    // req.user will be available if the user is logged in, otherwise it will be undefined.
-    res.render('hub/index', { // Updated EJS path
-        title: 'Unplann\'d HUB', // Updated title
+// No model imports needed directly in this controller as it only renders a static page.
+
+exports.renderHomePage = (req, res) => {
+    res.render('hub/index', {
+        title: 'Unplann\'d HUB',
         user: req.user // Pass user object for conditional rendering
     });
 };

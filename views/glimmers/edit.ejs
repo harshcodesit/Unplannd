@@ -17,7 +17,7 @@
         border-radius: 15px;
         box-shadow: 0.5em 0.5em 0 var(--retro-accent-red);
         padding: 2.5rem;
-        max-width: 500px; /* Wider for forms */
+        max-width: 600px; /* Wider for forms */
         width: 100%;
         text-align: center;
         position: relative;
@@ -250,6 +250,7 @@
                     </div>
                 </div>
 
+                <!-- Geolocation Inputs -->
                 <div class="mb-3">
                     <label for="latitude" class="form-label-retro">LATITUDE</label>
                     <input type="number" step="any" class="form-control-retro" id="latitude" name="glimmer[latitude]" value="<%= glimmer.geometry.coordinates[1] %>" required>
@@ -268,7 +269,7 @@
                     <% 
                         const mapLat = glimmer.geometry.coordinates[1];
                         const mapLon = glimmer.geometry.coordinates[0];
-                        const googleMapsApiKey = 'YOUR_Maps_API_KEY'; // Replace with your actual API key
+                        const googleMapsApiKey = 'YOUR_GOOGLE_MAPS_API_KEY'; // Replace with your actual API key
                         const mapSrc = `https://www.google.com/maps/embed/v1/place?key=${googleMapsApiKey}&q=${mapLat},${mapLon}&zoom=15`;
                     %>
                     <iframe id="mapPreview" width="600" height="450" style="border:0" loading="lazy" allowfullscreen src="<%= mapSrc %>"></iframe>
@@ -300,7 +301,8 @@
 
                 <div class="mb-3">
                     <label for="images" class="form-label-retro">UPLOAD NEW GLIMMER IMAGES (MAX 5)</label>
-                    <input type="file" class="form-control-retro" id="images" name="image" accept="image/*" multiple> <div class="invalid-feedback-retro">
+                    <input type="file" class="form-control-retro" id="images" name="image" accept="image/*" multiple> <!-- name changed to 'image' -->
+                    <div class="invalid-feedback-retro">
                         Please upload at least one image for your Glimmer.
                     </div>
                     <p class="image-upload-feedback" id="imageUploadFeedback">Existing images will be replaced by new uploads.</p>
@@ -311,7 +313,7 @@
                         <% glimmer.image.forEach(img => { %>
                             <div class="image-preview-item">
                                 <img src="<%= img.url %>" alt="Current Glimmer Image">
-                                <button type="button" class="remove-image-btn" data-image-url="<%= img.url %>" data-image-filename="<%= img.filename %>">×</button>
+                                <button type="button" class="remove-image-btn" data-image-url="<%= img.url %>" data-image-filename="<%= img.filename %>">&times;</button>
                             </div>
                         <% }) %>
                     </div>
@@ -332,8 +334,8 @@
 </div>
 
 <script>
-    // IMPORTANT: Replace 'YOUR_Maps_API_KEY' with your actual Google Maps Embed API Key
-    const Maps_API_KEY = 'YOUR_Maps_API_KEY'; 
+    // IMPORTANT: Replace 'YOUR_GOOGLE_MAPS_API_KEY' with your actual Google Maps Embed API Key
+    const GOOGLE_MAPS_API_KEY = 'YOUR_GOOGLE_MAPS_API_KEY'; 
     const MAX_IMAGES = 5; // Define maximum number of images
 
     // Function to update the map preview
@@ -420,7 +422,7 @@
 
                         previewItem.innerHTML = `
                             <img src="${e.target.result}" alt="Image Preview">
-                            <button type="button" class="remove-image-btn" data-image-url="${e.target.result}" data-image-filename="${file.name}">×</button>
+                            <button type="button" class="remove-image-btn" data-image-url="${e.target.result}" data-image-filename="${file.name}">&times;</button>
                         `;
                         imagePreviewContainer.appendChild(previewItem);
                     };

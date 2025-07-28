@@ -1,44 +1,59 @@
 // glimmergrid-mvp/controllers/trailController.js
-// This controller will handle logic for /trail/sparks and /trail/footprints
-const User = require('../models/User'); // Will need User model for these pages
-const Glimmer = require('../models/Glimmer'); // Will need Glimmer model for populating
+const mongoose = require('mongoose'); // Import mongoose for dynamic model access
+
+// Models will be accessed dynamically via mongoose.model() within functions.
 
 // Render the Hosted Glimmers (Sparks) page
-exports.renderSparksPage = async (req, res) => {
-    try {
-        const user = await User.findById(req.user._id)
-                               .populate('hostedGlimmers'); // Populate hosted glimmers
+module.exports.renderSparksPage = async (req, res) => {
+    const User = mongoose.model('User');
+    const Glimmer = mongoose.model('Glimmer');
 
-        if (!user) {
+    try {
+        const currentUser = await User.findById(req.user._id)
+                                    .populate({
+                                        path: 'hostedGlimmers',
+                                        select: 'title locationName startDate image'
+                                    })
+                                    .sort({ 'hostedGlimmers.startDate': -1 });
+
+        if (!currentUser) {
             req.flash('error_msg', 'User not found.');
-            return res.redirect('/hub');
+            return res.redirect('/login');
         }
+
         res.render('trail/sparks', {
-            title: `${user.username}'s Sparks`,
-            user: req.user, // Pass req.user for general user info in navbar/layout
-            glimmers: user.hostedGlimmers // Pass hosted glimmers to the view
+            title: 'Your Hosted Glimmers',
+            hostedGlimmers: currentUser.hostedGlimmers,
+            user: req.user
         });
+
     } catch (err) {
         console.error("Error rendering sparks page:", err);
-        req.flash('error_msg', 'Could not load hosted glimmers.');
+        req.flash('error_msg', 'Could not load your hosted glimmers.');
         res.redirect('/hub');
     }
 };
 
 // Render the Joined Glimmers (Footprints) page
-exports.renderFootprintsPage = async (req, res) => {
-    try {
-        const user = await User.findById(req.user._id)
-                               .populate('joinedGlimmers'); // Populate joined glimmers
+module.exports.renderFootprintsPage = async (req, res) => {
+    const User = mongoose.model('User');
+    const Glimmer = mongoose.model('Glimmer');
 
-        if (!user) {
+    try {
+        const currentUser = await User.findById(req.user._id)
+                               .populate({
+                                   path: 'joinedGlimmers',
+                                   select: 'title locationName startDate image'
+                               });
+
+        if (!currentUser) {
             req.flash('error_msg', 'User not found.');
-            return res.redirect('/hub');
+            return res.redirect('/login');
         }
         res.render('trail/footprints', {
-            title: `${user.username}'s Footprints`,
-            user: req.user, // Pass req.user for general user info in navbar/layout
-            glimmers: user.joinedGlimmers // Pass joined glimmers to the view
+            title: `${currentUser.username}'s Footprints`,
+            user: req.user,
+            joinedGlimmers: currentUser.joinedGlimmers
         });
     } catch (err) {
         console.error("Error rendering footprints page:", err);
@@ -46,5 +61,3 @@ exports.renderFootprintsPage = async (req, res) => {
         res.redirect('/hub');
     }
 };
-
-// Add other trail-related functions here as needed

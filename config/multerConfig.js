@@ -7,8 +7,7 @@ const fs = require('fs'); // Node.js file system module
 const avatarStorage = multer.diskStorage({
     destination: (req, file, cb) => {
         const uploadPath = path.join(__dirname, '../public/uploads/avatars');
-        // Create the directory if it doesn't exist
-        fs.mkdirSync(uploadPath, { recursive: true });
+        fs.mkdirSync(uploadPath, { recursive: true }); // Ensure directory exists
         cb(null, uploadPath);
     },
     filename: (req, file, cb) => {
@@ -17,11 +16,10 @@ const avatarStorage = multer.diskStorage({
     }
 });
 
-// Define storage for glimmer images
+// Define storage for glimmer images (even if not fully used yet, consistent with schema)
 const glimmerStorage = multer.diskStorage({
     destination: (req, file, cb) => {
         const uploadPath = path.join(__dirname, '../public/uploads/glimmers');
-        // Create the directory if it doesn't exist
         fs.mkdirSync(uploadPath, { recursive: true });
         cb(null, uploadPath);
     },
@@ -33,7 +31,6 @@ const glimmerStorage = multer.diskStorage({
 
 // File filter function for images
 const imageFilter = (req, file, cb) => {
-    // Accept images only
     if (!file.originalname.match(/\.(jpg|jpeg|png|gif|webp)$/i)) {
         req.fileValidationError = 'Only image files (jpg, jpeg, png, gif, webp) are allowed!';
         return cb(new Error(req.fileValidationError), false);
@@ -41,30 +38,15 @@ const imageFilter = (req, file, cb) => {
     cb(null, true);
 };
 
-// Configure Multer instances for different purposes
-const uploadAvatar = multer({
+// Export specific multer instances directly
+module.exports.uploadAvatar = multer({
     storage: avatarStorage,
     fileFilter: imageFilter,
-    limits: { fileSize: 5 * 1024 * 1024 } // 5 MB file size limit
-}).single('avatar'); // 'avatar' is the name of the input field in the form
+    limits: { fileSize: 5 * 1024 * 1024 } // 5 MB file size limit for avatars
+}).single('avatar');
 
-const uploadGlimmerImage = multer({
+module.exports.uploadGlimmerImages = multer({ // This will be used in Glimmer Phase 1
     storage: glimmerStorage,
     fileFilter: imageFilter,
-    limits: { fileSize: 10 * 1024 * 1024 } // 10 MB file size limit for glimmers
-}).single('image'); // 'image' is the name of the input field in the form
-
-// Export a function that can choose which upload middleware to use
-module.exports = (req, res, next) => {
-    // Determine if it's an avatar or glimmer image upload based on route or form field name
-    // This is a simplified approach; in a real app, you might have separate upload functions
-    // or more sophisticated routing logic.
-    if (req.originalUrl.includes('/register') || req.originalUrl.includes('/profile/edit')) {
-        uploadAvatar(req, res, next);
-    } else if (req.originalUrl.includes('/glimmers') && req.method === 'POST') {
-        uploadGlimmerImage(req, res, next);
-    } else {
-        // If no specific file upload, just continue
-        next();
-    }
-};
+    limits: { fileSize: 10 * 1024 * 1024 } // 10 MB limit per single glimmer image
+}).array('image', 5); // Expects input named 'image' (singular for the field), allows max 5 files.

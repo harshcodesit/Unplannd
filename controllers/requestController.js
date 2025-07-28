@@ -1,11 +1,15 @@
 // glimmergrid-mvp/controllers/requestController.js
 
-const Glimmer = require('../models/Glimmer');
-const Request = require('../models/Request');
-const User = require('../models/User'); // Will be used to update participants array
+const mongoose = require('mongoose'); // Import mongoose for dynamic model access
+
+// Models are accessed dynamically within functions for consistency.
 
 // --- Send a Join Request to a Glimmer ---
 module.exports.sendJoinRequest = async (req, res) => {
+    const Glimmer = mongoose.model('Glimmer');
+    const Request = mongoose.model('Request');
+    const User = mongoose.model('User'); 
+
     const { glimmerId } = req.params; // Get glimmer ID from URL parameters
     const requesterId = req.user._id; // Get logged-in user's ID (requester)
 
@@ -60,6 +64,10 @@ module.exports.sendJoinRequest = async (req, res) => {
 
 // --- View All Requests for a Glimmer (Host's View) ---
 module.exports.viewGlimmerRequests = async (req, res) => {
+    const Glimmer = mongoose.model('Glimmer');
+    const Request = mongoose.model('Request');
+    const User = mongoose.model('User');
+
     const { glimmerId } = req.params;
     const currentUserId = req.user._id; // Logged-in user
 
@@ -90,6 +98,10 @@ module.exports.viewGlimmerRequests = async (req, res) => {
 
     } catch (err) {
         console.error("Error fetching glimmer requests:", err);
+        if (err.name === 'CastError') {
+            req.flash('error_msg', 'Invalid Glimmer ID.');
+            return res.redirect('/glimmers');
+        }
         req.flash('error_msg', 'Could not load glimmer requests.');
         res.redirect(`/glimmers/${glimmerId}`);
     }
@@ -97,6 +109,10 @@ module.exports.viewGlimmerRequests = async (req, res) => {
 
 // --- Accept a Join Request ---
 module.exports.acceptJoinRequest = async (req, res) => {
+    const Glimmer = mongoose.model('Glimmer');
+    const Request = mongoose.model('Request');
+    const User = mongoose.model('User');
+
     const { glimmerId, requestId } = req.params;
     const currentUserId = req.user._id; // Logged-in user (should be host)
 
@@ -143,6 +159,10 @@ module.exports.acceptJoinRequest = async (req, res) => {
 
 // --- Reject a Join Request ---
 module.exports.rejectJoinRequest = async (req, res) => {
+    const Glimmer = mongoose.model('Glimmer');
+    const Request = mongoose.model('Request');
+    const User = mongoose.model('User');
+
     const { glimmerId, requestId } = req.params;
     const currentUserId = req.user._id; // Logged-in user (should be host)
 

@@ -143,7 +143,7 @@
 
     .stat-item strong {
         display: block;
-        font-size: 1.1rem; /* Slightly smaller numbers */
+        font-size: 1.1em; /* Slightly smaller numbers */
         color: var(--retro-accent-yellow); /* Yellow for numbers */
         font-family: var(--font-heading-retro); /* Press Start 2P for numbers */
         text-shadow: 1px 1px 0 rgba(0, 0, 0, 0.3);
@@ -167,9 +167,9 @@
     .profile-action-buttons {
         display: flex;
         flex-direction: row; /* Already horizontal */
-        gap: 0.6rem; /* Reduced gap between buttons */
-        margin-top: 0.8rem; /* Reduced margin */
-        padding-top: 0.8rem; /* Reduced padding */
+        gap: 0.6em; /* Reduced gap between buttons */
+        margin-top: 0.8em; /* Reduced margin */
+        padding-top: 0.8em; /* Reduced padding */
         border-top: 0.15em dashed rgba(0, 0, 0, 0.15);
         width: 100%;
         justify-content: center;
@@ -178,44 +178,45 @@
     }
 
     .btn-retro-profile {
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        min-width: 120px; /* More compact min-width */
-        background-color: var(--retro-accent-red);
+        position: relative;
+        background: var(--retro-accent-red);
         color: var(--retro-secondary-light);
         font-family: var(--font-heading-retro);
         font-size: 0.9em; /* Slightly smaller font for buttons */
+        font-weight: 700;
         padding: 0.6em 1em; /* Reduced padding */
-        border: 3px solid var(--retro-shadow-dark); /* Slightly thinner border */
-        border-radius: 12px; /* Slightly less rounded */
-        box-shadow: 0.4em 0.4em 0 var(--retro-shadow-dark); /* Slightly less prominent shadow */
+        border: 3px solid var(--retro-shadow-dark);
+        border-radius: 12px;
+        box-shadow: 0.4em 0.4em 0 var(--retro-shadow-dark);
         cursor: pointer;
         transition: all 0.2s ease;
-        text-shadow: 1px 1px 0 rgba(0, 0, 0, 0.5); /* Slightly less prominent text shadow */
-        letter-spacing: 0.5px; /* Reduced letter spacing */
+        overflow: hidden;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        text-shadow: 1px 1px 0 rgba(0, 0, 0, 0.5);
         text-decoration: none;
+        display: inline-block;
         box-sizing: border-box;
     }
 
     .btn-retro-profile:hover {
         background-color: var(--retro-accent-yellow);
         color: var(--retro-text);
-        transform: translateY(-3px); /* Less pronounced lift effect */
-        box-shadow: 0.5em 0.5em 0 var(--retro-shadow-dark); /* Less pronounced shadow on hover */
+        transform: translateY(-3px);
+        box-shadow: 0.5em 0.5em 0 var(--retro-shadow-dark);
     }
 
     .btn-retro-profile:active {
         transform: translateY(0);
-        box-shadow: 0.1em 0.1em 0 var(--retro-shadow-dark); /* Even more subtle active shadow */
+        box-shadow: 0.1em 0.1em 0 var(--retro-shadow-dark);
     }
 
     /* --- Review Section --- */
     .retro-review-section {
-        width: 360px; /* Consistent compact width with profile card */
+        width: 360px;
         background: var(--retro-primary-teal);
         border-radius: 15px;
-        padding: 1.2rem; /* Reduced padding */
+        padding: 1.2rem;
         box-shadow:
             0 0 0 0.15em var(--retro-shadow-dark),
             0 0 0 0.3em var(--retro-secondary-light),
@@ -230,10 +231,10 @@
 
     .retro-review-section h2 {
         font-family: var(--font-heading-retro);
-        font-size: 1.1rem; /* Slightly smaller heading */
+        font-size: 1.1rem;
         color: var(--retro-text);
-        margin-bottom: 0.8rem; /* Reduced margin */
-        padding-bottom: 0.4rem; /* Reduced padding */
+        margin-bottom: 0.8rem;
+        padding-bottom: 0.4rem;
         border-bottom: 2px dashed var(--retro-accent-yellow);
         text-align: center;
         text-shadow: 2px 2px 0 rgba(0, 0, 0, 0.4);
@@ -243,14 +244,14 @@
         background: var(--retro-secondary-light);
         border: 2px solid var(--retro-shadow-dark);
         border-radius: 8px;
-        padding: 0.7rem 0.9rem; /* Reduced padding */
-        margin-bottom: 0.8rem; /* Reduced margin */
-        box-shadow: 0.15em 0.15em 0 rgba(0, 0, 0, 0.2); /* More subtle shadow */
+        padding: 0.7rem 0.9rem;
+        margin-bottom: 0.8rem;
+        box-shadow: 0.15em 0.15em 0 rgba(0, 0, 0, 0.2);
         transition: transform 0.2s ease, box-shadow 0.2s ease;
     }
 
     .retro-review-item:hover {
-        transform: translateY(-2px) translateX(2px); /* More subtle shift on hover */
+        transform: translateY(-2px) translateX(2px);
         box-shadow: 0.2em 0.2em 0 rgba(0, 0, 0, 0.3);
     }
 
@@ -258,8 +259,8 @@
         display: flex;
         justify-content: space-between;
         align-items: center;
-        font-size: 0.8rem; /* Slightly smaller font */
-        margin-bottom: 0.3rem; /* Reduced margin */
+        font-size: 0.8rem;
+        margin-bottom: 0.3rem;
         color: var(--retro-text);
         font-weight: 600;
         font-family: var(--font-primary);
@@ -268,22 +269,22 @@
 
     .retro-review-stars {
         color: var(--retro-accent-yellow);
-        letter-spacing: 0.5px; /* Reduced letter spacing */
-        font-size: 1em; /* Slightly smaller stars */
+        letter-spacing: 0.5px;
+        font-size: 1em;
         text-shadow: none;
     }
 
     .retro-review-text {
-        font-size: 0.75rem; /* Slightly smaller font */
+        font-size: 0.75rem;
         color: var(--retro-text);
         line-height: 1.4;
-        margin-bottom: 0.3rem; /* Reduced margin */
+        margin-bottom: 0.3rem;
         font-family: var(--font-primary);
         text-shadow: none;
     }
 
     .retro-review-date {
-        font-size: 0.65rem; /* Slightly smaller font */
+        font-size: 0.65rem;
         color: var(--retro-text);
         text-align: right;
         font-family: var(--font-primary);
@@ -293,7 +294,7 @@
     .no-reviews-message {
         color: var(--retro-text);
         text-align: center;
-        padding: 0.8rem; /* Reduced padding */
+        padding: 0.8rem;
         font-style: italic;
         font-family: var(--font-primary);
         text-shadow: none;
@@ -304,14 +305,14 @@
         .profile-page-container {
             flex-direction: column;
             align-items: center;
-            padding: 1rem; /* More compact padding for smaller screens */
-            gap: 1rem; /* More compact gap */
+            padding: 1rem;
+            gap: 1rem;
         }
         .retro-profile-card,
         .retro-review-section {
-            width: 95%; /* Take more width on smaller screens */
-            max-width: 360px; /* Consistent max width */
-            padding: 1rem; /* More compact padding */
+            width: 95%;
+            max-width: 360px;
+            padding: 1rem;
         }
     }
 
@@ -328,19 +329,18 @@
             font-size: 1.1rem;
         }
         .profile-action-buttons {
-            flex-direction: column; /* Stack buttons vertically on very small screens */
-            gap: 0.5rem; /* Reduced gap */
+            flex-direction: column;
+            gap: 0.5rem;
         }
         .btn-retro-profile {
             min-width: unset;
             width: 100%;
-            font-size: 0.8em; /* Even smaller font */
-            padding: 0.5em 0.8em; /* Even smaller padding */
+            font-size: 0.8em;
+            padding: 0.5em 0.8em;
         }
     }
 </style>
 
-<!-- Helper function to render stars -->
 <%
     function renderStars(rating) {
         let stars = '';
@@ -362,7 +362,6 @@
 <div class="profile-page-container">
     <div class="retro-profile-card">
         <div class="profile-image-container">
-            <!-- Added null/undefined check for user before accessing properties -->
             <img src="<%= (user && user.avatarUrl) ? user.avatarUrl : '/images/default-avatar.png' %>" alt="<%= (user && user.username) ? user.username : 'Default' %> Profile Image" />
         </div>
 
@@ -401,8 +400,7 @@
             <% receivedReviews.forEach(review => { %>
                 <div class="retro-review-item">
                     <div class="retro-review-header">
-                        <!-- Displaying who wrote the review -->
-                        <span>FROM: <a href="/aura/<%= review.reviewer ? review.reviewer.username : '#' %>" class="text-retro-link"><%= (review.reviewer && review.reviewer.name) ? review.reviewer.name.toUpperCase() : 'ANONYMOUS' %></a></span>
+                        <span>FROM: <a href="/users/<%= review.reviewer ? review.reviewer._id : '#' %>/profile" class="text-retro-link"><%= (review.reviewer && review.reviewer.username) ? review.reviewer.username.toUpperCase() : 'ANONYMOUS' %></a></span>
                         <span class="retro-review-stars"><%= renderStars(review.rating) %></span>
                     </div>
                     <div class="retro-review-text">
@@ -420,6 +418,61 @@
     </div>
 </div>
 
-<!-- Ensure Press Start 2P and Inter fonts are loaded in your main boilerplate.ejs or style.css -->
-<!-- Example in boilerplate.ejs: -->
-<!-- <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Inter:wght@400;600;700&display=swap" rel="stylesheet"> -->
+<script>
+    // Client-side validation for the form
+    (function () {
+        'use strict';
+
+        var forms = document.querySelectorAll('.needs-validation');
+        const passwordInput = document.getElementById('password');
+        const passwordConfirmInput = document.getElementById('passwordConfirm');
+        const passwordMismatchFeedback = document.getElementById('passwordMismatchFeedback');
+
+        // NEW: Image preview elements
+        const avatarInput = document.getElementById('avatar');
+        const avatarPreview = document.getElementById('avatarPreview');
+
+        // Function to check password match
+        const checkPasswordMatch = () => {
+            if (passwordInput.value !== passwordConfirmInput.value) {
+                passwordConfirmInput.setCustomValidity('Passwords do not match.');
+                passwordMismatchFeedback.classList.add('password-mismatch'); // Add class to show specific message
+            } else {
+                passwordConfirmInput.setCustomValidity('');
+                passwordMismatchFeedback.classList.remove('password-mismatch'); // Hide specific message
+            }
+        };
+
+        // Listen for input on both password fields
+        passwordInput.addEventListener('input', checkPasswordMatch);
+        passwordConfirmInput.addEventListener('input', checkPasswordMatch);
+
+        // NEW: Event listener for avatar input to show preview
+        avatarInput.addEventListener('change', function() {
+            if (this.files && this.files[0]) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    avatarPreview.src = e.target.result;
+                };
+                reader.readAsDataURL(this.files[0]);
+            } else {
+                // If no file is selected, revert to a default placeholder
+                avatarPreview.src = "/images/default-avatar.png"; // Ensure you have this placeholder image
+            }
+        });
+        // END NEW
+
+        Array.prototype.slice.call(forms)
+            .forEach(function (form) {
+                form.addEventListener('submit', function (event) {
+                    checkPasswordMatch(); // Check again on submit
+
+                    if (!form.checkValidity()) {
+                        event.preventDefault();
+                        event.stopPropagation();
+                    }
+                    form.classList.add('was-validated');
+                }, false);
+            });
+    })();
+</script>

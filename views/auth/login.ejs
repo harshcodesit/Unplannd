@@ -1,4 +1,4 @@
-<% layout('layouts/boilerplate') %>
+<%- layout('layouts/boilerplate') %>
 
 <style>
     /* Specific styles for the login page to match the retro theme */
@@ -33,7 +33,7 @@
         left: 0;
         right: 0;
         bottom: 0;
-        background-image: 
+        background-image:
             repeating-linear-gradient(45deg, rgba(0,0,0,0.05) 0, rgba(0,0,0,0.05) 1px, transparent 1px, transparent 10px),
             repeating-linear-gradient(-45deg, rgba(0,0,0,0.05) 0, rgba(0,0,0,0.05) 1px, transparent 1px, transparent 10px);
         background-size: 10px 10px;
@@ -160,9 +160,9 @@
             <form action="/login" method="POST" class="needs-validation" novalidate>
                 <div class="mb-3">
                     <label class="form-label-retro" for="username">USERNAME</label>
-                    <input class="form-control-retro" type="text" id="username" name="username" required autofocus>
+                    <input class="form-control-retro" type="text" id="username" name="username" required autofocus value="<%= oldInput.username || '' %>">
                     <div class="invalid-feedback-retro">
-                        Please enter your username.
+                        PLEASE ENTER YOUR USERNAME.
                     </div>
                 </div>
 
@@ -170,7 +170,7 @@
                     <label class="form-label-retro" for="password">PASSWORD</label>
                     <input class="form-control-retro" type="password" id="password" name="password" required>
                     <div class="invalid-feedback-retro">
-                        Please enter your password.
+                        PLEASE ENTER YOUR PASSWORD.
                     </div>
                 </div>
                 

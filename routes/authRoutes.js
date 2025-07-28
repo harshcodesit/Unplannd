@@ -1,40 +1,29 @@
 // glimmergrid-mvp/routes/authRoutes.js
 const express = require('express');
-const router = express.Router();
-const authController = require('../controllers/authController');
-const { forwardAuthenticated, ensureAuthenticated } = require('../middleware/authMiddleware');
+// We will pass authController as an argument to the module.exports function
+// const authController = require('../controllers/authController'); // REMOVED direct import
+const { forwardAuthenticated, ensureAuthenticated, isLoggedIn } = require('../middleware/authMiddleware'); // Corrected middleware import
+const { uploadAvatar } = require('../config/multerConfig'); // Import specific multer uploader
+const catchAsync = require('../utils/catchAsync'); // Assuming you have this utility
 
-// --- Authentication Routes ---
-router.get('/login', forwardAuthenticated, authController.renderLoginPage);
-router.post('/login', authController.loginUser);
-router.get('/register', forwardAuthenticated, authController.renderRegisterPage);
-router.post('/register', authController.registerUser);
-router.get('/logout', ensureAuthenticated, authController.logoutUser);
+// Export a function that accepts authController as an argument
+module.exports = (authController) => { // This router now exports a function
+    const router = express.Router();
 
-// --- Aura (Profile) Routes ---
-// @route   GET /aura
-// @desc    Render user's profile view (Aura)
-// @access  Private
-router.get('/aura', ensureAuthenticated, authController.renderAuraPage); // Updated path and controller function
+    // --- Authentication Routes ---
+    router.get('/login', forwardAuthenticated, authController.renderLoginPage);
+    // CRITICAL FIX: Remove catchAsync from loginUser, as passport.authenticate handles its own responses
+    router.post('/login', authController.loginUser); 
+    router.get('/register', forwardAuthenticated, authController.renderRegisterPage);
+    router.post('/register', uploadAvatar, catchAsync(authController.registerUser)); 
+    router.get('/logout', isLoggedIn, authController.logoutUser);
 
-// @route   GET /profile/edit (keeping this path for now, can be changed to /aura/edit if desired)
-// @desc    Render edit profile form
-// @access  Private
-router.get('/profile/edit', ensureAuthenticated, authController.renderEditProfilePage);
+    // --- Aura (Profile) Routes ---
+    router.get('/aura', isLoggedIn, catchAsync(authController.renderAuraPage));
+    router.get('/profile/edit', isLoggedIn, catchAsync(authController.renderEditProfilePage));
+    router.post('/profile/edit', uploadAvatar, catchAsync(authController.updateProfile)); 
+    router.get('/profile/change-password', isLoggedIn, catchAsync(authController.renderChangePasswordPage));
+    router.post('/profile/change-password', isLoggedIn, catchAsync(authController.changePassword));
 
-// @route   POST /profile/edit
-// @desc    Handle updating user profile
-// @access  Private
-router.post('/profile/edit', ensureAuthenticated, authController.updateProfile);
-
-// @route   GET /profile/change-password (keeping this path for now)
-// @desc    Render change password form
-// @access  Private
-router.get('/profile/change-password', ensureAuthenticated, authController.renderChangePasswordPage);
-
-// @route   POST /profile/change-password
-// @desc    Handle password change submission
-// @access  Private
-router.post('/profile/change-password', ensureAuthenticated, authController.changePassword);
-
-module.exports = router;
+    return router; // Return the configured router
+};
