@@ -24,7 +24,7 @@ require('./models/Request');
 const authController = require('./controllers/authController');
 const hubController = require('./controllers/hubController');
 
-// All other controllers (glimmer, grid, request, trail) are NOT imported here in Phase 0.
+// IMPORTANT: All other controllers (glimmer, grid, request, trail) are NOT imported here in Phase 0.
 // They will be imported and their routers mounted in subsequent phases.
 // const glimmerController = require('./controllers/glimmerController');
 // const gridController = require('./controllers/gridController');
@@ -33,6 +33,7 @@ const hubController = require('./controllers/hubController');
 
 
 // --- Route Imports (Functions that accept controllers) ---
+// These are functions that need to be called with their respective controllers.
 const authRoutes = require('./routes/authRoutes')(authController);
 const hubRoutes = require('./routes/hubRoutes')(hubController);
 
@@ -42,9 +43,6 @@ const hubRoutes = require('./routes/hubRoutes')(hubController);
 // const gridRoutes = require('./routes/gridRoutes');
 // const trailRoutes = require('./routes/trailRoutes');
 // const requestRoutes = require('./routes/requests');
-
-// NEW: Import error handler middleware
-const { multerErrorHandler, generalErrorHandler } = require('./middleware/errorHandler');
 
 
 // --- DATABASE CONNECTION ---
@@ -82,16 +80,13 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 
 // --- ROUTES (Mounted after all core middleware) ---
+// Only mount routes necessary for Auth and Profile for now
 app.use('/', authRoutes);
 app.use('/hub', hubRoutes);
 app.use('/', hubRoutes); // Also mount hubRoutes to the root path
 
 
-// --- ERROR HANDLING (Order is important: Multer errors first, then general, then 404) ---
-app.use(multerErrorHandler); // Catch Multer-specific errors
-app.use(generalErrorHandler); // Catch any other uncaught errors
-
-// 404 Not Found Handler (MUST be last)
+// --- ERROR HANDLING (404 Not Found) ---
 app.use((req, res, next) => {
     res.status(404).render('error/404', { title: 'Page Not Found' });
 });

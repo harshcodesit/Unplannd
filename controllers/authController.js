@@ -156,7 +156,7 @@ const updateProfile = async (req, res) => {
     if (!name || !username || !email) { errors.push({ msg: 'Name, Username, and Email are required.' }); }
     const emailRegex = /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/;
     if (!emailRegex.test(email)) { errors.push({ msg: 'Please enter a valid email address.' }); }
-    const usernameRegex = /^[a-zA-Z0-Z0-9_]{3,20}$/; // Corrected regex to handle only basic alphanumeric + underscore
+    const usernameRegex = /^[a-zA-Z0-9_]{3,20}$/; // Corrected regex to handle only basic alphanumeric + underscore
     if (!usernameRegex.test(username)) { errors.push({ msg: 'Username can only contain letters, numbers, and underscores, and be 3-20 characters long.' }); }
 
 

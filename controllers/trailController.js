@@ -9,6 +9,7 @@ module.exports.renderSparksPage = async (req, res) => {
     const Glimmer = mongoose.model('Glimmer');
 
     try {
+        // req.user is available because of the isLoggedIn middleware
         const currentUser = await User.findById(req.user._id)
                                     .populate({
                                         path: 'hostedGlimmers',
@@ -61,3 +62,5 @@ module.exports.renderFootprintsPage = async (req, res) => {
         res.redirect('/hub');
     }
 };
+
+// Add other trail-related functions here as needed
