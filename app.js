@@ -22,27 +22,22 @@ require('./models/Request');
 
 // --- CONTROLLER IMPORTS (CRITICAL: Import all controllers explicitly here) ---
 const authController = require('./controllers/authController');
+const glimmerController = require('./controllers/glimmerController'); // NEW: Glimmer Controller
+const gridController = require('./controllers/gridController');     // NEW: Grid Controller
 const hubController = require('./controllers/hubController');
-
-// IMPORTANT: All other controllers (glimmer, grid, request, trail) are NOT imported here in Phase 0.
-// They will be imported and their routers mounted in subsequent phases.
-// const glimmerController = require('./controllers/glimmerController');
-// const gridController = require('./controllers/gridController');
-// const requestController = require('./controllers/requestController');
-// const trailController = require('./controllers/trailController');
+const requestController = require('./controllers/requestController'); // NEW: Request Controller
+const trailController = require('./controllers/trailController');   // NEW: Trail Controller
 
 
-// --- Route Imports (Functions that accept controllers) ---
-// These are functions that need to be called with their respective controllers.
+// --- Route Imports (These are functions that accept controllers) ---
 const authRoutes = require('./routes/authRoutes')(authController);
 const hubRoutes = require('./routes/hubRoutes')(hubController);
 
-// IMPORTANT: All other routes (glimmer, grid, request, trail) are NOT imported/mounted here in Phase 0.
-// They will be imported and their routers mounted in subsequent phases.
-// const glimmerRoutes = require('./routes/glimmerRoutes');
-// const gridRoutes = require('./routes/gridRoutes');
-// const trailRoutes = require('./routes/trailRoutes');
-// const requestRoutes = require('./routes/requests');
+// NEW: Import and pass controllers to the Glimmer-related routers
+const glimmerRoutes = require('./routes/glimmerRoutes')(glimmerController);
+const gridRoutes = require('./routes/gridRoutes')(gridController); // CRITICAL: Pass gridController
+const trailRoutes = require('./routes/trailRoutes')(trailController);
+const requestRoutes = require('./routes/requests')(requestController);
 
 
 // --- DATABASE CONNECTION ---
@@ -54,9 +49,9 @@ app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
 
 // --- CORE MIDDLEWARE (ORDER IS CRUCIAL) ---
-app.use(express.urlencoded({ extended: true }));
-app.use(express.json());
-app.use(methodOverride('_method'));
+app.use(express.urlencoded({ extended: true })); // Parses URL-encoded bodies (for form submissions)
+app.use(express.json()); // Parses JSON bodies (if your frontend sends JSON)
+app.use(methodOverride('_method')); // Allows PUT/DELETE requests from forms using ?_method=PUT/DELETE
 app.use(
     session({
         secret: process.env.SESSION_SECRET,
@@ -67,8 +62,8 @@ app.use(
 );
 app.use(passport.initialize());
 app.use(passport.session());
-require('./config/passport')(passport);
-app.use(flash());
+require('./config/passport')(passport); // Passport config
+app.use(flash()); // Connect flash
 app.use((req, res, next) => {
     res.locals.success_msg = req.flash('success_msg');
     res.locals.error_msg = req.flash('error_msg');
@@ -80,13 +75,23 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 
 // --- ROUTES (Mounted after all core middleware) ---
-// Only mount routes necessary for Auth and Profile for now
 app.use('/', authRoutes);
 app.use('/hub', hubRoutes);
 app.use('/', hubRoutes); // Also mount hubRoutes to the root path
 
+// NEW: Mount Glimmer-related routes
+app.use('/glimmers', glimmerRoutes); // Handles /glimmers, /glimmers/:id, /glimmers/:id/edit, /glimmers/:id/delete
+app.use('/grid', gridRoutes); // Handles /grid/search, /grid/launch
+app.use('/trail', trailRoutes); // Handles /trail/sparks, /trail/footprints
+app.use('/glimmers/:glimmerId/requests', requestRoutes); // Mount Request routes (nested under glimmers)
 
-// --- ERROR HANDLING (404 Not Found) ---
+
+// --- ERROR HANDLING (Order is important: Multer errors first, then general, then 404) ---
+const { multerErrorHandler, generalErrorHandler } = require('./middleware/errorHandler');
+app.use(multerErrorHandler); // Catch Multer-specific errors
+app.use(generalErrorHandler); // Catch any other uncaught errors
+
+// 404 Not Found Handler (MUST be last)
 app.use((req, res, next) => {
     res.status(404).render('error/404', { title: 'Page Not Found' });
 });

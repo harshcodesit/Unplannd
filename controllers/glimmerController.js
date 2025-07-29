@@ -1,6 +1,7 @@
 // glimmergrid-mvp/controllers/glimmerController.js
 const mongoose = require('mongoose'); // Import mongoose for dynamic model access
-// Models are accessed dynamically within functions to prevent circular dependencies at top-level
+// Models (Glimmer, User, Review, Request) are accessed dynamically within functions
+// to prevent circular dependencies and ensure they are registered by Mongoose.
 
 // Helper function to generate blurred coordinates (server-side)
 function getBlurredCoordinates(longitude, latitude, radiusKm = 1) {
@@ -177,6 +178,7 @@ module.exports.renderEditForm = async (req, res) => {
 };
 
 // --- Update Glimmer (PUT handler) ---
+// This function assumes 'uploadGlimmerImages' middleware has run BEFORE it in the route chain
 module.exports.updateGlimmer = async (req, res) => {
     const Glimmer = mongoose.model('Glimmer');
     const User = mongoose.model('User'); 

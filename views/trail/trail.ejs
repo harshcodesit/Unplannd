@@ -1,0 +1,471 @@
+<%- layout("/layouts/boilerplate") %>
+<style>
+    /* --- Root Variables for Theme Consistency (ensure these are in your main style.css) --- */
+    :root {
+        --retro-bg: wheat; /* Main background and outer box */
+        --retro-text: #1F2937; /* Dark text for contrast */
+        --retro-accent-red: #d1451e; /* From box shadow, button hover */
+        --retro-accent-yellow: #FFD93D; /* From previous accent, price underline */
+        --retro-primary-teal: #2F9C95; /* From your card background */
+        --retro-secondary-light: #fff; /* From box shadow white */
+        --retro-shadow-dark: #000; /* From box shadow black */
+        --retro-shadow-light: rgba(0, 0, 0, 0.2); /* For softer elements, box-shadow opacity */
+
+        /* Fonts */
+        --font-primary: "Inter", sans-serif;
+        --font-heading-retro: 'Press Start 2P', cursive; /* For titles and buttons */
+
+        /* Transitions */
+        --transition-fast: 0.2s ease;
+        --transition-medium: 0.3s ease;
+        --transition-slow: 0.6s ease;
+    }
+
+    /* --- General Body Styling --- */
+    body {
+        background-color: var(--retro-bg);
+        font-family: var(--font-primary);
+        color: var(--retro-text);
+        margin: 0;
+        padding: 0;
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column; /* Allow content to stack */
+        justify-content: flex-start; /* Align content to the top */
+        align-items: center; /* Center horizontally */
+        box-sizing: border-box;
+    }
+
+    /* Pixelated image rendering for that retro feel */
+    img {
+        image-rendering: pixelated;
+        image-rendering: -moz-crisp-edges;
+        image-rendering: -o-crisp-edges;
+        image-rendering: -webkit-optimize-contrast;
+        -ms-interpolation-mode: nearest-neighbor;
+    }
+
+    /* --- Page Container --- */
+    .joined-events-page-container { /* Specific container for joined events */
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-start;
+        align-items: center;
+        padding: 2rem;
+        background-color: var(--retro-bg); /* Matches body background */
+        font-family: var(--font-primary);
+        color: var(--retro-text);
+        min-height: 100vh;
+        width: 100%;
+        box-sizing: border-box;
+    }
+
+    /* --- Page Title --- */
+    .page-title-retro {
+        font-family: var(--font-heading-retro);
+        color: var(--retro-text);
+        text-align: center;
+        margin-bottom: 2em;
+        font-size: 2.5em;
+        text-shadow: 3px 3px 0 rgba(0, 0, 0, 0.5);
+        padding-bottom: 0.5em;
+        border-bottom: 3px dashed var(--retro-accent-yellow);
+        animation: fadeInDown 0.8s ease-out;
+        max-width: 90%;
+        word-break: break-word; /* Ensure long titles wrap */
+    }
+
+    @keyframes fadeInDown {
+        from { opacity: 0; transform: translateY(-30px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* --- Outer Container for Joined Events List --- */
+    .joined-events-box { /* Specific box for joined events, similar to hosted-events-box */
+        width: 100%;
+        max-width: 1400px;
+        background-color: var(--retro-primary-teal);
+        padding: 1.8em;
+        box-shadow:
+            0 0 0 0.15em var(--retro-shadow-dark),
+            0 0 0 0.3em var(--retro-secondary-light),
+            0 0 0 0.45em var(--retro-shadow-dark),
+            0 0.5em 0 0 var(--retro-accent-red),
+            0 0.5em 0 0.15em var(--retro-shadow-dark);
+        
+        transition: transform var(--transition-fast) steps(1);
+        animation: boxEntry 0.8s ease-out 0.2s backwards;
+        box-sizing: border-box;
+        text-shadow: 1px 1px 0 rgba(0, 0, 0, 0.3);
+
+        display: flex;
+        flex-direction: column;
+        gap: 1.5rem;
+    }
+
+    @keyframes boxEntry {
+        0% { opacity: 0; transform: translateY(30px) scale(0.95); }
+        100% { opacity: 1; transform: translateY(0) scale(1); }
+    }
+
+    .joined-events-box:hover {
+        transform: translateY(-0.2em);
+        box-shadow:
+            0 0 0 0.15em var(--retro-shadow-dark),
+            0 0 0 0.3em var(--retro-secondary-light),
+            0 0 0 0.45em var(--retro-shadow-dark),
+            0 0.8em 0 0 var(--retro-accent-red),
+            0 0.8em 0 0.15em var(--retro-shadow-dark);
+    }
+
+    /* --- Individual Joined Event Card (Horizontal Layout) --- */
+    .joined-event-card { /* Specific card for joined events, similar to hosted-event-card */
+        display: flex;
+        align-items: center;
+        background: var(--retro-secondary-light);
+        border: 2px solid var(--retro-shadow-dark);
+        border-radius: 12px;
+        padding: 1em;
+        box-shadow: 0.3em 0.3em 0 rgba(0, 0, 0, 0.25);
+        transition: all var(--transition-medium);
+        position: relative;
+        overflow: hidden;
+        animation: cardSlideIn 0.6s ease-out backwards;
+    }
+
+    .joined-event-card:nth-child(odd) { animation-delay: 0.3s; }
+    .joined-event-card:nth-child(even) { animation-delay: 0.4s; }
+
+    @keyframes cardSlideIn {
+        from { opacity: 0; transform: translateX(-50px); }
+        to { opacity: 1; transform: translateX(0); }
+    }
+
+    .joined-event-card:hover {
+        transform: translateY(-5px) rotate(1deg);
+        box-shadow: 0.5em 0.5em 0 var(--retro-shadow-dark);
+    }
+
+    /* --- Card Image --- */
+    .card-list-image-container {
+        flex-shrink: 0;
+        width: 100px;
+        height: 100px;
+        border: 2px solid var(--retro-shadow-dark);
+        border-radius: 8px;
+        overflow: hidden;
+        margin-right: 1.2em;
+        background-color: var(--retro-bg);
+    }
+
+    .card-list-image-container img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        display: block;
+    }
+
+    /* --- Card Details (Title, Date, Time) --- */
+    .card-list-details {
+        flex-grow: 1;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        padding-right: 1em;
+        color: var(--retro-text);
+    }
+
+    .card-list-details h3 {
+        font-family: var(--font-heading-retro);
+        font-size: 1.1em;
+        font-weight: 700;
+        margin: 0 0 0.3em 0;
+        line-height: 1.2;
+        text-shadow: 1px 1px 0 rgba(0, 0, 0, 0.3);
+        word-break: break-word;
+    }
+
+    .card-list-details p {
+        font-family: var(--font-primary);
+        font-size: 0.9em;
+        margin: 0.2em 0;
+        display: flex;
+        align-items: center;
+        gap: 0.5em;
+        text-shadow: none;
+    }
+
+    .card-list-details p svg {
+        width: 1em;
+        height: 1em;
+        fill: var(--retro-text);
+        flex-shrink: 0;
+    }
+
+    /* --- View Glimmer Button --- */
+    .card-view-glimmer-button { /* Specific button for viewing joined glimmers */
+        flex-shrink: 0;
+        position: relative;
+        background: var(--retro-accent-red);
+        color: var(--retro-secondary-light);
+        font-family: var(--font-heading-retro);
+        font-size: 0.75em;
+        font-weight: 700;
+        padding: 0.7em 1.2em;
+        border: 0.18em solid var(--retro-shadow-dark);
+        border-radius: 0.4em;
+        box-shadow: 0.25em 0.25em 0 var(--retro-shadow-dark);
+        cursor: pointer;
+        transition: all var(--transition-fast);
+        overflow: hidden;
+        text-transform: uppercase;
+        letter-spacing: 0.04em;
+        text-shadow: 1px 1px 0 rgba(0, 0, 0, 0.4);
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .card-view-glimmer-button::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(
+            90deg,
+            transparent 0%,
+            rgba(255, 255, 255, 0.2) 50%,
+            transparent 100%
+        );
+        transition: left var(--transition-slow);
+        z-index: 1;
+    }
+
+    .card-view-glimmer-button:hover {
+        background: var(--retro-shadow-dark);
+        color: var(--retro-accent-yellow);
+        transform: translate(-0.1em, -0.1em);
+        box-shadow: 0.35em 0.35em 0 var(--retro-accent-red);
+        text-shadow: 1px 1px 0 rgba(0, 0, 0, 0.6);
+    }
+
+    .card-view-glimmer-button:active {
+        transform: translate(0.1em, 0.1em);
+        box-shadow: 0.1em 0.1em 0 var(--retro-shadow-dark);
+    }
+
+    /* --- No Events Message --- */
+    .no-events-message {
+        color: var(--retro-text);
+        text-align: center;
+        padding: 2rem;
+        font-style: italic;
+        font-family: var(--font-primary);
+        text-shadow: none;
+        width: 100%;
+        max-width: 600px;
+        background-color: var(--retro-secondary-light);
+        border: 2px dashed var(--retro-shadow-dark);
+        border-radius: 10px;
+        box-shadow: 0.2em 0.2em 0 rgba(0, 0, 0, 0.2);
+    }
+
+    /* --- Responsive Adjustments (Shared styles from sparks.ejs) --- */
+    @media (max-width: 1200px) {
+        .joined-events-box {
+            padding: 1.5em;
+            gap: 1.2rem;
+        }
+        .joined-event-card {
+            padding: 0.8em;
+        }
+        .page-title-retro {
+            font-size: 2.2em;
+        }
+    }
+
+    @media (max-width: 992px) {
+        .joined-events-page-container {
+            padding: 1.5rem;
+        }
+        .page-title-retro {
+            font-size: 2em;
+            margin-bottom: 1.5em;
+        }
+        .joined-events-box {
+            padding: 1.2em;
+            gap: 1rem;
+        }
+        .joined-event-card {
+            flex-direction: column; /* Stack image and details vertically */
+            text-align: center;
+            padding: 1em;
+        }
+        .card-list-image-container {
+            margin: 0 auto 1em auto;
+        }
+        .card-list-details {
+            padding-right: 0;
+            margin-bottom: 1em;
+        }
+        .card-list-details h3 {
+            font-size: 1.05em;
+            margin-bottom: 0.5em;
+        }
+        .card-list-details p {
+            justify-content: center;
+            font-size: 0.85em;
+        }
+        .card-view-glimmer-button {
+            width: 80%; /* Button takes more width when stacked */
+            max-width: 250px;
+            font-size: 0.8em;
+            padding: 0.6em 1em;
+            margin: 0 auto;
+        }
+    }
+
+    @media (max-width: 768px) {
+        .joined-events-page-container {
+            padding: 1rem 0.5rem;
+        }
+        .page-title-retro {
+            font-size: 1.8em;
+            margin-bottom: 1.2em;
+            text-shadow: 2px 2px 0 rgba(0, 0, 0, 0.5);
+        }
+        .joined-events-box {
+            padding: 0.8em;
+            gap: 0.8rem;
+            box-shadow:
+                0 0 0 0.1em var(--retro-shadow-dark),
+                0 0 0 0.2em var(--retro-secondary-light),
+                0 0 0 0.3em var(--retro-shadow-dark),
+                0 0.3em 0 0 var(--retro-accent-red),
+                0 0.3em 0 0.1em var(--retro-shadow-dark);
+        }
+        .joined-event-card {
+            padding: 0.8em;
+            border-radius: 10px;
+        }
+        .card-list-image-container {
+            width: 80px;
+            height: 80px;
+            border-radius: 6px;
+        }
+        .card-list-details h3 {
+            font-size: 1em;
+        }
+        .card-list-details p {
+            font-size: 0.8em;
+            gap: 0.4em;
+        }
+        .card-view-glimmer-button {
+            font-size: 0.7em;
+            padding: 0.5em 0.8em;
+            border-width: 0.15em;
+            border-radius: 0.3em;
+        }
+    }
+
+    @media (max-width: 480px) {
+        .joined-events-page-container {
+            padding: 0.5rem;
+        }
+        .page-title-retro {
+            font-size: 1.5em;
+            margin-bottom: 1em;
+            text-shadow: 1.5px 1.5px 0 rgba(0, 0, 0, 0.5);
+        }
+        .joined-events-box {
+            padding: 0.5em;
+            gap: 0.6rem;
+        }
+        .joined-event-card {
+            padding: 0.6em;
+            border-radius: 8px;
+        }
+        .card-list-image-container {
+            width: 70px;
+            height: 70px;
+            border-radius: 5px;
+            margin-bottom: 0.8em;
+        }
+        .card-list-details h3 {
+            font-size: 0.9em;
+        }
+        .card-list-details p {
+            font-size: 0.75em;
+        }
+        .card-view-glimmer-button {
+            font-size: 0.65em;
+            padding: 0.4em 0.7em;
+            border-width: 0.12em;
+            border-radius: 0.25em;
+        }
+    }
+</style>
+
+<body>
+    <div class="joined-events-page-container">
+        <h1 class="page-title-retro">Your Joined Glimmers</h1>
+
+        <div class="joined-events-box">
+            <% if (joinedGlimmers && joinedGlimmers.length > 0) { %>
+                <% joinedGlimmers.forEach(function(glimmer) { %>
+                    <div class="joined-event-card">
+                        <div class="card-list-image-container">
+                            <img src="<%= glimmer.image && glimmer.image.length > 0 ? glimmer.image[0].url : '/images/default-glimmer.png' %>" alt="<%= glimmer.title %> Image">
+                        </div>
+                        <div class="card-list-details">
+                            <h3><%= glimmer.title.toUpperCase() %></h3>
+                            <p>
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-calendar-days">
+                                    <path d="M8 2v4"/>
+                                    <path d="M16 2v4"/>
+                                    <rect width="18" height="18" x="3" y="4" rx="2"/>
+                                    <path d="M3 10h18"/>
+                                    <path d="M8 14h.01"/>
+                                    <path d="M12 14h.01"/>
+                                    <path d="M16 14h.01"/>
+                                    <path d="M8 18h.01"/>
+                                    <path d="M12 18h.01"/>
+                                    <path d="M16 18h.01"/>
+                                </svg>
+                                <%= glimmer.startDate.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) %>
+                            </p>
+                            <p>
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-clock">
+                                    <circle cx="12" cy="12" r="10"/>
+                                    <polyline points="12 6 12 12 16 14"/>
+                                </svg>
+                                <%= glimmer.startDate.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true }) %>
+                            </p>
+                            <p>
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-map-pin">
+                                    <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/>
+                                    <circle cx="12" cy="9" r="3"/>
+                                </svg>
+                                <%= glimmer.locationName.toUpperCase() %>
+                            </p>
+                        </div>
+                        <div class="card-actions-container">
+                            <a href="/glimmers/<%= glimmer._id %>" class="card-view-glimmer-button">VIEW GLIMMER</a>
+                            <!-- Add Review button will go here in a later phase -->
+                        </div>
+                    </div>
+                <% }); %>
+            <% } else { %>
+                <p class="no-events-message">You haven't joined any glimmers yet. Go out and explore!</p>
+            <% } %>
+        </div>
+    </div>
+
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script>
+        lucide.createIcons(); // Initialize Lucide icons
+    </script>
+</body>

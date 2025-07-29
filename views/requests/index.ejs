@@ -36,7 +36,6 @@
         box-sizing: border-box;
     }
 
-    /* Pixelated image rendering for that retro feel */
     img {
         image-rendering: pixelated;
         image-rendering: -moz-crisp-edges;
@@ -45,27 +44,12 @@
         -ms-interpolation-mode: nearest-neighbor;
     }
 
-    /* --- Page Container --- */
-    .event-management-page-container {
-        display: flex;
-        flex-direction: column;
-        justify-content: flex-start;
-        align-items: center;
-        padding: 2rem;
-        background-color: var(--retro-bg);
-        font-family: var(--font-primary);
-        color: var(--retro-text);
-        min-height: 100vh;
+    /* --- Requests Container --- */
+    .requests-container {
         width: 100%;
-        box-sizing: border-box;
-    }
-
-    /* --- Event Details Section (Simplified for this page) --- */
-    .event-details-section {
-        width: 100%;
-        max-width: 900px; /* Wider for details */
+        max-width: 800px; /* Max width for the requests page */
         background-color: var(--retro-primary-teal);
-        padding: 2em;
+        padding: 2.5em;
         border-radius: 15px;
         box-shadow:
             0 0 0 0.15em var(--retro-shadow-dark),
@@ -73,265 +57,193 @@
             0 0 0 0.45em var(--retro-shadow-dark),
             0 0.6em 0 0 var(--retro-accent-red),
             0 0.6em 0 0.15em var(--retro-shadow-dark);
-        margin-bottom: 2.5em; /* Space below event details */
-        text-align: center;
-        animation: fadeIn 0.8s ease-out;
+        margin: 2rem auto;
         box-sizing: border-box;
         text-shadow: 1px 1px 0 rgba(0, 0, 0, 0.3);
+        animation: entry 0.8s ease-out;
     }
 
-    @keyframes fadeIn {
-        from { opacity: 0; transform: translateY(20px); }
-        to { opacity: 1; transform: translateY(0); }
+    @keyframes entry {
+        0% { opacity: 0; transform: translateY(30px) scale(0.95); }
+        100% { opacity: 1; transform: translateY(0) scale(1); }
     }
 
-    /* Revised Title Layout */
-    .event-details-section h1 {
+    .requests-container h1 {
         font-family: var(--font-heading-retro);
-        font-size: 2.5em; /* Slightly larger for main title */
-        color: var(--retro-text);
-        margin: 0.5em 0 1em 0; /* Adjusted top and bottom margin for more space */
-        padding-bottom: 0.3em; /* Small padding at the bottom */
-        text-shadow: 4px 4px 0 rgba(0, 0, 0, 0.6); /* More prominent shadow */
-        line-height: 1.1;
-        position: relative; /* For the pseudo-element underline */
-        display: inline-block; /* To make pseudo-element width match text */
-    }
-
-    .event-details-section h1::after {
-        content: '';
-        position: absolute;
-        left: 0;
-        right: 0;
-        bottom: -5px; /* Position below text */
-        height: 4px; /* Thickness of the underline */
-        background: var(--retro-accent-yellow); /* Yellow highlight */
-        transform: skewX(-15deg); /* Retro skew effect */
-        box-shadow: 2px 2px 0 rgba(0, 0, 0, 0.2); /* Small shadow for the underline */
-    }
-
-    /* Revised Date & Time Text */
-    .event-details-section .detail-item {
-        font-family: var(--font-heading-retro); /* Use retro font for these as well */
-        font-size: 1.1em; /* Slightly larger */
-        margin: 0.6em 0; /* Adjusted margin */
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        gap: 0.8em;
-        color: var(--retro-text); /* Darker text for more contrast */
-        text-shadow: 2px 2px 0 rgba(0, 0, 0, 0.3); /* Add shadow for retro feel */
-        border-bottom: 2px dashed rgba(0, 0, 0, 0.2); /* Dashed underline */
-        padding-bottom: 0.4em;
-    }
-
-    .event-details-section .detail-item:last-of-type {
-        border-bottom: none; /* No border for the last item */
-    }
-
-    .event-details-section .detail-item svg {
-        width: 1.3em; /* Slightly larger icons */
-        height: 1.3em;
-        fill: var(--retro-text); /* Icon color matches text */
-        flex-shrink: 0;
-    }
-
-    /* --- Requests Section --- */
-    .requests-section {
-        width: 100%;
-        max-width: 900px; /* Consistent width with event details */
-        background-color: var(--retro-primary-teal);
-        padding: 1.8em;
-        border-radius: 15px;
-        box-shadow:
-            0 0 0 0.15em var(--retro-shadow-dark),
-            0 0 0 0.3em var(--retro-secondary-light),
-            0 0 0 0.45em var(--retro-shadow-dark),
-            0 0.5em 0 0 var(--retro-accent-red),
-            0 0.5em 0 0.15em var(--retro-shadow-dark);
-        animation: fadeIn 0.8s ease-out 0.2s backwards; /* Staggered entry */
-        box-sizing: border-box;
-        text-shadow: 1px 1px 0 rgba(0, 0, 0, 0.3);
-    }
-
-    .requests-section h2 {
-        font-family: var(--font-heading-retro);
-        font-size: 1.8em;
         color: var(--retro-text);
         text-align: center;
-        margin-bottom: 1.5em;
+        margin-bottom: 1em;
+        font-size: 2em;
+        text-shadow: 3px 3px 0 rgba(0, 0, 0, 0.5);
         padding-bottom: 0.5em;
         border-bottom: 3px dashed var(--retro-accent-yellow);
-        text-shadow: 2px 2px 0 rgba(0, 0, 0, 0.4);
+    }
+
+    .requests-container h1 span {
+        color: var(--retro-accent-red); /* Highlight glimmer title */
     }
 
     .requests-list {
-        list-style: none; /* Remove default list styling */
+        list-style: none;
         padding: 0;
-        margin: 0;
-        display: flex;
-        flex-direction: column; /* Stack requests vertically */
-        gap: 1.2em; /* Space between request cards */
+        margin-top: 2em;
     }
 
-    /* --- Individual Request Card --- */
-    .request-card {
-        display: flex;
-        align-items: center;
-        background: var(--retro-secondary-light);
-        border: 2px solid var(--retro-shadow-dark);
+    .request-item {
+        background-color: var(--retro-secondary-light);
+        padding: 1.5em;
         border-radius: 10px;
-        padding: 1em;
-        box-shadow: 0.25em 0.25em 0 rgba(0, 0, 0, 0.2);
-        transition: all var(--transition-medium);
+        border: 2px solid var(--retro-shadow-dark);
+        box-shadow: 0.3em 0.3em 0 rgba(0, 0, 0, 0.2);
+        margin-bottom: 1.5em;
+        display: flex;
+        flex-direction: column;
+        gap: 0.8em;
         position: relative;
         overflow: hidden;
-        animation: slideInLeft 0.5s ease-out backwards; /* Entry animation for requests */
     }
 
-    .request-card:nth-child(odd) { animation-delay: 0.3s; }
-    .request-card:nth-child(even) { animation-delay: 0.4s; }
-
-    @keyframes slideInLeft {
-        from { opacity: 0; transform: translateX(-30px); }
-        to { opacity: 1; transform: translateX(0); }
+    .request-item::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 5px; /* Thin border at top */
+        background-color: var(--retro-accent-yellow);
+        z-index: 1;
     }
 
-    .request-card:hover {
-        transform: translateY(-3px) translateX(3px);
-        box-shadow: 0.4em 0.4em 0 rgba(0, 0, 0, 0.3);
+    .request-item.accepted::before {
+        background-color: #4CAF50; /* Green for accepted */
     }
 
-    .request-card .pfp-container {
-        flex-shrink: 0;
+    .request-item.rejected::before {
+        background-color: var(--retro-accent-red); /* Red for rejected */
+    }
+
+    .requester-info {
+        display: flex;
+        align-items: center;
+        gap: 1em;
+        margin-bottom: 1em;
+        padding-bottom: 0.8em;
+        border-bottom: 1px dashed rgba(0, 0, 0, 0.2);
+    }
+
+    .requester-avatar {
         width: 60px;
         height: 60px;
         border-radius: 50%;
-        overflow: hidden;
-        border: 2px solid var(--retro-accent-yellow);
-        box-shadow: 0 2px 5px var(--retro-shadow-light);
+        object-fit: cover;
+        border: 3px solid var(--retro-primary-teal);
+        box-shadow: 0 0 0 2px var(--retro-shadow-dark);
         margin-right: 1em;
     }
 
-    .request-card .pfp-container img {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-        display: block;
+    .requester-details {
+        flex-grow: 1;
     }
 
-    .request-card .requester-info {
-        flex-grow: 1; /* Allow info to take space */
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        margin-right: 1em; /* Space before buttons */
+    .requester-details h3 {
+        font-family: var(--font-heading-retro);
+        font-size: 1.1em;
+        color: var(--retro-text);
+        margin: 0 0 0.2em;
+        text-shadow: 1px 1px 0 rgba(0, 0, 0, 0.2);
+    }
+
+    .requester-details p {
+        font-family: var(--font-primary);
+        font-size: 0.9em;
+        color: rgba(0, 0, 0, 0.7);
+        margin: 0;
+        text-shadow: none;
+    }
+
+    .request-status {
+        font-family: var(--font-heading-retro);
+        font-size: 1em;
+        padding: 0.5em 1em;
+        border-radius: 5px;
+        text-transform: uppercase;
+        font-weight: bold;
+        text-shadow: 1px 1px 0 rgba(0, 0, 0, 0.3);
+        align-self: flex-end; /* Align status to the right */
+    }
+
+    .status-pending {
+        background-color: var(--retro-accent-yellow);
         color: var(--retro-text);
     }
 
-    .request-card .requester-info .name {
-        font-family: var(--font-heading-retro);
-        font-size: 1em;
-        font-weight: 700;
-        margin: 0;
-        text-shadow: 1px 1px 0 rgba(0, 0, 0, 0.2);
-        word-break: break-word;
+    .status-accepted {
+        background-color: #4CAF50; /* Green */
+        color: white;
     }
 
-    .request-card .requester-info .requested-date {
-        font-family: var(--font-primary);
-        font-size: 0.8em;
-        color: rgba(0, 0, 0, 0.7);
-        text-shadow: none;
-        margin-top: 0.2em;
+    .status-rejected {
+        background-color: var(--retro-accent-red);
+        color: white;
     }
 
-    .request-card .request-actions {
-        flex-shrink: 0;
+    .request-actions {
         display: flex;
-        gap: 0.6em; /* Space between buttons */
-        align-items: center;
+        gap: 1em;
+        margin-top: 1em;
+        justify-content: flex-end; /* Align buttons to the right */
     }
 
-    /* --- Action Buttons (Symbol-only for Accept/Reject) --- */
-    .action-button {
+    .request-action-button {
         position: relative;
+        background: var(--retro-bg);
+        color: var(--retro-text);
         font-family: var(--font-heading-retro);
-        font-size: 0.7em; /* Smallest font for actions */
+        font-size: 0.8em;
         font-weight: 700;
-        padding: 0.5em 0.8em;
-        border: 2px solid var(--retro-shadow-dark);
-        border-radius: 0.3em;
-        box-shadow: 0.2em 0.2em 0 var(--retro-shadow-dark);
+        padding: 0.6em 1em;
+        border: 0.2em solid var(--retro-shadow-dark);
+        border-radius: 0.4em;
+        box-shadow: 0.3em 0.3em 0 var(--retro-shadow-dark);
         cursor: pointer;
         transition: all var(--transition-fast);
         overflow: hidden;
         text-transform: uppercase;
-        letter-spacing: 0.03em;
-        text-shadow: 1px 1px 0 rgba(0, 0, 0, 0.3);
-        text-decoration: none;
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        min-width: 30px; /* Ensure icons have space */
-        min-height: 30px;
-    }
-
-    .action-button svg {
-        width: 1.2em; /* Slightly larger icon */
-        height: 1.2em;
-        fill: currentColor; /* Use current text color */
-        margin: 0; /* No margin for symbol-only buttons */
-    }
-
-    .action-button span { /* Hidden text for accessibility, visually hidden */
-        position: absolute;
-        width: 1px;
-        height: 1px;
-        padding: 0;
-        margin: -1px;
-        overflow: hidden;
-        clip: rect(0, 0, 0, 0);
-        white-space: nowrap;
-        border: 0;
-    }
-
-    .action-button.view-profile {
-        background-color: var(--retro-accent-yellow);
-        color: var(--retro-text);
-    }
-    .action-button.accept {
-        background-color: #10b981; /* Green for accept */
-        color: var(--retro-secondary-light);
-    }
-    .action-button.reject {
-        background-color: var(--retro-accent-red); /* Red for reject */
-        color: var(--retro-secondary-light);
-    }
-
-    .action-button:hover {
-        transform: translateY(-0.1em) translateX(0.1em);
-        box-shadow: 0.3em 0.3em 0 var(--retro-shadow-dark);
-    }
-
-    .action-button.view-profile:hover {
-        background-color: var(--retro-primary-teal);
-        color: var(--retro-secondary-light);
+        letter-spacing: 0.05em;
         text-shadow: 1px 1px 0 rgba(0, 0, 0, 0.4);
-    }
-    .action-button.accept:hover {
-        background-color: #0d8a5e; /* Darker green */
-    }
-    .action-button.reject:hover {
-        background-color: #a73614; /* Darker red */
+        text-decoration: none;
+        display: inline-block;
     }
 
-    .action-button:active {
+    .request-action-button:hover {
+        background: var(--retro-accent-red);
+        color: var(--retro-secondary-light);
+        transform: translate(-0.1em, -0.1em);
+        box-shadow: 0.4em 0.4em 0 var(--retro-shadow-dark);
+    }
+
+    .request-action-button:active {
         transform: translate(0.1em, 0.1em);
-        box-shadow: 0.1em 0.1em 0 var(--retro-shadow-dark);
+        box-shadow: 0.15em 0.15em 0 var(--retro-shadow-dark);
     }
 
-    .action-button:disabled {
+    .request-action-button.accept {
+        background-color: #4CAF50; /* Green for accept */
+        color: white;
+    }
+    .request-action-button.accept:hover {
+        background-color: #388E3C; /* Darker green on hover */
+    }
+
+    .request-action-button.reject {
+        background-color: var(--retro-accent-red); /* Red for reject */
+        color: white;
+    }
+    .request-action-button.reject:hover {
+        background-color: #A0331D; /* Darker red on hover */
+    }
+
+    .request-action-button:disabled {
         opacity: 0.6;
         cursor: not-allowed;
         background-color: #ccc;
@@ -339,7 +251,7 @@
         transform: none;
         text-shadow: none;
     }
-    .action-button:disabled:hover {
+    .request-action-button:disabled:hover {
         background-color: #ccc;
         color: var(--retro-text);
     }
@@ -358,196 +270,138 @@
         border: 2px dashed var(--retro-shadow-dark);
         border-radius: 10px;
         box-shadow: 0.2em 0.2em 0 rgba(0, 0, 0, 0.2);
-        margin-top: 2em; /* Space from heading */
+        margin-top: 2em;
     }
 
-    /* --- Responsive Adjustments --- */
-    @media (max-width: 992px) {
-        .event-details-section,
-        .requests-section {
+    /* Responsive Adjustments */
+    @media (max-width: 768px) {
+        .requests-container {
             padding: 1.5em;
-            width: 95%; /* Take more width */
-            max-width: 700px; /* Limit overall max width */
+            margin: 1rem auto;
+            box-shadow:
+                0 0 0 0.1em var(--retro-shadow-dark),
+                0 0 0 0.2em var(--retro-secondary-light),
+                0 0 0 0.3em var(--retro-shadow-dark),
+                0 0.4em 0 0 var(--retro-accent-red),
+                0 0.4em 0 0.1em var(--retro-shadow-dark);
         }
-        .event-details-section h1 {
-            font-size: 2em;
-            margin: 0.5em 0 0.8em 0; /* Adjusted margins for smaller screens */
+        .requests-container h1 {
+            font-size: 1.8em;
         }
-        .event-details-section .detail-item {
+        .request-item {
+            padding: 1em;
+        }
+        .requester-info {
+            flex-direction: column;
+            align-items: flex-start;
+            text-align: left;
+        }
+        .requester-avatar {
+            width: 50px;
+            height: 50px;
+        }
+        .requester-details h3 {
             font-size: 1em;
-            gap: 0.6em;
-            padding-bottom: 0.3em;
         }
-        .event-details-section .detail-item svg {
-            width: 1.1em;
-            height: 1.1em;
+        .requester-details p {
+            font-size: 0.85em;
         }
-        .requests-section h2 {
-            font-size: 1.5em;
+        .request-status {
+            font-size: 0.9em;
+            padding: 0.4em 0.8em;
+            align-self: flex-start;
         }
-        .request-card {
-            flex-wrap: wrap; /* Allow wrapping on smaller screens */
-            justify-content: center; /* Center items when wrapped */
-            text-align: center;
+        .request-actions {
+            flex-direction: column;
+            gap: 0.8em;
+            width: 100%;
+            justify-content: flex-start;
         }
-        .request-card .pfp-container {
-            margin: 0 auto 0.8em auto; /* Center PFP and add bottom margin */
-        }
-        .request-card .requester-info {
-            flex-basis: 100%; /* Make name full width */
-            margin-right: 0;
-            margin-bottom: 0.8em; /* Space before buttons */
-        }
-        .request-card .requester-info .name {
-            font-size: 0.95em;
-        }
-        .request-card .request-actions {
-            flex-basis: 100%; /* Make buttons full width */
-            justify-content: center; /* Center buttons horizontally */
-        }
-        .action-button {
-            font-size: 0.65em;
-            padding: 0.4em 0.7em;
-            min-width: unset; /* Remove min-width to allow content to dictate */
-        }
-        .action-button svg {
-            margin: 0; /* Ensure no margin for icons */
+        .request-action-button {
+            width: 100%;
+            font-size: 0.75em;
+            padding: 0.5em 1em;
         }
     }
 
     @media (max-width: 480px) {
-        .event-management-page-container {
-            padding: 1rem 0.5rem;
-        }
-        .event-details-section {
+        .requests-container {
             padding: 1em;
-            margin-bottom: 2em;
+            margin: 0.5rem auto;
         }
-        .event-details-section h1 {
-            font-size: 1.8em;
-            text-shadow: 2px 2px 0 rgba(0, 0, 0, 0.6);
-            margin: 0.5em 0 0.6em 0; /* Further adjusted for smaller screens */
+        .requests-container h1 {
+            font-size: 1.5em;
         }
-        .event-details-section .detail-item {
-            font-size: 0.9em;
-            gap: 0.5em;
-            padding-bottom: 0.2em;
-        }
-        .event-details-section .detail-item svg {
-            width: 1em;
-            height: 1em;
-        }
-        .requests-section {
-            padding: 1em;
-        }
-        .requests-section h2 {
-            font-size: 1.3em;
-            margin-bottom: 1em;
-        }
-        .requests-list {
-            gap: 0.8em;
-        }
-        .request-card {
+        .request-item {
             padding: 0.8em;
         }
-        .request-card .pfp-container {
-            width: 50px;
-            height: 50px;
-            margin-bottom: 0.6em;
+        .requester-avatar {
+            width: 40px;
+            height: 40px;
         }
-        .request-card .requester-info .name {
+        .requester-details h3 {
             font-size: 0.9em;
         }
-        .request-card .request-actions {
-            gap: 0.4em;
+        .requester-details p {
+            font-size: 0.8em;
         }
-        .action-button {
-            font-size: 0.6em;
-            padding: 0.3em 0.5em;
-            border-width: 1.5px;
-            border-radius: 0.25em;
-            box-shadow: 0.15em 0.15em 0 var(--retro-shadow-dark);
+        .request-status {
+            font-size: 0.8em;
+            padding: 0.3em 0.6em;
         }
-        .action-button svg {
-            width: 1em;
-            height: 1em;
+        .request-action-button {
+            font-size: 0.7em;
+            padding: 0.4em 0.8em;
         }
     }
 </style>
 
 <body>
-    <div class="event-management-page-container">
-        <!-- Simplified Event Details Section -->
-        <div class="event-details-section">
-            <h1><%= glimmer.title.toUpperCase() %></h1>
-            <p class="detail-item">
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-calendar-days">
-                    <path d="M8 2v4"/><path d="M16 2v4"/><rect width="18" height="18" x="3" y="4" rx="2"/><path d="M3 10h18"/><path d="M8 14h.01"/><path d="M12 14h.01"/><path d="M16 14h.01"/><path d="M8 18h.01"/><path d="M12 18h.01"/><path d="M16 18h.01"/>
-                </svg>
-                <%= glimmer.startDate.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) %>
-            </p>
-            <p class="detail-item">
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-clock">
-                    <circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>
-                </svg>
-                <%= glimmer.startDate.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true }) %>
-            </p>
-        </div>
+    <div class="requests-container">
+        <h1>REQUESTS FOR <span class="glimmer-title"><%= glimmer.title.toUpperCase() %></span></h1>
 
-        <div class="requests-section">
-            <h2>GLIMMER REQUESTS</h2>
+        <% if (requests && requests.length > 0) { %>
             <ul class="requests-list">
-                <% if (requests && requests.length > 0) { %>
-                    <% requests.forEach(function(request) { %>
-                        <li class="request-card" data-request-id="<%= request._id %>">
-                            <div class="pfp-container">
-                                <img src="<%= request.requester.avatarUrl || '/images/default-avatar.png' %>" alt="<%= request.requester.username %>'s Profile Picture">
+                <% requests.forEach(function(request) { %>
+                    <li class="request-item <%= request.status %>">
+                        <div class="requester-info">
+                            <img src="<%= request.requester.avatarUrl || '/images/default-avatar.png' %>" alt="<%= request.requester.username %>'s Avatar" class="requester-avatar">
+                            <div class="requester-details">
+                                <h3><%= request.requester.username.toUpperCase() %></h3>
+                                <p>Requested on: <%= request.requestedAt.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) %></p>
                             </div>
-                            <div class="requester-info">
-                                <span class="name"><%= request.requester.username.toUpperCase() %></span>
-                                <span class="requested-date">Requested on: <%= request.requestedAt.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) %></span>
-                            </div>
+                            <span class="request-status status-<%= request.status %>">
+                                <%= request.status.toUpperCase() %>
+                            </span>
+                        </div>
+
+                        <% if (request.status === 'pending') { %>
                             <div class="request-actions">
-                                
-                                <% if (request.status === 'pending') { %>
-                                    <form action="/glimmers/<%= glimmer._id %>/requests/<%= request._id %>/accept?_method=PATCH" method="POST" style="display:inline;">
-                                        <button type="submit" class="action-button accept" aria-label="Accept Request">
-                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-check">
-                                                <path d="M20 6 9 17 4 12"/>
-                                            </svg>
-                                            <span>Accept</span>
-                                        </button>
-                                    </form>
-                                    <form action="/glimmers/<%= glimmer._id %>/requests/<%= request._id %>/reject?_method=PATCH" method="POST" style="display:inline;">
-                                        <button type="submit" class="action-button reject" aria-label="Reject Request">
-                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-x">
-                                                <path d="M18 6 6 18"/><path d="m6 6 12 12"/>
-                                            </svg>
-                                            <span>Reject</span>
-                                        </button>
-                                    </form>
-                                <% } else { %>
-                                    <button type="button" class="action-button" disabled>
-                                        <%= request.status.toUpperCase() %>
-                                    </button>
-                                <% } %>
+                                <form action="/glimmers/<%= glimmer._id %>/requests/<%= request._id %>/accept?_method=PATCH" method="POST" style="display:inline;">
+                                    <button type="submit" class="request-action-button accept">ACCEPT</button>
+                                </form>
+                                <form action="/glimmers/<%= glimmer._id %>/requests/<%= request._id %>/reject?_method=PATCH" method="POST" style="display:inline;">
+                                    <button type="submit" class="request-action-button reject">REJECT</button>
+                                </form>
                             </div>
-                        </li>
-                    <% }); %>
-                <% } else { %>
-                    <p class="no-requests-message">No join requests for this Glimmer yet.</p>
-                <% } %>
+                        <% } else { %>
+                            <div class="request-actions">
+                                <button type="button" class="request-action-button" disabled>
+                                    <%= request.status === 'accepted' ? 'ACCEPTED' : 'REJECTED' %>
+                                </button>
+                            </div>
+                        <% } %>
+                    </li>
+                <% }) %>
             </ul>
-        </div>
+        <% } else { %>
+            <div class="no-requests-message">
+                No join requests for this Glimmer yet.
+            </div>
+        <% } %>
 
         <div class="glimmer-actions" style="margin-top: 3em;">
             <a href="/glimmers/<%= glimmer._id %>" class="glimmer-action-button">BACK TO GLIMMER</a>
         </div>
     </div>
-
-    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Inter:wght@400;500;700;800&display=swap" rel="stylesheet">
-    <script src="https://unpkg.com/lucide@latest"></script>
-    <script>
-        lucide.createIcons(); // Initialize Lucide icons
-    </script>
 </body>

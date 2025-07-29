@@ -1,40 +1,45 @@
 // glimmergrid-mvp/middleware/authMiddleware.js
-const mongoose = require('mongoose'); // Import mongoose for dynamic model access
+const mongoose = require('mongoose');
 
-// Middleware to check if user is authenticated to access a route
 module.exports.isLoggedIn = (req, res, next) => {
     if (!req.isAuthenticated()) {
-        req.session.returnTo = req.originalUrl; // Store the URL they were trying to access
+        req.session.returnTo = req.originalUrl;
         req.flash('error_msg', 'You must be logged in to do that.');
         return res.redirect('/login');
     }
     next();
 };
 
-// Middleware to prevent authenticated users from accessing login/register pages
 module.exports.forwardAuthenticated = (req, res, next) => {
     if (!req.isAuthenticated()) {
         return next();
     }
-    res.redirect('/hub'); // Redirect to new homepage (HUB) if already logged in
+    res.redirect('/hub');
 };
 
-// Middleware to check if the logged-in user is the author/creator of the Glimmer
+module.exports.ensureAuthenticated = (req, res, next) => { // This is often synonymous with isLoggedIn
+    if (req.isAuthenticated()) {
+        return next();
+    }
+    req.session.returnTo = req.originalUrl;
+    req.flash('error_msg', 'Please log in to view that resource.');
+    res.redirect('/login');
+};
+
 module.exports.isAuthor = async (req, res, next) => {
-    const Glimmer = mongoose.model('Glimmer'); // Get Glimmer model dynamically
+    const Glimmer = mongoose.model('Glimmer');
     
-    const { id } = req.params; // Get the glimmer ID from the URL
-    const glimmer = await Glimmer.findById(id); // Find the glimmer
+    const { id } = req.params;
+    const glimmer = await Glimmer.findById(id);
 
     if (!glimmer) {
         req.flash('error_msg', 'Glimmer not found.');
-        return res.redirect('/glimmers'); // Redirect to all glimmers if not found
+        return res.redirect('/glimmers');
     }
 
-    // Check if the glimmer's creator ID matches the logged-in user's ID
     if (!glimmer.creator.equals(req.user._id)) {
         req.flash('error_msg', 'You do not have permission to do that. You are not the owner of this Glimmer.');
-        return res.redirect(`/glimmers/${id}`); // Redirect back to the glimmer's show page
+        return res.redirect(`/glimmers/${id}`);
     }
-    next(); // If authorized, proceed
+    next();
 };

@@ -1,4 +1,4 @@
-<% layout("/layouts/boilerplate") %>
+<%- layout("/layouts/boilerplate") %>
 <style>
     /* --- Root Variables for Theme Consistency --- */
     :root {
@@ -46,7 +46,7 @@
     }
 
     /* --- Page Container --- */
-    .hosted-events-page-container {
+    .hosted-events-page-container { /* Specific container for hosted events */
         display: flex;
         flex-direction: column;
         justify-content: flex-start;
@@ -81,11 +81,11 @@
     }
 
     /* --- Outer Container for Hosted Events List --- */
-    .hosted-events-box {
+    .hosted-events-box { /* Specific box for hosted events */
         width: 100%;
-        max-width: 1400px; /* Max width for the entire list box */
-        background-color: var(--retro-primary-teal); /* Teal background for the box */
-        padding: 1.8em; /* Internal padding around the cards */
+        max-width: 1400px;
+        background-color: var(--retro-primary-teal);
+        padding: 1.8em;
         box-shadow:
             0 0 0 0.15em var(--retro-shadow-dark),
             0 0 0 0.3em var(--retro-secondary-light),
@@ -94,13 +94,13 @@
             0 0.5em 0 0.15em var(--retro-shadow-dark);
         
         transition: transform var(--transition-fast) steps(1);
-        animation: boxEntry 0.8s ease-out 0.2s backwards; /* Staggered entry animation */
+        animation: boxEntry 0.8s ease-out 0.2s backwards;
         box-sizing: border-box;
         text-shadow: 1px 1px 0 rgba(0, 0, 0, 0.3);
 
-        display: flex; /* Make it a flex container */
-        flex-direction: column; /* Stack cards vertically inside this box */
-        gap: 1.5rem; /* Spacing between individual event cards */
+        display: flex;
+        flex-direction: column;
+        gap: 1.5rem;
     }
 
     @keyframes boxEntry {
@@ -109,7 +109,7 @@
     }
 
     .hosted-events-box:hover {
-        transform: translateY(-0.2em); /* Subtle lift on hover */
+        transform: translateY(-0.2em);
         box-shadow:
             0 0 0 0.15em var(--retro-shadow-dark),
             0 0 0 0.3em var(--retro-secondary-light),
@@ -120,17 +120,17 @@
 
     /* --- Individual Hosted Event Card (Horizontal Layout) --- */
     .hosted-event-card {
-        display: flex; /* Arrange content horizontally within the card */
-        align-items: center; /* Vertically align items in the center */
-        background: var(--retro-secondary-light); /* Light background for individual cards */
+        display: flex;
+        align-items: center;
+        background: var(--retro-secondary-light);
         border: 2px solid var(--retro-shadow-dark);
         border-radius: 12px;
         padding: 1em;
-        box-shadow: 0.3em 0.3em 0 rgba(0, 0, 0, 0.25); /* Stronger shadow than default feature item */
+        box-shadow: 0.3em 0.3em 0 rgba(0, 0, 0, 0.25);
         transition: all var(--transition-medium);
         position: relative;
         overflow: hidden;
-        animation: cardSlideIn 0.6s ease-out backwards; /* Entry animation for cards */
+        animation: cardSlideIn 0.6s ease-out backwards;
     }
 
     .hosted-event-card:nth-child(odd) { animation-delay: 0.3s; }
@@ -142,36 +142,36 @@
     }
 
     .hosted-event-card:hover {
-        transform: translateY(-5px) rotate(1deg); /* Lift and slight rotation on hover */
+        transform: translateY(-5px) rotate(1deg);
         box-shadow: 0.5em 0.5em 0 var(--retro-shadow-dark);
     }
 
     /* --- Card Image --- */
     .card-list-image-container {
-        flex-shrink: 0; /* Prevent image from shrinking */
-        width: 100px; /* Fixed width for the image */
-        height: 100px; /* Fixed height for the image */
+        flex-shrink: 0;
+        width: 100px;
+        height: 100px;
         border: 2px solid var(--retro-shadow-dark);
-        border-radius: 8px; /* Slightly less rounded than card */
+        border-radius: 8px;
         overflow: hidden;
-        margin-right: 1.2em; /* Space between image and text content */
-        background-color: var(--retro-bg); /* Placeholder background */
+        margin-right: 1.2em;
+        background-color: var(--retro-bg);
     }
 
     .card-list-image-container img {
         width: 100%;
         height: 100%;
-        object-fit: cover; /* Ensures image covers area without distortion */
+        object-fit: cover;
         display: block;
     }
 
     /* --- Card Details (Title, Date, Time) --- */
     .card-list-details {
-        flex-grow: 1; /* Allow details to take up remaining space */
+        flex-grow: 1;
         display: flex;
         flex-direction: column;
-        justify-content: center; /* Center content vertically */
-        padding-right: 1em; /* Space before the button */
+        justify-content: center;
+        padding-right: 1em;
         color: var(--retro-text);
     }
 
@@ -179,10 +179,10 @@
         font-family: var(--font-heading-retro);
         font-size: 1.1em;
         font-weight: 700;
-        margin: 0 0 0.3em 0; /* Reduced margin */
+        margin: 0 0 0.3em 0;
         line-height: 1.2;
         text-shadow: 1px 1px 0 rgba(0, 0, 0, 0.3);
-        word-break: break-word; /* Break long titles */
+        word-break: break-word;
     }
 
     .card-list-details p {
@@ -192,7 +192,7 @@
         display: flex;
         align-items: center;
         gap: 0.5em;
-        text-shadow: none; /* No shadow for small text */
+        text-shadow: none;
     }
 
     .card-list-details p svg {
@@ -202,19 +202,26 @@
         flex-shrink: 0;
     }
 
-    /* --- Manage Button --- */
-    .card-manage-button {
-        flex-shrink: 0; /* Prevent button from shrinking */
+    /* --- Action Buttons Container --- */
+    .card-actions-container {
+        display: flex;
+        flex-direction: column;
+        gap: 0.8em;
+        flex-shrink: 0;
+    }
+
+    /* --- Action Buttons (Manage, Edit, Delete) --- */
+    .card-action-button {
         position: relative;
-        background: var(--retro-accent-red); /* Red background for button */
+        background: var(--retro-accent-red);
         color: var(--retro-secondary-light);
         font-family: var(--font-heading-retro);
-        font-size: 0.75em; /* Smaller button font size */
+        font-size: 0.75em;
         font-weight: 700;
-        padding: 0.7em 1.2em; /* Adjusted padding */
-        border: 0.18em solid var(--retro-shadow-dark); /* Slightly thinner border */
+        padding: 0.7em 1.2em;
+        border: 0.18em solid var(--retro-shadow-dark);
         border-radius: 0.4em;
-        box-shadow: 0.25em 0.25em 0 var(--retro-shadow-dark); /* Smaller shadow */
+        box-shadow: 0.25em 0.25em 0 var(--retro-shadow-dark);
         cursor: pointer;
         transition: all var(--transition-fast);
         overflow: hidden;
@@ -222,12 +229,12 @@
         letter-spacing: 0.04em;
         text-shadow: 1px 1px 0 rgba(0, 0, 0, 0.4);
         text-decoration: none;
-        display: inline-flex; /* Use flex to center content if needed */
+        display: inline-flex;
         align-items: center;
         justify-content: center;
     }
 
-    .card-manage-button::before {
+    .card-action-button::before {
         content: "";
         position: absolute;
         top: 0;
@@ -244,21 +251,39 @@
         z-index: 1;
     }
 
-    .card-manage-button:hover {
-        background: var(--retro-shadow-dark); /* Dark background on hover */
-        color: var(--retro-accent-yellow); /* Yellow text on hover */
+    .card-action-button:hover {
+        background: var(--retro-shadow-dark);
+        color: var(--retro-accent-yellow);
         transform: translate(-0.1em, -0.1em);
-        box-shadow: 0.35em 0.35em 0 var(--retro-accent-red); /* Red shadow on hover */
+        box-shadow: 0.35em 0.35em 0 var(--retro-accent-red);
         text-shadow: 1px 1px 0 rgba(0, 0, 0, 0.6);
     }
 
-    .card-manage-button:hover::before {
-        left: 100%;
-    }
-
-    .card-manage-button:active {
+    .card-action-button:active {
         transform: translate(0.1em, 0.1em);
         box-shadow: 0.1em 0.1em 0 var(--retro-shadow-dark);
+    }
+
+    /* Specific button colors */
+    .card-action-button.manage {
+        background-color: var(--retro-primary-teal);
+    }
+    .card-action-button.manage:hover {
+        background-color: #257D77;
+    }
+    .card-action-button.edit {
+        background-color: var(--retro-accent-yellow);
+        color: var(--retro-text);
+    }
+    .card-action-button.edit:hover {
+        background-color: #D1B334;
+        color: var(--retro-secondary-light);
+    }
+    .card-action-button.delete {
+        background-color: var(--retro-accent-red);
+    }
+    .card-action-button.delete:hover {
+        background-color: #A0331D;
     }
 
     /* --- No Events Message --- */
@@ -268,7 +293,6 @@
         padding: 2rem;
         font-style: italic;
         font-family: var(--font-primary);
-        font-size: 1.1em;
         text-shadow: none;
         width: 100%;
         max-width: 600px;
@@ -310,26 +334,31 @@
             padding: 1em;
         }
         .card-list-image-container {
-            margin: 0 auto 1em auto; /* Center image and add bottom margin */
+            margin: 0 auto 1em auto;
         }
         .card-list-details {
             padding-right: 0;
-            margin-bottom: 1em; /* Space before the button */
+            margin-bottom: 1em;
         }
         .card-list-details h3 {
             font-size: 1.05em;
             margin-bottom: 0.5em;
         }
         .card-list-details p {
-            justify-content: center; /* Center date/time icons and text */
+            justify-content: center;
             font-size: 0.85em;
         }
-        .card-manage-button {
-            width: 80%; /* Button takes more width when stacked */
-            max-width: 250px;
+        .card-actions-container {
+            flex-direction: row;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 0.6em;
+            width: 100%;
+        }
+        .card-action-button {
+            flex-basis: calc(50% - 0.3em);
             font-size: 0.8em;
             padding: 0.6em 1em;
-            margin: 0 auto; /* Center the button */
         }
     }
 
@@ -368,11 +397,20 @@
             font-size: 0.8em;
             gap: 0.4em;
         }
-        .card-manage-button {
+        .card-action-button {
             font-size: 0.7em;
             padding: 0.5em 0.8em;
             border-width: 0.15em;
             border-radius: 0.3em;
+        }
+        .card-actions-container {
+            flex-direction: column;
+            gap: 0.6em;
+            width: 100%;
+        }
+        .card-action-button {
+            width: 100%;
+            flex-basis: auto;
         }
     }
 
@@ -405,7 +443,7 @@
         .card-list-details p {
             font-size: 0.75em;
         }
-        .card-manage-button {
+        .card-action-button {
             font-size: 0.65em;
             padding: 0.4em 0.7em;
             border-width: 0.12em;
@@ -419,53 +457,14 @@
         <h1 class="page-title-retro">Your Hosted Glimmers</h1>
 
         <div class="hosted-events-box">
-            <% const events = [
-                {
-                    title: "Retro Arcade Extravaganza",
-                    imageUrl: "https://images.unsplash.com/photo-1547849479-052e0d37e5e7?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTB8fHJldHJvJTIwYXJjYWRlfGVufDB8fDB8fHww&auto=format&fit=crop&w=800&q=60",
-                    date: "2025-08-15",
-                    time: "19:00"
-                },
-                {
-                    title: "Pixel Art Workshop",
-                    imageUrl: "https://images.unsplash.com/photo-1629704285140-5b653b6f17e3?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MXx8cGl4ZWwlMjBhcnR8ZW58MHx8MHx8fDA%3D&auto=format&fit=crop&w=800&q=60",
-                    date: "2025-09-01",
-                    time: "10:30"
-                },
-                {
-                    title: "Synthwave Night Live",
-                    imageUrl: "https://images.unsplash.com/photo-1582210850239-2a9c4b7b2b0c?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8c3ludGh3YXZlfGVufDB8fDB8fHww&auto=format&fit=crop&w=800&q=60",
-                    date: "2025-09-22",
-                    time: "21:00"
-                },
-                {
-                    title: "8-bit Gaming Tournament: Street Fighters",
-                    imageUrl: "https://images.unsplash.com/photo-1590481878028-1b6e4e5b3f7f?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTB8fG9sZCUyMGdhbWVzJTIwY29uc29sZXxlbnwwfHwwfHww&auto=format&fit=crop&w=800&q=60",
-                    date: "2025-10-05",
-                    time: "14:00"
-                },
-                {
-                    title: "Vintage Computing Fair",
-                    imageUrl: "https://images.unsplash.com/photo-1596541223946-b6d9e03d9e4a?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NHx8b2xkJTIwY29tcHV0ZXJ8ZW58MHx8MHx8fDA%3D&auto=format&fit=crop&w=800&q=60",
-                    date: "2025-10-20",
-                    time: "11:00"
-                },
-                {
-                    title: "Cyberpunk City Nights",
-                    imageUrl: "https://images.unsplash.com/photo-1579778230559-673323081e74?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTd8fGN5YmVycHVua3xlbnwwfHwwfHww&auto=format&fit=crop&w=800&q=60",
-                    date: "2025-11-10",
-                    time: "20:00"
-                }
-            ]; %>
-
-            <% if (events && events.length > 0) { %>
-                <% events.forEach(function(event) { %>
+            <% if (hostedGlimmers && hostedGlimmers.length > 0) { %>
+                <% hostedGlimmers.forEach(function(glimmer) { %>
                     <div class="hosted-event-card">
                         <div class="card-list-image-container">
-                            <img src="<%= event.imageUrl %>" alt="<%= event.title %> Image">
+                            <img src="<%= glimmer.image && glimmer.image.length > 0 ? glimmer.image[0].url : '/images/default-glimmer.png' %>" alt="<%= glimmer.title %> Image">
                         </div>
                         <div class="card-list-details">
-                            <h3><%= event.title %></h3>
+                            <h3><%= glimmer.title.toUpperCase() %></h3>
                             <p>
                                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-calendar-days">
                                     <path d="M8 2v4"/>
@@ -479,17 +478,30 @@
                                     <path d="M12 18h.01"/>
                                     <path d="M16 18h.01"/>
                                 </svg>
-                                <%= new Date(event.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) %>
+                                <%= glimmer.startDate.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) %>
                             </p>
                             <p>
                                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-clock">
                                     <circle cx="12" cy="12" r="10"/>
                                     <polyline points="12 6 12 12 16 14"/>
                                 </svg>
-                                <%= event.time %>
+                                <%= glimmer.startDate.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true }) %>
+                            </p>
+                            <p>
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-map-pin">
+                                    <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/>
+                                    <circle cx="12" cy="9" r="3"/>
+                                </svg>
+                                <%= glimmer.locationName.toUpperCase() %>
                             </p>
                         </div>
-                        <a href="/events/<%= 'event_id' %>/manage" class="card-manage-button">Manage</a>
+                        <div class="card-actions-container">
+                            <a href="/glimmers/<%= glimmer._id %>/requests" class="card-action-button manage">Manage Requests</a>
+                            <a href="/glimmers/<%= glimmer._id %>/edit" class="card-action-button edit">Edit Glimmer</a>
+                            <form action="/glimmers/<%= glimmer._id %>?_method=DELETE" method="POST" style="display:inline;">
+                                <button type="submit" class="card-action-button delete" onclick="return confirm('Are you sure you want to delete <%= glimmer.title %>? This action cannot be undone and will remove all associated requests and reviews!');">Delete Glimmer</button>
+                            </form>
+                        </div>
                     </div>
                 <% }); %>
             <% } else { %>
@@ -498,7 +510,6 @@
         </div>
     </div>
 
-    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Inter:wght@400;500;700;800&display=swap" rel="stylesheet">
     <script src="https://unpkg.com/lucide@latest"></script>
     <script>
         lucide.createIcons(); // Initialize Lucide icons

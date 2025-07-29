@@ -1,6 +1,6 @@
-<% layout("/layouts/boilerplate") %>
+<%- layout("/layouts/boilerplate") %>
 <style>
-    /* --- Root Variables for Theme Consistency --- */
+    /* --- Root Variables for Theme Consistency (ensure these are in your main style.css) --- */
     :root {
         --retro-bg: wheat; /* Main background and outer box */
         --retro-text: #1F2937; /* Dark text for contrast */
@@ -46,7 +46,7 @@
     }
 
     /* --- Page Container --- */
-    .attended-events-page-container {
+    .joined-events-page-container { /* Specific container for joined events */
         display: flex;
         flex-direction: column;
         justify-content: flex-start;
@@ -80,12 +80,12 @@
         to { opacity: 1; transform: translateY(0); }
     }
 
-    /* --- Outer Container for Attended Events List --- */
-    .attended-events-box {
+    /* --- Outer Container for Joined Events List --- */
+    .joined-events-box { /* Specific box for joined events, similar to hosted-events-box */
         width: 100%;
-        max-width: 1400px; /* Max width for the entire list box */
-        background-color: var(--retro-primary-teal); /* Teal background for the box */
-        padding: 1.8em; /* Internal padding around the cards */
+        max-width: 1400px;
+        background-color: var(--retro-primary-teal);
+        padding: 1.8em;
         box-shadow:
             0 0 0 0.15em var(--retro-shadow-dark),
             0 0 0 0.3em var(--retro-secondary-light),
@@ -94,13 +94,13 @@
             0 0.5em 0 0.15em var(--retro-shadow-dark);
         
         transition: transform var(--transition-fast) steps(1);
-        animation: boxEntry 0.8s ease-out 0.2s backwards; /* Staggered entry animation */
+        animation: boxEntry 0.8s ease-out 0.2s backwards;
         box-sizing: border-box;
         text-shadow: 1px 1px 0 rgba(0, 0, 0, 0.3);
 
-        display: flex; /* Make it a flex container */
-        flex-direction: column; /* Stack cards vertically inside this box */
-        gap: 1.5rem; /* Spacing between individual event cards */
+        display: flex;
+        flex-direction: column;
+        gap: 1.5rem;
     }
 
     @keyframes boxEntry {
@@ -108,8 +108,8 @@
         100% { opacity: 1; transform: translateY(0) scale(1); }
     }
 
-    .attended-events-box:hover {
-        transform: translateY(-0.2em); /* Subtle lift on hover */
+    .joined-events-box:hover {
+        transform: translateY(-0.2em);
         box-shadow:
             0 0 0 0.15em var(--retro-shadow-dark),
             0 0 0 0.3em var(--retro-secondary-light),
@@ -118,60 +118,60 @@
             0 0.8em 0 0.15em var(--retro-shadow-dark);
     }
 
-    /* --- Individual Attended Event Card (Horizontal Layout) --- */
-    .attended-event-card {
-        display: flex; /* Arrange content horizontally within the card */
-        align-items: center; /* Vertically align items in the center */
-        background: var(--retro-secondary-light); /* Light background for individual cards */
+    /* --- Individual Joined Event Card (Horizontal Layout) --- */
+    .joined-event-card { /* Specific card for joined events, similar to hosted-event-card */
+        display: flex;
+        align-items: center;
+        background: var(--retro-secondary-light);
         border: 2px solid var(--retro-shadow-dark);
         border-radius: 12px;
         padding: 1em;
-        box-shadow: 0.3em 0.3em 0 rgba(0, 0, 0, 0.25); /* Stronger shadow than default feature item */
+        box-shadow: 0.3em 0.3em 0 rgba(0, 0, 0, 0.25);
         transition: all var(--transition-medium);
         position: relative;
         overflow: hidden;
-        animation: cardSlideIn 0.6s ease-out backwards; /* Entry animation for cards */
+        animation: cardSlideIn 0.6s ease-out backwards;
     }
 
-    .attended-event-card:nth-child(odd) { animation-delay: 0.3s; }
-    .attended-event-card:nth-child(even) { animation-delay: 0.4s; }
+    .joined-event-card:nth-child(odd) { animation-delay: 0.3s; }
+    .joined-event-card:nth-child(even) { animation-delay: 0.4s; }
 
     @keyframes cardSlideIn {
         from { opacity: 0; transform: translateX(-50px); }
         to { opacity: 1; transform: translateX(0); }
     }
 
-    .attended-event-card:hover {
-        transform: translateY(-5px) rotate(1deg); /* Lift and slight rotation on hover */
+    .joined-event-card:hover {
+        transform: translateY(-5px) rotate(1deg);
         box-shadow: 0.5em 0.5em 0 var(--retro-shadow-dark);
     }
 
     /* --- Card Image --- */
     .card-list-image-container {
-        flex-shrink: 0; /* Prevent image from shrinking */
-        width: 100px; /* Fixed width for the image */
-        height: 100px; /* Fixed height for the image */
+        flex-shrink: 0;
+        width: 100px;
+        height: 100px;
         border: 2px solid var(--retro-shadow-dark);
-        border-radius: 8px; /* Slightly less rounded than card */
+        border-radius: 8px;
         overflow: hidden;
-        margin-right: 1.2em; /* Space between image and text content */
-        background-color: var(--retro-bg); /* Placeholder background */
+        margin-right: 1.2em;
+        background-color: var(--retro-bg);
     }
 
     .card-list-image-container img {
         width: 100%;
         height: 100%;
-        object-fit: cover; /* Ensures image covers area without distortion */
+        object-fit: cover;
         display: block;
     }
 
     /* --- Card Details (Title, Date, Time) --- */
     .card-list-details {
-        flex-grow: 1; /* Allow details to take up remaining space */
+        flex-grow: 1;
         display: flex;
         flex-direction: column;
-        justify-content: center; /* Center content vertically */
-        padding-right: 1em; /* Space before the button */
+        justify-content: center;
+        padding-right: 1em;
         color: var(--retro-text);
     }
 
@@ -179,10 +179,10 @@
         font-family: var(--font-heading-retro);
         font-size: 1.1em;
         font-weight: 700;
-        margin: 0 0 0.3em 0; /* Reduced margin */
+        margin: 0 0 0.3em 0;
         line-height: 1.2;
         text-shadow: 1px 1px 0 rgba(0, 0, 0, 0.3);
-        word-break: break-word; /* Break long titles */
+        word-break: break-word;
     }
 
     .card-list-details p {
@@ -192,7 +192,7 @@
         display: flex;
         align-items: center;
         gap: 0.5em;
-        text-shadow: none; /* No shadow for small text */
+        text-shadow: none;
     }
 
     .card-list-details p svg {
@@ -202,19 +202,19 @@
         flex-shrink: 0;
     }
 
-    /* --- Review Button --- */
-    .card-review-button {
-        flex-shrink: 0; /* Prevent button from shrinking */
+    /* --- View Glimmer Button --- */
+    .card-view-glimmer-button { /* Specific button for viewing joined glimmers */
+        flex-shrink: 0;
         position: relative;
-        background: var(--retro-accent-yellow); /* Yellow background for review button */
-        color: var(--retro-text);
+        background: var(--retro-accent-red);
+        color: var(--retro-secondary-light);
         font-family: var(--font-heading-retro);
-        font-size: 0.75em; /* Smaller button font size */
+        font-size: 0.75em;
         font-weight: 700;
-        padding: 0.7em 1.2em; /* Adjusted padding */
-        border: 0.18em solid var(--retro-shadow-dark); /* Slightly thinner border */
+        padding: 0.7em 1.2em;
+        border: 0.18em solid var(--retro-shadow-dark);
         border-radius: 0.4em;
-        box-shadow: 0.25em 0.25em 0 var(--retro-shadow-dark); /* Smaller shadow */
+        box-shadow: 0.25em 0.25em 0 var(--retro-shadow-dark);
         cursor: pointer;
         transition: all var(--transition-fast);
         overflow: hidden;
@@ -222,12 +222,12 @@
         letter-spacing: 0.04em;
         text-shadow: 1px 1px 0 rgba(0, 0, 0, 0.4);
         text-decoration: none;
-        display: inline-flex; /* Use flex to center content if needed */
+        display: inline-flex;
         align-items: center;
         justify-content: center;
     }
 
-    .card-review-button::before {
+    .card-view-glimmer-button::before {
         content: "";
         position: absolute;
         top: 0;
@@ -244,19 +244,15 @@
         z-index: 1;
     }
 
-    .card-review-button:hover {
-        background: var(--retro-accent-red); /* Red background on hover */
-        color: var(--retro-secondary-light); /* White text on hover */
+    .card-view-glimmer-button:hover {
+        background: var(--retro-shadow-dark);
+        color: var(--retro-accent-yellow);
         transform: translate(-0.1em, -0.1em);
-        box-shadow: 0.35em 0.35em 0 var(--retro-shadow-dark); /* Dark shadow on hover */
+        box-shadow: 0.35em 0.35em 0 var(--retro-accent-red);
         text-shadow: 1px 1px 0 rgba(0, 0, 0, 0.6);
     }
 
-    .card-review-button:hover::before {
-        left: 100%;
-    }
-
-    .card-review-button:active {
+    .card-view-glimmer-button:active {
         transform: translate(0.1em, 0.1em);
         box-shadow: 0.1em 0.1em 0 var(--retro-shadow-dark);
     }
@@ -268,7 +264,6 @@
         padding: 2rem;
         font-style: italic;
         font-family: var(--font-primary);
-        font-size: 1.1em;
         text-shadow: none;
         width: 100%;
         max-width: 600px;
@@ -278,13 +273,13 @@
         box-shadow: 0.2em 0.2em 0 rgba(0, 0, 0, 0.2);
     }
 
-    /* --- Responsive Adjustments --- */
+    /* --- Responsive Adjustments (Shared styles from sparks.ejs) --- */
     @media (max-width: 1200px) {
-        .attended-events-box {
+        .joined-events-box {
             padding: 1.5em;
             gap: 1.2rem;
         }
-        .attended-event-card {
+        .joined-event-card {
             padding: 0.8em;
         }
         .page-title-retro {
@@ -293,48 +288,48 @@
     }
 
     @media (max-width: 992px) {
-        .attended-events-page-container {
+        .joined-events-page-container {
             padding: 1.5rem;
         }
         .page-title-retro {
             font-size: 2em;
             margin-bottom: 1.5em;
         }
-        .attended-events-box {
+        .joined-events-box {
             padding: 1.2em;
             gap: 1rem;
         }
-        .attended-event-card {
+        .joined-event-card {
             flex-direction: column; /* Stack image and details vertically */
             text-align: center;
             padding: 1em;
         }
         .card-list-image-container {
-            margin: 0 auto 1em auto; /* Center image and add bottom margin */
+            margin: 0 auto 1em auto;
         }
         .card-list-details {
             padding-right: 0;
-            margin-bottom: 1em; /* Space before the button */
+            margin-bottom: 1em;
         }
         .card-list-details h3 {
             font-size: 1.05em;
             margin-bottom: 0.5em;
         }
         .card-list-details p {
-            justify-content: center; /* Center date/time icons and text */
+            justify-content: center;
             font-size: 0.85em;
         }
-        .card-review-button {
+        .card-view-glimmer-button {
             width: 80%; /* Button takes more width when stacked */
             max-width: 250px;
             font-size: 0.8em;
             padding: 0.6em 1em;
-            margin: 0 auto; /* Center the button */
+            margin: 0 auto;
         }
     }
 
     @media (max-width: 768px) {
-        .attended-events-page-container {
+        .joined-events-page-container {
             padding: 1rem 0.5rem;
         }
         .page-title-retro {
@@ -342,7 +337,7 @@
             margin-bottom: 1.2em;
             text-shadow: 2px 2px 0 rgba(0, 0, 0, 0.5);
         }
-        .attended-events-box {
+        .joined-events-box {
             padding: 0.8em;
             gap: 0.8rem;
             box-shadow:
@@ -352,7 +347,7 @@
                 0 0.3em 0 0 var(--retro-accent-red),
                 0 0.3em 0 0.1em var(--retro-shadow-dark);
         }
-        .attended-event-card {
+        .joined-event-card {
             padding: 0.8em;
             border-radius: 10px;
         }
@@ -368,7 +363,7 @@
             font-size: 0.8em;
             gap: 0.4em;
         }
-        .card-review-button {
+        .card-view-glimmer-button {
             font-size: 0.7em;
             padding: 0.5em 0.8em;
             border-width: 0.15em;
@@ -377,7 +372,7 @@
     }
 
     @media (max-width: 480px) {
-        .attended-events-page-container {
+        .joined-events-page-container {
             padding: 0.5rem;
         }
         .page-title-retro {
@@ -385,11 +380,11 @@
             margin-bottom: 1em;
             text-shadow: 1.5px 1.5px 0 rgba(0, 0, 0, 0.5);
         }
-        .attended-events-box {
+        .joined-events-box {
             padding: 0.5em;
             gap: 0.6rem;
         }
-        .attended-event-card {
+        .joined-event-card {
             padding: 0.6em;
             border-radius: 8px;
         }
@@ -405,7 +400,7 @@
         .card-list-details p {
             font-size: 0.75em;
         }
-        .card-review-button {
+        .card-view-glimmer-button {
             font-size: 0.65em;
             padding: 0.4em 0.7em;
             border-width: 0.12em;
@@ -415,56 +410,18 @@
 </style>
 
 <body>
-    <div class="attended-events-page-container">
-        <h1 class="page-title-retro">Your Attended Glimmers</h1>
+    <div class="joined-events-page-container">
+        <h1 class="page-title-retro">Your Joined Glimmers</h1>
 
-        <div class="attended-events-box">
-            <% const attendedEvents = [
-                {
-                    title: "Game Dev Jam 2024",
-                    imageUrl: "https://images.unsplash.com/photo-1614741165209-78b1d7d02568?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MXx8Z2FtZSUyMGRldmVsb3BtZW50fGVufDB8fDB8fHww&auto=format&fit=crop&w=800&q=60",
-                    date: "2024-05-20",
-                    time: "18:00",
-                    reviewed: true
-                },
-                {
-                    title: "VR Experience Expo",
-                    imageUrl: "https://images.unsplash.com/photo-1549495974-958d54c8668d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Nnx8dnJ8ZW58MHx8MHx8fDA%3D&auto=format&fit=crop&w=800&q=60",
-                    date: "2024-06-10",
-                    time: "11:00",
-                    reviewed: false
-                },
-                {
-                    title: "Retrowave Festival",
-                    imageUrl: "https://images.unsplash.com/photo-1588494916895-d8aa71de8463?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTd8fHJldHJvd2F2ZXxlbnwwfHwwfHww&auto=format&fit=crop&w=800&q=60",
-                    date: "2024-07-01",
-                    time: "20:00",
-                    reviewed: false
-                },
-                {
-                    title: "Classic Console Showcase",
-                    imageUrl: "https://images.unsplash.com/photo-1629851722830-1b773d2a7f5a?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8N3x8cmV0cm8lMjBnYW1lJTIwY29uc29sZXxlbnwwfHwwfHww&auto=format&fit=crop&w=800&q=60",
-                    date: "2024-07-15",
-                    time: "10:00",
-                    reviewed: true
-                },
-                {
-                    title: "Indie Game Night",
-                    imageUrl: "https://images.unsplash.com/photo-1550979737-293699b78759?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8OXx8aW5kaWUlMjBnYW1lfGVufDB8fDB8fHww&auto=format&fit=crop&w=800&q=60",
-                    date: "2024-08-01",
-                    time: "19:30",
-                    reviewed: false
-                }
-            ]; %>
-
-            <% if (attendedEvents && attendedEvents.length > 0) { %>
-                <% attendedEvents.forEach(function(event) { %>
-                    <div class="attended-event-card">
+        <div class="joined-events-box">
+            <% if (joinedGlimmers && joinedGlimmers.length > 0) { %>
+                <% joinedGlimmers.forEach(function(glimmer) { %>
+                    <div class="joined-event-card">
                         <div class="card-list-image-container">
-                            <img src="<%= event.imageUrl %>" alt="<%= event.title %> Image">
+                            <img src="<%= glimmer.image && glimmer.image.length > 0 ? glimmer.image[0].url : '/images/default-glimmer.png' %>" alt="<%= glimmer.title %> Image">
                         </div>
                         <div class="card-list-details">
-                            <h3><%= event.title %></h3>
+                            <h3><%= glimmer.title.toUpperCase() %></h3>
                             <p>
                                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-calendar-days">
                                     <path d="M8 2v4"/>
@@ -478,30 +435,35 @@
                                     <path d="M12 18h.01"/>
                                     <path d="M16 18h.01"/>
                                 </svg>
-                                <%= new Date(event.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) %>
+                                <%= glimmer.startDate.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) %>
                             </p>
                             <p>
                                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-clock">
                                     <circle cx="12" cy="12" r="10"/>
                                     <polyline points="12 6 12 12 16 14"/>
                                 </svg>
-                                <%= event.time %>
+                                <%= glimmer.startDate.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true }) %>
+                            </p>
+                            <p>
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-map-pin">
+                                    <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/>
+                                    <circle cx="12" cy="9" r="3"/>
+                                </svg>
+                                <%= glimmer.locationName.toUpperCase() %>
                             </p>
                         </div>
-                        <% if (event.reviewed) { %>
-                            <span class="card-review-button" style="background: var(--retro-shadow-dark); color: var(--retro-accent-yellow); cursor: default;">Reviewed</span>
-                        <% } else { %>
-                            <a href="/events/<%= 'event_id' %>/review" class="card-review-button">Review It</a>
-                        <% } %>
+                        <div class="card-actions-container">
+                            <a href="/glimmers/<%= glimmer._id %>" class="card-view-glimmer-button">VIEW GLIMMER</a>
+                            <!-- Add Review button will go here in a later phase -->
+                        </div>
                     </div>
                 <% }); %>
             <% } else { %>
-                <p class="no-events-message">You haven't attended any glimmers yet. Go out and explore!</p>
+                <p class="no-events-message">You haven't joined any glimmers yet. Go out and explore!</p>
             <% } %>
         </div>
     </div>
 
-    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Inter:wght@400;500;700;800&display=swap" rel="stylesheet">
     <script src="https://unpkg.com/lucide@latest"></script>
     <script>
         lucide.createIcons(); // Initialize Lucide icons

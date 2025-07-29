@@ -1,4 +1,4 @@
-<% layout("/layouts/boilerplate") %>
+<%- layout("/layouts/boilerplate") %>
 <style>
     /* --- Root Variables for Theme Consistency --- */
     :root {
@@ -12,7 +12,7 @@
         --retro-shadow-light: rgba(0, 0, 0, 0.2); /* For softer elements, box-shadow opacity */
 
         /* Fonts */
-        --font-primary: 'Press Start 2P', cursive;
+        --font-primary: "Inter", sans-serif;
         --font-heading-retro: 'Press Start 2P', cursive; /* For titles and buttons */
 
         /* Transitions */
@@ -42,13 +42,9 @@
         image-rendering: -o-crisp-edges;
         image-rendering: -webkit-optimize-contrast;
         -ms-interpolation-mode: nearest-neighbor;
-        /* Optional: for a "true" pixel font look on some text, consider: */
-        /* -webkit-font-smoothing: none; */
-        /* -moz-osx-font-smoothing: grayscale; */
     }
 
     /* --- Outer Container: .events-page-container --- */
-    /* This new container will manage the overall page layout and outer spacing */
     .events-page-container {
         display: flex;
         justify-content: center; /* Center the box within this container */
@@ -63,17 +59,14 @@
     }
 
     /* --- The "Box" Container: .retro-events-box --- */
-    /* This is the main wrapper with the distinct retro border effect */
     .retro-events-box {
         width: 100%; /* It will take up the available width within .events-page-container */
         max-width: 1400px; /* Limit max width for very large screens */
         background-color: var(--retro-bg); /* Wheat background */
         padding: 1.5em; /* Internal padding around the cards */
-        /* Adjusted text-shadow for better readability */
         text-shadow: 1px 1px 0 rgba(0, 0, 0, 0.3); /* Softer, single-pixel offset */
         box-sizing: border-box; /* Include padding in the element's total width and height */
 
-        /* The iconic multi-layered box-shadow, adjusted for consistency */
         box-shadow:
             0 0 0 0.15em var(--retro-shadow-dark),
             0 0 0 0.3em var(--retro-secondary-light),
@@ -81,13 +74,8 @@
             0 0.5em 0 0 var(--retro-accent-red), /* Red 3D shadow */
             0 0.5em 0 0.15em var(--retro-shadow-dark); /* Dark outline for 3D shadow */
         
-        transition: transform var(--transition-fast) steps(1); /* Original transition for the box */
-        
-        display: flex; /* Makes cards inside flex items */
-        flex-wrap: wrap; /* Allows cards to wrap to the next line */
-        justify-content: space-between; /* Space out cards within the box */
-        gap: 2rem; /* Consistent spacing between cards */
-        animation: boxEntry 0.8s ease-out; /* Add an entry animation for the entire box */
+        transition: transform var(--transition-fast) steps(1);
+        animation: boxEntry 0.8s ease-out;
     }
 
     @keyframes boxEntry {
@@ -99,21 +87,15 @@
     /* --- Individual Card: .retro-event-card --- */
     .retro-event-card {
         width: 350px; /* Fixed width as requested */
-        /* Removed fixed height here to allow content to dictate height */
         padding: 10px; /* Slightly increased padding inside card */
         background: var(--retro-primary-teal); /* Card background color */
         border-radius: 15px;
         border: 2px solid var(--retro-shadow-dark); /* Black border */
         box-shadow: 0.2em 0.2em 0 var(--retro-shadow-light); /* Softer initial shadow */
-        transition: all var(--transition-medium); /* Smooth transition for hover */
+        transition: all var(--transition-medium);
         position: relative;
         overflow: hidden;
-        /* height: auto;  Already default, but good to be explicit */
-        display: flex;
-        flex-direction: column; /* Stacks image and body vertically */
-        animation: cardFadeIn 0.6s ease-out backwards; /* Add a subtle entry animation for cards */
-        /* Adjusted text-shadow for card content */
-        text-shadow: 1px 1px 0 rgba(0, 0, 0, 0.2); /* Lighter, less pronounced shadow */
+        animation: cardFadeIn 0.6s ease-out backwards;
     }
 
     .retro-event-card:nth-child(even) { animation-delay: 0.1s; }
@@ -125,82 +107,68 @@
     }
 
     .retro-event-card:hover {
-        transform: translateY(-5px) rotate(0deg) scale(1.02); /* Lift and slight scale */
-        box-shadow: 0.4em 0.4em 0 var(--retro-shadow-dark); /* More pronounced shadow on hover */
-    }
-
-    .retro-event-card:active {
-        animation: shake 0.5s ease-in-out; /* Shake animation from your original code */
-    }
-
-    @keyframes shake {
-        0% { transform: translateX(0); }
-        25% { transform: translateX(-5px); }
-        50% { transform: translateX(5px); }
-        75% { transform: translateX(-5px); }
-        100% { transform: translateX(0); }
+        transform: translateY(-5px) rotate(0deg) scale(1.02);
+        box-shadow: 0.4em 0.4em 0 var(--retro-shadow-dark);
     }
 
     /* --- Card Image Styling --- */
     .card-image-container {
         width: 100%;
-        height: 160px; /* Reduced height for image */
-        border: 2px solid var(--retro-shadow-dark); /* Added border for visual consistency */
-        border-radius: 10px; /* Slightly less rounded than card */
+        height: 160px;
+        border: 2px solid var(--retro-shadow-dark);
+        border-radius: 10px;
         overflow: hidden;
-        margin-bottom: 10px; /* Reduced space between image and card body */
-        background-color: var(--retro-secondary-light); /* Placeholder background */
+        margin-bottom: 10px;
+        background-color: var(--retro-secondary-light);
     }
 
     .card-image-container img {
         height: 100%;
         width: 100%;
-        object-fit: cover; /* Ensures image covers area without distortion */
-        display: block; /* Remove extra space below image */
+        object-fit: cover;
+        display: block;
     }
 
     /* --- Card Body Section --- */
-    /* Contains title, features, price, and button */
     .card-body-section {
-        flex-grow: 1; /* Allows this section to take up remaining vertical space */
+        flex-grow: 1;
         position: relative;
-        padding: 0 1em 1em; /* Adjusted padding */
-        background-color: var(--retro-primary-teal); /* Uses the card background color */
-        color: var(--retro-text); /* Text color for content inside */
+        padding: 0 1em 1em;
+        background-color: var(--retro-primary-teal);
+        color: var(--retro-text);
         z-index: 2;
-        border-top: 2px dashed rgba(0, 0, 0, 0.2); /* Dashed line effect */
-        padding-top: 0.8em; /* Reduced space for the dashed line */
+        border-top: 2px dashed rgba(0, 0, 0, 0.2);
+        padding-top: 0.8em;
     }
 
     /* --- Card Title --- */
     .card-title h2 {
-        font-family: var(--font-heading-retro); /* Apply retro font */
-        font-size: 1.2em; /* Slightly reduced font size */
+        font-family: var(--font-heading-retro);
+        font-size: 1.2em;
         font-weight: 700;
-        margin-bottom: 0.8rem; /* Reduced margin */
+        margin-bottom: 0.8rem;
         color: var(--retro-text);
         line-height: 1.2;
         text-align: center;
-        /* Adjusted text-shadow for title */
-        text-shadow: 2px 2px 0 rgba(0, 0, 0, 0.4); /* Subtle, clear shadow */
-        word-break: break-word; /* Prevent long titles from overflowing */
+        text-shadow: 2px 2px 0 rgba(0, 0, 0, 0.4);
+        word-break: break-word;
     }
 
     /* --- Feature Grid --- */
     .feature-grid {
         display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); /* Adjusted minmax for smaller features */
-        gap: 0.8em; /* Reduced gap */
-        margin-bottom: 1em; /* Reduced margin */
-        padding: 0 0.5em; /* Small horizontal padding */
+        grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+        gap: 0.8em;
+        margin-bottom: 1em;
+        padding: 0 0.5em;
     }
 
     .feature-item {
         display: flex;
         align-items: center;
-        gap: 0.5em; /* Reduced gap inside feature item */
-        padding: 0.4em 0.6em; /* Reduced padding to fit more compactly */
-        background: var(--retro-secondary-light); /* Light background for feature boxes */
+        gap: 0.5em;
+        padding: 0.4em 0.6em;
+        background: var(--retro-secondary-light);
         border: 0.12em solid var(--retro-shadow-dark);
         border-radius: 0.3em;
         box-shadow: 0.2em 0.2em 0 rgba(0, 0, 0, 0.2);
@@ -208,41 +176,41 @@
     }
 
     .feature-item:hover {
-        transform: translateX(0.2em) translateY(-0.05em); /* Slight shift and lift */
+        transform: translateX(0.2em) translateY(-0.05em);
         box-shadow: 0.25em 0.25em 0 rgba(0, 0, 0, 0.25);
     }
 
     .feature-icon {
-        width: 1.3em; /* Slightly reduced icon size */
+        width: 1.3em;
         height: 1.3em;
         display: flex;
         align-items: center;
         justify-content: center;
-        background: var(--retro-accent-yellow); /* Yellow background for icons */
+        background: var(--retro-accent-yellow);
         border: 0.12em solid var(--retro-shadow-dark);
         border-radius: 0.3em;
         box-shadow: 0.2em 0.2em 0 rgba(0, 0, 0, 0.2);
         transition: all var(--transition-fast);
-        flex-shrink: 0; /* Prevent icon from shrinking */
+        flex-shrink: 0;
     }
 
     .feature-item:hover .feature-icon {
-        background: var(--retro-accent-red); /* Change color on hover */
+        background: var(--retro-accent-red);
         transform: rotate(-5deg);
     }
 
     .feature-icon svg {
-        width: 0.8em; /* Adjusted SVG size to match icon box */
+        width: 0.8em;
         height: 0.8em;
         fill: var(--retro-text);
     }
 
     .feature-text {
-        font-size: 0.8em; /* Slightly reduced font size */
+        font-family: var(--font-primary);
+        font-size: 0.8em;
         font-weight: 400;
         color: var(--retro-text);
-        word-break: break-word; /* Ensure text wraps if too long */
-        /* Removed text-shadow from here for maximum readability */
+        word-break: break-word;
         text-shadow: none;
     }
 
@@ -251,19 +219,19 @@
         display: flex;
         justify-content: space-between;
         align-items: center;
-        margin-top: 1em; /* Reduced margin */
-        padding-top: 0.8em; /* Reduced padding */
+        margin-top: 1em;
+        padding-top: 0.8em;
         border-top: 2px dashed rgba(0, 0, 0, 0.2);
         position: relative;
     }
 
     .card-actions::before {
-        content: "✂"; /* Scissor icon */
+        content: "✂";
         position: absolute;
         top: -0.8em;
         left: 50%;
         transform: translateX(-50%) rotate(90deg);
-        background: var(--retro-primary-teal); /* Match card background */
+        background: var(--retro-primary-teal);
         padding: 0 0.5em;
         font-size: 1em;
         color: rgba(0, 0, 0, 0.4);
@@ -271,13 +239,12 @@
 
     .price {
         position: relative;
-        font-family: var(--font-heading-retro); /* Retro font for price */
-        font-size: 1.6em; /* Slightly reduced price font size */
+        font-family: var(--font-heading-retro);
+        font-size: 1.6em;
         font-weight: 800;
         color: var(--retro-text);
-        background: var(--retro-primary-teal); /* Match card background */
-        line-height: 1; /* Adjust line height for better alignment */
-        /* Adjusted text-shadow for price */
+        background: var(--retro-primary-teal);
+        line-height: 1;
         text-shadow: 1px 1px 0 rgba(0, 0, 0, 0.3);
     }
 
@@ -290,7 +257,7 @@
         height: 0.2em;
         background: var(--retro-accent-yellow);
         z-index: -1;
-        opacity: 0.8; /* Increased opacity for better visibility */
+        opacity: 0.8;
     }
 
     .price-currency {
@@ -302,36 +269,33 @@
 
     .price-period {
         display: block;
-        font-family: var(--font-primary); /* Use normal font for "to join" */
+        font-family: var(--font-primary);
         font-size: 0.4em;
         font-weight: 600;
-        color: rgba(0, 0, 0, 0.7); /* Darker for readability */
-        margin-top: 0.1em; /* Reduced margin */
-        /* Removed text-shadow from here */
+        color: rgba(0, 0, 0, 0.7);
         text-shadow: none;
     }
 
     /* --- Card Button --- */
     .card-button {
         position: relative;
-        background: var(--retro-bg); /* Wheat background for button */
+        background: var(--retro-bg);
         color: var(--retro-text);
-        font-family: var(--font-heading-retro); /* Retro font for button text */
-        font-size: 0.8em; /* Slightly reduced button font size */
+        font-family: var(--font-heading-retro);
+        font-size: 0.8em;
         font-weight: 700;
-        padding: 0.6em 1em; /* Reduced padding */
+        padding: 0.6em 1em;
         border: 0.2em solid var(--retro-shadow-dark);
         border-radius: 0.4em;
-        box-shadow: 0.3em 0.3em 0 var(--retro-shadow-dark); /* Shadow matches border color */
+        box-shadow: 0.3em 0.3em 0 var(--retro-shadow-dark);
         cursor: pointer;
         transition: all var(--transition-fast);
         overflow: hidden;
         text-transform: uppercase;
         letter-spacing: 0.05em;
-        /* Adjusted text-shadow for button */
-        text-shadow: 1px 1px 0 rgba(0, 0, 0, 0.4); /* Clearer shadow */
-        text-decoration: none; /* Remove underline for links acting as buttons */
-        display: inline-block; /* Ensure padding works correctly */
+        text-shadow: 1px 1px 0 rgba(0, 0, 0, 0.4);
+        text-decoration: none;
+        display: inline-block;
     }
 
     .card-button::before {
@@ -348,20 +312,15 @@
             transparent 100%
         );
         transition: left var(--transition-slow);
-        z-index: 1; /* Ensure the shimmer is above the button background */
+        z-index: 1;
     }
 
     .card-button:hover {
-        background: var(--retro-accent-red); /* Red on hover */
-        color: var(--retro-secondary-light); /* White text on hover */
+        background: var(--retro-accent-red);
+        color: var(--retro-secondary-light);
         transform: translate(-0.1em, -0.1em);
         box-shadow: 0.4em 0.4em 0 var(--retro-shadow-dark);
-        /* Adjusted text-shadow on hover for button */
-        text-shadow: 1px 1px 0 rgba(0, 0, 0, 0.6); /* Slightly more pronounced when active */
-    }
-
-    .card-button:hover::before {
-        left: 100%;
+        text-shadow: 1px 1px 0 rgba(0, 0, 0, 0.6);
     }
 
     .card-button:active {
@@ -370,18 +329,16 @@
     }
 
     /* --- Responsive Adjustments --- */
-    /* Adjust general padding/margins */
     @media (max-width: 1200px) {
         .events-page-container {
             padding: 1.5rem;
         }
         .retro-events-box {
-            gap: 1.5rem; /* Slightly reduce gap for better fit on narrower desktops */
+            gap: 1.5rem;
             padding: 1em;
         }
     }
 
-    /* Tablet and smaller desktops */
     @media (max-width: 992px) {
         .events-page-container {
             padding: 1rem;
@@ -390,11 +347,11 @@
             gap: 1rem;
         }
         .retro-event-card {
-            width: calc(50% - 1rem); /* Two cards per row, accounting for gap */
-            max-width: 350px; /* Still constrain max width */
+            width: calc(50% - 1rem);
+            max-width: 350px;
         }
         .card-image-container {
-            height: 140px; /* Further reduce image height */
+            height: 140px;
         }
         .card-title h2 {
             font-size: 1.1em;
@@ -410,39 +367,37 @@
         }
     }
 
-    /* Mobile devices */
     @media (max-width: 768px) {
         body {
-            align-items: flex-start; /* Align to top when content is longer */
+            align-items: flex-start;
         }
         .events-page-container {
-            padding: 1rem 0.5rem; /* Less horizontal padding */
+            padding: 1rem 0.5rem;
         }
         .retro-events-box {
             padding: 0.8em;
-            gap: 1.5rem; /* Maintain good spacing when stacked */
-            flex-direction: column; /* Stack cards vertically */
-            align-items: center; /* Center cards when stacked */
+            gap: 1.5rem;
+            flex-direction: column;
+            align-items: center;
             box-shadow:
-                0 0 0 0.1em var(--retro-shadow-dark), /* Slightly thinner outer border for mobile box */
+                0 0 0 0.1em var(--retro-shadow-dark),
                 0 0 0 0.2em var(--retro-secondary-light),
                 0 0 0 0.3em var(--retro-shadow-dark),
-                0 0.3em 0 0 var(--retro-accent-red), /* Adjusted 3D shadow for mobile */
-                0 0.3em 0 0.1em var(--retro-shadow-dark);
+                0 0.4em 0 0 var(--retro-accent-red),
+                0 0.4em 0 0.1em var(--retro-shadow-dark);
         }
         .retro-event-card {
-            width: 95%; /* Allow cards to take up most of the width */
-            max-width: 350px; /* But don't let them get wider than original spec */
-            padding: 8px; /* Slightly less internal padding */
+            width: 95%;
+            max-width: 350px;
+            padding: 8px;
         }
         .card-image-container {
-            height: 120px; /* Significantly reduced image height for small mobiles */
+            height: 120px;
             margin-bottom: 8px;
         }
         .card-title h2 {
             font-size: 1em;
             margin-bottom: 0.6rem;
-            /* Adjusted text-shadow for title on mobile */
             text-shadow: 1.5px 1.5px 0 rgba(0, 0, 0, 0.4);
         }
         .feature-grid {
@@ -477,7 +432,6 @@
         }
     }
 
-    /* Very small mobile devices (e.g., iPhone 5/SE) */
     @media (max-width: 480px) {
         .events-page-container {
             padding: 0.5rem;
@@ -487,11 +441,11 @@
             gap: 1rem;
         }
         .retro-event-card {
-            width: 100%; /* Take full width */
-            border-radius: 10px; /* Slightly less rounded for very small screens */
+            width: 100%;
+            border-radius: 10px;
         }
         .card-image-container {
-            height: 100px; /* Minimum image height for very small screens */
+            height: 100px;
         }
         .card-title h2 {
             font-size: 0.9em;
@@ -505,79 +459,83 @@
         .card-button {
             font-size: 0.6em;
             padding: 0.4em 0.7em;
+            border-width: 0.12em;
+            border-radius: 0.25em;
         }
     }
 </style>
+
 <body>
     <div class="events-page-container">
         <div class="retro-events-box">
-            <% for (let i=0;i<=6;i++) {%>
-                <div class="retro-event-card">
-                    <div class="card-image-container">
-                        <img src="https://media.istockphoto.com/id/505964108/photo/couples-dancing-and-drinking-at-evening-party.jpg?s=612x612&w=0&k=20&c=_pNpYuOdBQSwbCTMxvlWy6vQAlb4h_X3RJyU2bACGH0=" alt="Party Image">
-                    </div>
-                    <div class="card-body-section">
-                        <div class="card-title">
-                            <h2>The Rooftop Meeting <%= i + 1 %></h2>
+            <% if (glimmers && glimmers.length > 0) { %>
+                <% glimmers.forEach(glimmer => { %>
+                    <div class="retro-event-card">
+                        <div class="card-image-container">
+                            <img src="<%= glimmer.image && glimmer.image.length > 0 ? glimmer.image[0].url : '/images/default-glimmer.png' %>" alt="<%= glimmer.title %>">
                         </div>
-                        <div class="feature-grid">
-                            <div class="feature-item">
-                                <div class="feature-icon">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-venetian-mask">
-                                        <path d="M18 11c-1.5 0-2.5.5-3 2"/>
-                                        <path d="M4 6a2 2 0 0 0-2 2v4a5 5 0 0 0 5 5 8 8 0 0 1 5 2 8 8 0 0 1 5-2 5 5 0 0 0 5-5V8a2 2 0 0 0-2-2h-3a8 8 0 0 0-5 2 8 8 0 0 0-5-2z"/>
-                                        <path d="M6 11c1.5 0 2.5.5 3 2"/>
-                                    </svg>
+                        <div class="card-body-section">
+                            <div class="card-title">
+                                <h2><%= glimmer.title.toUpperCase() %></h2>
+                            </div>
+                            <div class="feature-grid">
+                                <div class="feature-item">
+                                    <div class="feature-icon">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-venetian-mask">
+                                            <path d="M18 11c-1.5 0-2.5.5-3 2"/>
+                                            <path d="M4 6a2 2 0 0 0-2 2v4a5 5 0 0 0 5 5 8 8 0 0 1 5 2 8 8 0 0 1 5-2 5 5 0 0 0 5-5V8a2 2 0 0 0-2-2h-3a8 8 0 0 0-5 2 8 8 0 0 0-5-2z"/>
+                                            <path d="M6 11c1.5 0 2.5.5 3 2"/>
+                                        </svg>
+                                    </div>
+                                    <span class="feature-text"><%= glimmer.creator ? glimmer.creator.name.toUpperCase() : 'UNKNOWN HOST' %></span> 
                                 </div>
-                                <span class="feature-text">Dipesh Verma</span> 
-                                 <!-- name of the host -->
+
+                                <div class="feature-item">
+                                    <div class="feature-icon">
+                                        <svg viewBox="0 0 24 24">
+                                            <path d="M12,17.56L16.07,16.43L16.62,10.33H9.38L9.2,8.3H16.8L17,6.31H7L7.56,12.32H14.45L14.22,14.9L12,15.5L9.78,14.9L9.64,13.24H7.64L7.93,16.43L12,17.56M4.07,3H19.93L18.5,19.2L12,21L5.5,19.2L4.07,3Z"/>
+                                        </svg>
+                                    </div>
+                                    <span class="feature-text">RATING: <%= glimmer.creator && glimmer.creator.overallRating !== undefined ? glimmer.creator.overallRating.toFixed(1) : 'N/A' %></span>
+                                </div>
+
+                                <div class="feature-item">
+                                    <div class="feature-icon">
+                                        <svg viewBox="0 0 24 24">
+                                            <path d="M18.5,4L19.66,8.35L18.7,8.61C18.25,7.74 17.79,6.87 17.26,6.43C16.73,6 16.11,6 15.5,6H13V16.5C13,17 13,17.5 13.33,17.75C13.67,18 14.33,18 15,18V19H9V18C9.67,18 10.33,18 10.67,17.75C11,17.5 11,17 11,16.5V6H8.5C7.89,6 7.27,6 6.74,6.43C6.21,6.87 5.75,7.74 5.3,8.61L4.34,8.35L5.5,4H18.5Z"/>
+                                        </svg>
+                                    </div>
+                                    <span class="feature-text"><%= glimmer.startDate.toLocaleDateString('en-US', { day: '2-digit', month: '2-digit', year: '2-digit' }) %></span>
+                                </div>
+
+                                <div class="feature-item">
+                                    <div class="feature-icon">
+                                        <svg viewBox="0 0 24 24">
+                                            <path d="M9.19,6.35C8.41,7.13 7.75,8.05 7.25,9H5V11H7.12C7.05,11.32 7,11.66 7,12C7,12.34 7.05,12.68 7.12,13H5V15H7.25C7.75,15.95 8.41,16.87 9.19,17.65L7.77,19.07L9.88,21.18L11.3,19.77C11.85,20.03 12.41,20.2 13,20.31V23H15V20.31C15.59,20.2 16.15,20.03 16.7,19.77L18.12,21.18L20.23,19.07L18.81,17.65C19.59,16.87 20.25,15.95 20.75,15H23V13H20.88C20.95,12.68 21,12.34 21,12C21,11.66 20.95,11.32 20.88,11H23V9H20.75C20.25,8.05 19.59,7.13 18.81,6.35L20.23,4.93L18.12,2.82L16.7,4.23C16.15,3.97 15.59,3.8 15,3.69V1H13V3.69C12.41,3.8 11.85,3.97 11.3,4.23L9.88,2.82L7.77,4.93L9.19,6.35M13,17A5,5 0 0,1 8,12A5,5 0 0,1 13,7A5,5 0 0,1 18,12A5,5 0 0,1 13,17Z"/>
+                                        </svg>
+                                    </div>
+                                    <span class="feature-text"><%= glimmer.startDate.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true }) %></span>
+                                </div>
                             </div>
 
-                            <div class="feature-item">
-                                <div class="feature-icon">
-                                    <svg viewBox="0 0 24 24">
-                                        <path d="M12,17.56L16.07,16.43L16.62,10.33H9.38L9.2,8.3H16.8L17,6.31H7L7.56,12.32H14.45L14.22,14.9L12,15.5L9.78,14.9L9.64,13.24H7.64L7.93,16.43L12,17.56M4.07,3H19.93L18.5,19.2L12,21L5.5,19.2L4.07,3Z"/>
-                                    </svg>
+                            <div class="card-actions">
+                                <div class="price">
+                                    <span class="price-currency">$</span>0
+                                    <span class="price-period">TO JOIN</span>
                                 </div>
-                                <span class="feature-text">Rating : 4.8</span>
-                                <!-- rating of the host -->
+                                <!-- For sample glimmers, link to a placeholder or a generic message -->
+                                <a href="#" class="card-button">GET TICKETS</a> 
                             </div>
-
-                            <div class="feature-item">
-                                <div class="feature-icon">
-                                    <svg viewBox="0 0 24 24">
-                                        <path d="M18.5,4L19.66,8.35L18.7,8.61C18.25,7.74 17.79,6.87 17.26,6.43C16.73,6 16.11,6 15.5,6H13V16.5C13,17 13,17.5 13.33,17.75C13.67,18 14.33,18 15,18V19H9V18C9.67,18 10.33,18 10.67,17.75C11,17.5 11,17 11,16.5V6H8.5C7.89,6 7.27,6 6.74,6.43C6.21,6.87 5.75,7.74 5.3,8.61L4.34,8.35L5.5,4H18.5Z"/>
-                                    </svg>
-                                </div>
-                                <span class="feature-text">27/05/25</span>
-                                <!-- date of the glimmer  -->
-                            </div>
-
-                            <div class="feature-item">
-                                <div class="feature-icon">
-                                    <svg viewBox="0 0 24 24">
-                                        <path d="M9.19,6.35C8.41,7.13 7.75,8.05 7.25,9H5V11H7.12C7.05,11.32 7,11.66 7,12C7,12.34 7.05,12.68 7.12,13H5V15H7.25C7.75,15.95 8.41,16.87 9.19,17.65L7.77,19.07L9.88,21.18L11.3,19.77C11.85,20.03 12.41,20.2 13,20.31V23H15V20.31C15.59,20.2 16.15,20.03 16.7,19.77L18.12,21.18L20.23,19.07L18.81,17.65C19.59,16.87 20.25,15.95 20.75,15H23V13H20.88C20.95,12.68 21,12.34 21,12C21,11.66 20.95,11.32 20.88,11H23V9H20.75C20.25,8.05 19.59,7.13 18.81,6.35L20.23,4.93L18.12,2.82L16.7,4.23C16.15,3.97 15.59,3.8 15,3.69V1H13V3.69C12.41,3.8 11.85,3.97 11.3,4.23L9.88,2.82L7.77,4.93L9.19,6.35M13,17A5,5 0 0,1 8,12A5,5 0 0,1 13,7A5,5 0 0,1 18,12A5,5 0 0,1 13,17Z"/>
-                                    </svg>
-                                </div>
-                                <span class="feature-text">3:00 AM</span>
-                                <!-- time of glimmer -->
-                            </div>
-                        </div>
-
-                        <div class="card-actions">
-                            <div class="price">
-                                <span class="price-currency">$</span>0
-                                <span class="price-period">to join</span>
-                                <!-- price hardcode for mvp -->
-                            </div>
-                            <a href="#" class="card-button">Get Tickets</a>
-                            <!-- redirects to the glimmer details page -->
                         </div>
                     </div>
-                </div>
-            <% }%>
+                <% }) %>
+            <% } else { %>
+                <p class="no-events-message">You haven't hosted any glimmers yet. Time to launch one!</p>
+            <% } %>
         </div>
     </div>
 
-    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Inter:wght@400;500;700;800&display=swap" rel="stylesheet">
+    <!-- Ensure Press Start 2P and Inter fonts are loaded in your main boilerplate.ejs or style.css -->
+    <!-- Example in boilerplate.ejs: -->
+    <!-- <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Inter:wght@400;500;700;800&display=swap" rel="stylesheet"> -->
 </body>

@@ -119,7 +119,7 @@
         font-family: var(--font-primary);
         font-size: 1em;
         box-sizing: border-box; /* Include padding in width */
-        box-shadow: 0.2em 0.2em 0 rgba(0, 0, 0, 0.2); /* Subtle inset-like shadow */
+        box-shadow: 0.2em 0.2em 0 var(--retro-shadow-dark); /* Subtle inset-like shadow */
         transition: all var(--transition-fast);
     }
 
@@ -248,64 +248,50 @@
         object-fit: cover;
     }
 
-    .image-preview-item .remove-image {
+    .remove-image-btn {
         position: absolute;
         top: 2px;
         right: 2px;
-        background: var(--retro-accent-red);
+        background-color: var(--retro-accent-red);
         color: var(--retro-secondary-light);
         border: 1px solid var(--retro-shadow-dark);
         border-radius: 50%;
         width: 20px;
         height: 20px;
         display: flex;
-        align-items: center;
         justify-content: center;
+        align-items: center;
         font-size: 0.8em;
         cursor: pointer;
-        opacity: 0.9;
-        transition: opacity var(--transition-fast);
-        font-family: var(--font-primary); /* For the 'X' */
-        font-weight: bold;
+        line-height: 1;
+        padding: 0;
+        box-shadow: 0.1em 0.1em 0 rgba(0,0,0,0.2);
+        transition: background-color var(--transition-fast);
     }
 
-    .image-preview-item .remove-image:hover {
-        opacity: 1;
-        background: var(--retro-shadow-dark);
+    .remove-image-btn:hover {
+        background-color: var(--retro-shadow-dark);
     }
 
-    /* --- Location Preview Map --- */
-    .location-preview-section {
-        background-color: var(--retro-secondary-light);
-        padding: 1.5em;
-        border-radius: 10px;
-        border: 2px solid var(--retro-shadow-dark);
-        box-shadow: 0.3em 0.3em 0 rgba(0, 0, 0, 0.2);
-        margin-top: 1.8em; /* Space above this section */
+    .image-upload-feedback {
+        font-family: var(--font-primary);
+        font-size: 0.85em;
+        color: var(--retro-text);
+        margin-top: -0.8rem; /* Adjust to sit closer to input */
         text-align: center;
     }
 
-    .location-preview-section h2 {
-        font-family: var(--font-heading-retro);
-        font-size: 1.5em;
-        color: var(--retro-text);
-        text-shadow: 2px 2px 0 rgba(0, 0, 0, 0.4);
-        margin-bottom: 1em;
-    }
-
-    .location-map-container {
-        position: relative;
+    /* Map Preview */
+    .map-preview-container {
         width: 100%;
-        padding-bottom: 56.25%; /* 16:9 Aspect Ratio */
-        height: 0;
-        overflow: hidden;
+        height: 250px; /* Fixed height for map preview */
         border: 2px solid var(--retro-shadow-dark);
         border-radius: 8px;
-        box-shadow: 0.2em 0.2em 0 rgba(0, 0, 0, 0.2);
-        margin-top: 1em;
+        overflow: hidden;
+        margin-bottom: 1rem;
+        box-shadow: 0.2em 0.2em 0 var(--retro-shadow-dark);
     }
-
-    .location-map-container iframe {
+    .map-preview-container iframe {
         position: absolute;
         top: 0;
         left: 0;
@@ -329,23 +315,24 @@
         width: 100%; /* Take full width */
         margin-top: 2.5em; /* Spacing above the button */
         position: relative;
-        background: var(--retro-accent-red); /* Red primary color for the button */
+        background: var(--retro-accent-red);
         color: var(--retro-secondary-light);
         font-family: var(--font-heading-retro);
         font-size: 1.2em; /* Larger button text */
         font-weight: 700;
         padding: 0.8em 1.5em; /* More padding */
-        border: 0.25em solid var(--retro-shadow-dark); /* Thicker border */
-        border-radius: 0.5em; /* Slightly more rounded */
-        box-shadow: 0.4em 0.4em 0 var(--retro-shadow-dark); /* More pronounced shadow */
+        border: 0.25em solid var(--retro-shadow-dark);
+        border-radius: 0.5em;
+        box-shadow: 0.4em 0.4em 0 var(--retro-shadow-dark);
         cursor: pointer;
         transition: all var(--transition-fast);
         overflow: hidden;
         text-transform: uppercase;
         letter-spacing: 0.1em;
-        text-shadow: 2px 2px 0 rgba(0, 0, 0, 0.6); /* Stronger shadow for button text */
-        text-decoration: none; /* In case it's an <a> acting as button */
-        box-sizing: border-box; /* Ensure padding is included in width */
+        text-shadow: 2px 2px 0 rgba(0, 0, 0, 0.6);
+        text-decoration: none;
+        display: inline-block;
+        box-sizing: border-box;
     }
 
     .launch-button::before {
@@ -366,19 +353,15 @@
     }
 
     .launch-button:hover {
-        background: var(--retro-shadow-dark); /* Dark background on hover */
-        color: var(--retro-accent-yellow); /* Yellow text on hover */
-        transform: translate(-0.2em, -0.2em); /* More pronounced lift */
-        box-shadow: 0.6em 0.6em 0 var(--retro-accent-red); /* Red shadow on hover */
+        background: var(--retro-shadow-dark);
+        color: var(--retro-accent-yellow);
+        transform: translate(-0.2em, -0.2em);
+        box-shadow: 0.6em 0.6em 0 var(--retro-accent-red);
         text-shadow: 2px 2px 0 rgba(0, 0, 0, 0.8);
     }
 
-    .launch-button:hover::before {
-        left: 100%;
-    }
-
     .launch-button:active {
-        transform: translate(0.15em, 0.15em); /* Simulate press */
+        transform: translate(0.15em, 0.15em);
         box-shadow: 0.2em 0.2em 0 var(--retro-shadow-dark);
     }
 
@@ -497,292 +480,84 @@
     }
 </style>
 
-<body>
-    <div class="retro-form-container">
-        <h1>Host Your Glimmer</h1>
-        <form action="/events" method="POST" enctype="multipart/form-data" novalidate class="needs-validation">
-            <div class="form-group-retro">
-                <label for="title">Event Title</label>
-                <input type="text" id="title" name="event[title]" placeholder="e.g., Pixel Party Night" required>
-                <div class="invalid-feedback">
-                    Please provide an event title.
-                </div>
-            </div>
-
-            <div class="form-group-retro">
-                <label for="description">Event Description</label>
-                <textarea id="description" name="event[description]" rows="5" placeholder="Tell us about your epic event!" required></textarea>
-                <div class="invalid-feedback">
-                    Please provide an event description.
-                </div>
-            </div>
-
-            <div class="form-group-retro">
-                <label for="locationName">Location Name (e.g., Cafe, Park, Building)</label>
-                <input type="text" id="locationName" name="event[locationName]" placeholder="e.g., Cyberpunk City Rooftop" required>
-                <div class="invalid-feedback">
-                    Please provide a descriptive location name.
-                </div>
-            </div>
-
-            <!-- Hidden fields for Latitude and Longitude -->
-            <input type="hidden" id="latitude" name="event[latitude]" required>
-            <input type="hidden" id="longitude" name="event[longitude]" required>
-            <div class="invalid-feedback" id="location-coords-feedback" style="display: none;">
-                Please allow location access or provide coordinates.
-            </div>
-
-            <!-- New Location Preview Section -->
-            <div class="location-preview-section">
-                <h2>CONFIRM YOUR GLIMMER LOCATION</h2>
-                <div class="location-map-container">
-                    <!-- Map will be loaded here by JavaScript -->
-                    <iframe id="location-preview-map"
-                        width="600"
-                        height="450"
-                        style="border:0"
-                        loading="lazy"
-                        allowfullscreen
-                        src="">
-                    </iframe>
-                </div>
-                <p class="location-preview-message" id="map-status-message">
-                    Your exact location will be shown here for confirmation.
-                </p>
-            </div>
-
-            <div class="form-group-retro">
-                <label for="eventDate">Date</label>
-                <input type="date" id="eventDate" name="event[date]" required>
-                <div class="invalid-feedback">
-                    Please select a date for the event.
-                </div>
-            </div>
-
-            <div class="form-group-retro">
-                <label for="eventTime">Time</label>
-                <input type="time" id="eventTime" name="event[time]" required>
-                <div class="invalid-feedback">
-                    Please select a time for the event.
-                </div>
-            </div>
-
-            <div class="form-group-retro">
-                <label for="images">Event Images (Max 5)</label>
-                <div class="file-input-wrapper">
-                    <input type="file" id="images" name="event[images]" accept="image/*" multiple>
-                    <label for="images" class="custom-file-upload">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-image-plus">
-                            <path d="M12 5v14"/>
-                            <path d="M5 12h14"/>
-                            <path d="M21 12V6a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v11a2 2 0 0 0 2 2h7"/>
-                            <circle cx="12" cy="12" r="1"/>
-                            <path d="m22 22-1-1"/>
-                            <path d="m21 17 1 1 1-1"/>
-                        </svg>
-                        Upload Images
-                    </label>
-                </div>
-                <div id="image-preview-container">
+<div class="change-password-container">
+    <div class="change-password-card">
+        <div class="change-password-content">
+            <h1 class="change-password-card-title">CHANGE PASSWORD</h1>
+            <form action="/profile/change-password" method="POST" class="needs-validation" novalidate>
+                <div class="mb-3">
+                    <label class="form-label-retro" for="currentPassword">CURRENT PASSWORD</label>
+                    <input class="form-control-retro" type="password" id="currentPassword" name="currentPassword" required>
+                    <div class="invalid-feedback-retro">
+                        PLEASE ENTER YOUR CURRENT PASSWORD.
                     </div>
-                <div class="invalid-feedback" id="image-upload-feedback" style="display: none;">
-                    You can upload a maximum of 5 images.
                 </div>
+
+                <div class="mb-3">
+                    <label class="form-label-retro" for="newPassword">NEW PASSWORD</label>
+                    <input type="password" class="form-control-retro" id="newPassword" name="newPassword" required>
+                    <div class="invalid-feedback-retro">
+                        PLEASE ENTER A NEW PASSWORD (MIN 6 CHARACTERS).
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label-retro" for="newPassword2">CONFIRM NEW PASSWORD</label>
+                    <input type="password" class="form-control-retro" id="newPassword2" name="newPassword2" required>
+                    <div class="invalid-feedback-retro" id="passwordMismatchFeedback">
+                        NEW PASSWORDS DO NOT MATCH.
+                    </div>
+                </div>
+
+                <button class="btn-retro-primary" type="submit">UPDATE PASSWORD</button>
+            </form>
+
+            <div class="back-link-section">
+                <p>WANT TO EDIT YOUR AURA DETAILS?</p>
+                <a href="/profile/edit">EDIT AURA HERE</a>
+                <p class="mt-3">GO BACK TO YOUR AURA?</p>
+                <a href="/aura">VIEW AURA</a>
             </div>
-
-            <button type="submit" class="launch-button">Launch Glimmer</button>
-        </form>
+        </div>
     </div>
+</div>
 
-    <script src="https://kit.fontawesome.com/your-font-awesome-kit-code.js" crossorigin="anonymous"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Inter:wght@400;500;700;800&display=swap" rel="stylesheet">
+<script>
+    // Client-side validation for the form
+    (function () {
+        'use strict';
 
-    <script>
-        // IMPORTANT: Replace 'YOUR_GOOGLE_MAPS_API_KEY' with your actual Google Maps Embed API Key
-        const GOOGLE_MAPS_API_KEY = 'YOUR_GOOGLE_MAPS_API_KEY'; 
-        const MAX_IMAGES = 5; // Define maximum number of images
+        var forms = document.querySelectorAll('.needs-validation');
+        const newPasswordInput = document.getElementById('newPassword');
+        const newPassword2Input = document.getElementById('newPassword2');
+        const passwordMismatchFeedback = document.getElementById('passwordMismatchFeedback');
 
-        // Function to get current geolocation and populate hidden fields AND update map preview
-        async function populateCoordinates() {
-            const latitudeInput = document.getElementById('latitude');
-            const longitudeInput = document.getElementById('longitude');
-            const feedbackDiv = document.getElementById('location-coords-feedback');
-            const mapIframe = document.getElementById('location-preview-map');
-            const mapStatusMessage = document.getElementById('map-status-message');
-
-            if (navigator.geolocation) {
-                mapStatusMessage.textContent = "Attempting to get your location...";
-                mapStatusMessage.style.color = 'var(--retro-text)'; // Reset color
-                feedbackDiv.style.display = 'none'; // Hide form validation feedback initially
-                
-                navigator.geolocation.getCurrentPosition(
-                    (position) => {
-                        const lat = position.coords.latitude;
-                        const lon = position.coords.longitude;
-
-                        latitudeInput.value = lat;
-                        longitudeInput.value = lon;
-                        
-                        // Update map iframe src
-                        mapIframe.src = `https://www.google.com/maps/embed/v1/place?key=${GOOGLE_MAPS_API_KEY}&q=${lat},${lon}&zoom=15`;
-                        mapStatusMessage.textContent = "Your exact glimmer location is shown above.";
-                        mapStatusMessage.style.color = 'var(--retro-primary-teal)'; // Greenish for success
-                        console.log("Location obtained and map updated:", lat, lon);
-                    },
-                    (error) => {
-                        console.error("Geolocation error:", error);
-                        let errorMessage = "Could not get your location. Please ensure location services are enabled and permissions granted.";
-                        if (error.code === error.PERMISSION_DENIED) {
-                            errorMessage = "Location access denied. Please enable location permissions for this site in your browser settings.";
-                        } else if (error.code === error.POSITION_UNAVAILABLE) {
-                            errorMessage = "Location information is unavailable.";
-                        } else if (error.code === error.TIMEOUT) {
-                            errorMessage = "The request to get user location timed out.";
-                        }
-                        mapStatusMessage.textContent = errorMessage;
-                        mapStatusMessage.style.color = 'var(--retro-accent-red)'; // Red for error
-                        feedbackDiv.style.display = 'block';
-                        feedbackDiv.textContent = "Location coordinates are required. " + errorMessage;
-                    },
-                    { enableHighAccuracy: true, timeout: 10000, maximumAge: 0 } // Increased timeout
-                );
+        // Function to check password match
+        const checkPasswordMatch = () => {
+            if (newPasswordInput.value !== newPassword2Input.value) {
+                newPassword2Input.setCustomValidity('New passwords do not match.');
+                passwordMismatchFeedback.classList.add('password-mismatch'); // Add class to show specific message
             } else {
-                mapStatusMessage.textContent = "Geolocation is not supported by your browser. Please consider using a browser that supports geolocation or a manual input method.";
-                mapStatusMessage.style.color = 'var(--retro-accent-red)';
-                feedbackDiv.style.display = 'block';
-                feedbackDiv.textContent = "Location coordinates are required. Geolocation not supported.";
+                newPassword2Input.setCustomValidity('');
+                passwordMismatchFeedback.classList.remove('password-mismatch'); // Hide specific message
             }
-        }
+        };
 
-        // Simple client-side validation for demonstration (Bootstrap-like)
-        (function () {
-            'use strict';
-            const form = document.querySelector('.needs-validation');
+        // Listen for input on both new password fields
+        newPasswordInput.addEventListener('input', checkPasswordMatch);
+        newPassword2Input.addEventListener('input', checkPasswordMatch);
 
-            // Populate coordinates on page load
-            populateCoordinates(); 
+        Array.prototype.slice.call(forms)
+            .forEach(function (form) {
+                form.addEventListener('submit', function (event) {
+                    checkPasswordMatch(); // Check again on submit
 
-            form.addEventListener('submit', function (event) {
-                const latitudeInput = document.getElementById('latitude');
-                const longitudeInput = document.getElementById('longitude');
-                const locationCoordsFeedback = document.getElementById('location-coords-feedback');
-                const imageUploadFeedback = document.getElementById('image-upload-feedback');
-
-                // Check if coordinates are populated before allowing form submission
-                if (!latitudeInput.value || !longitudeInput.value) {
-                    event.preventDefault();
-                    event.stopPropagation();
-                    locationCoordsFeedback.textContent = "Location coordinates are required. Please allow geolocation or try again.";
-                    locationCoordsFeedback.style.display = 'block';
-                } else {
-                    locationCoordsFeedback.style.display = 'none';
-                }
-
-                // Check image count before submission
-                // Ensure at least one image is uploaded
-                if (uploadedFiles.items.length === 0) {
-                    event.preventDefault();
-                    event.stopPropagation();
-                    imageUploadFeedback.textContent = "At least one image is required.";
-                    imageUploadFeedback.style.display = 'block';
-                } else if (uploadedFiles.items.length > MAX_IMAGES) {
-                    // This case should ideally be prevented by the change listener,
-                    // but it's a good fallback for robust validation.
-                    event.preventDefault();
-                    event.stopPropagation();
-                    imageUploadFeedback.textContent = `You can upload a maximum of ${MAX_IMAGES} images.`;
-                    imageUploadFeedback.style.display = 'block';
-                } else {
-                    imageUploadFeedback.style.display = 'none';
-                }
-
-
-                if (!form.checkValidity()) {
-                    event.preventDefault();
-                    event.stopPropagation();
-                }
-                form.classList.add('was-validated');
-            }, false);
-        })();
-
-        // Image Preview & Removal Logic
-        const imageInput = document.getElementById('images');
-        const imagePreviewContainer = document.getElementById('image-preview-container');
-        const uploadedFiles = new DataTransfer(); // To manage files programmatically
-        const customFileUploadLabel = document.querySelector('.custom-file-upload');
-        const imageUploadFeedback = document.getElementById('image-upload-feedback');
-
-
-        // Function to update the file input and the upload button's enabled/disabled state
-        function updateFileInputAndButton() {
-            imageInput.files = uploadedFiles.files; // Keep the actual input's files array updated
-            if (uploadedFiles.items.length >= MAX_IMAGES) {
-                imageInput.disabled = true; // Disable the file input
-                customFileUploadLabel.classList.add('disabled'); // Add disabled style to label
-                imageUploadFeedback.textContent = `Maximum of ${MAX_IMAGES} images reached. Remove some to upload more.`;
-                imageUploadFeedback.style.display = 'block';
-            } else {
-                imageInput.disabled = false; // Enable the file input
-                customFileUploadLabel.classList.remove('disabled'); // Remove disabled style
-                imageUploadFeedback.style.display = 'none'; // Hide feedback if below limit
-            }
-        }
-
-        imageInput.addEventListener('change', function(event) {
-            const files = event.target.files;
-            
-            for (let i = 0; i < files.length; i++) {
-                const file = files[i];
-                // Only add if it's an image and we haven't reached the max limit
-                if (file.type.startsWith('image/') && uploadedFiles.items.length < MAX_IMAGES) {
-                    uploadedFiles.items.add(file); // Add to our managed list
-
-                    const reader = new FileReader();
-                    reader.onload = function(e) {
-                        const previewItem = document.createElement('div');
-                        previewItem.className = 'image-preview-item';
-                        previewItem.dataset.name = file.name; // Store original file name for removal
-
-                        previewItem.innerHTML = `
-                            <img src="${e.target.result}" alt="Image Preview">
-                            <span class="remove-image">&times;</span>
-                        `;
-                        imagePreviewContainer.appendChild(previewItem);
-                    };
-                    reader.readAsDataURL(file);
-                } else if (uploadedFiles.items.length >= MAX_IMAGES) {
-                    // If trying to add more than allowed, show feedback and stop
-                    imageUploadFeedback.textContent = `You can upload a maximum of ${MAX_IMAGES} images.`;
-                    imageUploadFeedback.style.display = 'block';
-                    break; // Stop processing further files from this selection
-                }
-            }
-            // Update the actual input's files with our managed list and button state
-            updateFileInputAndButton();
-            // Clear the original file input value to allow re-uploading the same file if needed after removal
-            // This prevents the 'change' event from not firing if the same file is selected again
-            event.target.value = ''; 
-        });
-
-        imagePreviewContainer.addEventListener('click', function(event) {
-            if (event.target.classList.contains('remove-image')) {
-                const itemToRemove = event.target.closest('.image-preview-item');
-                const fileName = itemToRemove.dataset.name;
-
-                // Remove from DataTransfer object
-                for (let i = 0; i < uploadedFiles.items.length; i++) {
-                    if (uploadedFiles.items[i].name === fileName) {
-                        uploadedFiles.items.remove(i);
-                        break;
+                    if (!form.checkValidity()) {
+                        event.preventDefault();
+                        event.stopPropagation();
                     }
-                }
-                
-                itemToRemove.remove(); // Remove from DOM
-                updateFileInputAndButton(); // Update input and button state after removal
-            }
-        });
-
-        // Initialize button state on page load
-        updateFileInputAndButton();
-    </script>
-</body>
+                    form.classList.add('was-validated');
+                }, false);
+            });
+    })();
+</script>
