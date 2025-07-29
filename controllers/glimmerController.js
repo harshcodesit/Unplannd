@@ -67,17 +67,31 @@ module.exports.createGlimmer = async (req, res) => {
     const Glimmer = mongoose.model('Glimmer');
     const User = mongoose.model('User'); 
 
+    // Debug logging to understand what's happening with file uploads
+    console.log('=== DEBUG: File Upload Analysis ===');
+    console.log('req.files:', req.files);
+    console.log('req.files type:', typeof req.files);
+    console.log('req.files length:', req.files ? req.files.length : 'undefined');
+    console.log('req.body:', req.body);
+    console.log('req.fileValidationError:', req.fileValidationError);
+    console.log('===================================');
+
     // Multer errors (like file type, file size) are now handled in the route middleware itself,
     // potentially setting req.fileValidationError.
     if (req.fileValidationError) {
+        console.log('File validation error detected:', req.fileValidationError);
         req.flash('error_msg', req.fileValidationError);
         return res.redirect('/grid/launch');
     }
+    
     // Check if no files were uploaded, as images are required
     if (!req.files || req.files.length === 0) { 
+        console.log('No files detected in req.files');
         req.flash('error_msg', 'At least one glimmer image is required.');
         return res.redirect('/grid/launch');
     }
+
+    console.log('Files successfully uploaded:', req.files.length, 'files');
 
 
     const { title, description, locationName, latitude, longitude, eventDate, eventTime } = req.body.glimmer;

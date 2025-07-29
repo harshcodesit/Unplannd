@@ -574,7 +574,7 @@
                 <label for="images">Event Images (Max 5)</label>
                 <div class="file-input-wrapper">
                     <!-- CRITICAL FIX: name="image" to match Multer's .array('image', 5) -->
-                    <input type="file" id="images" name="image" accept="image/*" multiple>
+                    <input type="file" id="images" name="image" accept="image/*" multiple max="5">
                     <label for="images" class="custom-file-upload">
                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-image-plus">
                             <path d="M12 5v14"/>
@@ -682,14 +682,15 @@
 
                 // Check image count before submission
                 // Ensure at least one image is uploaded
-                if (filesToUpload.length === 0) { // CRITICAL: Use filesToUpload.length
+                const fileInput = document.getElementById('images');
+                const actualFiles = fileInput.files;
+                
+                if (!actualFiles || actualFiles.length === 0) {
                     event.preventDefault();
                     event.stopPropagation();
                     imageUploadFeedback.textContent = "At least one image is required.";
                     imageUploadFeedback.style.display = 'block';
-                } else if (filesToUpload.length > MAX_IMAGES) { // CRITICAL: Use filesToUpload.length
-                    // This case should ideally be prevented by the change listener,
-                    // but it's a good fallback for robust validation.
+                } else if (actualFiles.length > MAX_IMAGES) {
                     event.preventDefault();
                     event.stopPropagation();
                     imageUploadFeedback.textContent = `You can upload a maximum of ${MAX_IMAGES} images.`;
@@ -710,19 +711,14 @@
         // Image Preview & Removal Logic
         const imageInput = document.getElementById('images');
         const imagePreviewContainer = document.getElementById('image-preview-container');
-        let filesToUpload = []; // CRITICAL: Use a simple array to manage files
         const customFileUploadLabel = document.querySelector('.custom-file-upload');
         const imageUploadFeedback = document.getElementById('image-upload-feedback');
 
-
-        // Function to update the file input and the upload button's enabled/disabled state
-        function updateFileInputAndButton() {
-            // CRITICAL: Construct a new FileList from the filesToUpload array
-            const dataTransfer = new DataTransfer();
-            filesToUpload.forEach(file => dataTransfer.items.add(file));
-            imageInput.files = dataTransfer.files; // Assign the new FileList to the input
-
-            if (filesToUpload.length >= MAX_IMAGES) {
+        // Function to update the upload button's enabled/disabled state
+        function updateButtonState() {
+            const currentFiles = imageInput.files;
+            
+            if (currentFiles && currentFiles.length >= MAX_IMAGES) {
                 imageInput.disabled = true; // Disable the file input
                 if (customFileUploadLabel) {
                     customFileUploadLabel.classList.add('disabled'); // Add disabled style to label
@@ -739,18 +735,37 @@
         }
 
         imageInput.addEventListener('change', function(event) {
-            const newFiles = Array.from(event.target.files); // Convert FileList to Array
+            const files = event.target.files;
             
-            for (const file of newFiles) {
-                // Only add if it's an image and we haven't reached the max limit
-                if (file.type.startsWith('image/') && filesToUpload.length < MAX_IMAGES) {
-                    filesToUpload.push(file); // Add to our managed array
-
+            // Check if we're exceeding the limit
+            if (files.length > MAX_IMAGES) {
+                imageUploadFeedback.textContent = `You can upload a maximum of ${MAX_IMAGES} images. Only the first ${MAX_IMAGES} will be used.`;
+                imageUploadFeedback.style.display = 'block';
+                
+                // Create a new FileList with only the first MAX_IMAGES files
+                const dataTransfer = new DataTransfer();
+                for (let i = 0; i < MAX_IMAGES; i++) {
+                    dataTransfer.items.add(files[i]);
+                }
+                imageInput.files = dataTransfer.files;
+            } else {
+                imageUploadFeedback.style.display = 'none';
+            }
+            
+            // Clear existing previews
+            imagePreviewContainer.innerHTML = '';
+            
+            // Create previews for all selected files (up to MAX_IMAGES)
+            const filesToShow = imageInput.files;
+            for (let i = 0; i < filesToShow.length; i++) {
+                const file = filesToShow[i];
+                
+                if (file.type.startsWith('image/')) {
                     const reader = new FileReader();
                     reader.onload = function(e) {
                         const previewItem = document.createElement('div');
                         previewItem.className = 'image-preview-item';
-                        previewItem.dataset.name = file.name; // Store original file name for removal
+                        previewItem.dataset.index = i; // Store index for removal
 
                         previewItem.innerHTML = `
                             <img src="${e.target.result}" alt="Image Preview">
@@ -759,33 +774,35 @@
                         imagePreviewContainer.appendChild(previewItem);
                     };
                     reader.readAsDataURL(file);
-                } else if (filesToUpload.length >= MAX_IMAGES) {
-                    // If trying to add more than allowed, show feedback and stop
-                    imageUploadFeedback.textContent = `You can upload a maximum of ${MAX_IMAGES} images.`;
-                    imageUploadFeedback.style.display = 'block';
-                    break; // Stop processing further files from this selection
                 }
             }
-            // Update the actual input's files with our managed list and button state
-            updateFileInputAndButton();
-            // Clear the original file input value to allow re-selecting the same file if needed after removal
-            event.target.value = ''; 
+            
+            // Update button state
+            updateButtonState();
         });
 
         imagePreviewContainer.addEventListener('click', function(event) {
             if (event.target.classList.contains('remove-image-btn')) {
                 const itemToRemove = event.target.closest('.image-preview-item');
-                const fileName = itemToRemove.dataset.name;
-
-                // Remove from our managed array
-                filesToUpload = filesToUpload.filter(file => file.name !== fileName);
+                const index = parseInt(itemToRemove.dataset.index);
                 
+                // Create a new FileList without the removed file
+                const dataTransfer = new DataTransfer();
+                const currentFiles = imageInput.files;
+                
+                for (let i = 0; i < currentFiles.length; i++) {
+                    if (i !== index) {
+                        dataTransfer.items.add(currentFiles[i]);
+                    }
+                }
+                
+                imageInput.files = dataTransfer.files;
                 itemToRemove.remove(); // Remove from DOM
-                updateFileInputAndButton(); // Update input and button state after removal
+                updateButtonState(); // Update button state after removal
             }
         });
 
         // Initialize button state on page load
-        updateFileInputAndButton();
+        updateButtonState();
     </script>
 </body>
