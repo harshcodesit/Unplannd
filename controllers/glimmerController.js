@@ -19,7 +19,7 @@ function getBlurredCoordinates(longitude, latitude, radiusKm = 1) {
 
     const newLonRad = lonRad + Math.atan2(
         Math.sin(randomAngle) * Math.sin(randomDistance / R) * Math.cos(latRad),
-        Math.cos(randomDistance / R) - Math.sin(latRad) * Math.sin(newLonRad)
+        Math.cos(randomDistance / R) - Math.sin(latRad) * Math.sin(newLatRad) 
     );
 
     return {
@@ -36,6 +36,7 @@ module.exports.index = async (req, res) => {
     try {
         const glimmers = await Glimmer.find({})
                                       .populate('creator', 'username name avatarUrl overallRating')
+                                      .populate('image') // Ensure image data is fetched
                                       .sort({ createdAt: -1 });
 
         const glimmersForDisplay = glimmers.map(glimmer => {
@@ -67,31 +68,17 @@ module.exports.createGlimmer = async (req, res) => {
     const Glimmer = mongoose.model('Glimmer');
     const User = mongoose.model('User'); 
 
-    // Debug logging to understand what's happening with file uploads
-    console.log('=== DEBUG: File Upload Analysis ===');
-    console.log('req.files:', req.files);
-    console.log('req.files type:', typeof req.files);
-    console.log('req.files length:', req.files ? req.files.length : 'undefined');
-    console.log('req.body:', req.body);
-    console.log('req.fileValidationError:', req.fileValidationError);
-    console.log('===================================');
-
     // Multer errors (like file type, file size) are now handled in the route middleware itself,
     // potentially setting req.fileValidationError.
     if (req.fileValidationError) {
-        console.log('File validation error detected:', req.fileValidationError);
         req.flash('error_msg', req.fileValidationError);
         return res.redirect('/grid/launch');
     }
-    
     // Check if no files were uploaded, as images are required
     if (!req.files || req.files.length === 0) { 
-        console.log('No files detected in req.files');
         req.flash('error_msg', 'At least one glimmer image is required.');
         return res.redirect('/grid/launch');
     }
-
-    console.log('Files successfully uploaded:', req.files.length, 'files');
 
 
     const { title, description, locationName, latitude, longitude, eventDate, eventTime } = req.body.glimmer;
@@ -115,8 +102,8 @@ module.exports.createGlimmer = async (req, res) => {
             geometry: { type: 'Point', coordinates: [parseFloat(longitude), parseFloat(latitude)] },
             startDate: combinedDateTime, creator: req.user._id, status: 'Open'
         });
-        // Image data is now in req.files (from Multer middleware directly in route)
-        newGlimmer.image = req.files.slice(0, 5).map(f => ({ url: f.path, filename: f.filename }));
+        // FIX: Store relative URL instead of absolute path
+        newGlimmer.image = req.files.slice(0, 5).map(f => ({ url: `/uploads/glimmers/${f.filename}`, filename: f.filename }));
         
         await newGlimmer.save();
         await User.findByIdAndUpdate(req.user._id, { $push: { hostedGlimmers: newGlimmer._id } });
@@ -148,22 +135,41 @@ module.exports.showGlimmer = async (req, res) => {
 
         let displayLocation = { latitude: glimmer.geometry.coordinates[1], longitude: glimmer.geometry.coordinates[0] };
         let showActualLocation = false;
-        let hasPendingRequest = false;
+        let hasSentRequest = false; 
+        let requestStatus = null;   
 
-        if (req.user && glimmer.creator && req.user._id.equals(glimmer.creator._id)) {
-            showActualLocation = true;
-        } else if (req.user) {
-            const existingRequest = await Request.findOne({ glimmer: glimmer._id, requester: req.user._id });
-            if (existingRequest) {
-                if (existingRequest.status === 'accepted') { showActualLocation = true; }
-                else if (existingRequest.status === 'pending') { hasPendingRequest = true; }
+        if (req.user) {
+            if (glimmer.creator && req.user._id.equals(glimmer.creator._id)) {
+                showActualLocation = true;
+            } else {
+                const existingRequest = await Request.findOne({ 
+                    glimmer: glimmer._id, 
+                    requester: req.user._id 
+                });
+
+                if (existingRequest) {
+                    hasSentRequest = true;
+                    requestStatus = existingRequest.status;
+                    if (existingRequest.status === 'accepted') {
+                        showActualLocation = true;
+                    }
+                }
             }
         }
-        if (!showActualLocation) { displayLocation = getBlurredCoordinates(glimmer.geometry.coordinates[0], glimmer.geometry.coordinates[1]); }
+        
+        if (!showActualLocation) { 
+            displayLocation = getBlurredCoordinates(glimmer.geometry.coordinates[0], glimmer.geometry.coordinates[1]); 
+        }
+
         res.render('glimmers/show', {
-            title: glimmer.title, glimmer: glimmer, user: req.user,
-            displayLatitude: displayLocation.latitude, displayLongitude: displayLocation.longitude,
-            showActualLocation: showActualLocation, hasPendingRequest: hasPendingRequest
+            title: glimmer.title, 
+            glimmer: glimmer, 
+            user: req.user,
+            displayLatitude: displayLocation.latitude, 
+            displayLongitude: displayLocation.longitude,
+            showActualLocation: showActualLocation, 
+            hasSentRequest: hasSentRequest,
+            requestStatus: requestStatus     
         });
     } catch (err) {
         console.error("Error fetching single glimmer:", err);
@@ -226,7 +232,8 @@ module.exports.updateGlimmer = async (req, res) => {
         glimmer.geometry = { type: 'Point', coordinates: [parseFloat(longitude), parseFloat(latitude)] };
         glimmer.startDate = newCombinedDateTime;
         if (req.files && req.files.length > 0) { 
-            glimmer.image = req.files.slice(0, 5).map(f => ({ url: f.path, filename: f.filename }));
+            // FIX: Store relative URL instead of absolute path for updates
+            glimmer.image = req.files.slice(0, 5).map(f => ({ url: `/uploads/glimmers/${f.filename}`, filename: f.filename }));
         } else if (!glimmer.image || glimmer.image.length === 0) {
             glimmer.image = [{ url: '/images/default-glimmer.png', filename: 'default-glimmer.png' }];
         }
