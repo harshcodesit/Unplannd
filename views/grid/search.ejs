@@ -31,7 +31,7 @@
         min-height: 100vh; /* Ensure body takes full height */
         display: flex; /* Use flexbox to center content */
         justify-content: center; /* Center horizontally */
-        align-items: center; /* Center vertically */
+        /* Center vertically */
         box-sizing: border-box; /* Include padding/border in element's total width/height */
     }
 
@@ -66,7 +66,9 @@
         padding: 1.5em; /* Internal padding around the cards */
         text-shadow: 1px 1px 0 rgba(0, 0, 0, 0.3); /* Softer, single-pixel offset */
         box-sizing: border-box; /* Include padding in the element's total width and height */
-
+        display: flex;
+        justify-items: center;
+        align-items: center;
         box-shadow:
             0 0 0 0.15em var(--retro-shadow-dark),
             0 0 0 0.3em var(--retro-secondary-light),
@@ -90,6 +92,7 @@
         padding: 10px; /* Slightly increased padding inside card */
         background: var(--retro-primary-teal); /* Card background color */
         border-radius: 15px;
+        margin: 10px;
         border: 2px solid var(--retro-shadow-dark); /* Black border */
         box-shadow: 0.2em 0.2em 0 var(--retro-shadow-light); /* Softer initial shadow */
         transition: all var(--transition-medium);

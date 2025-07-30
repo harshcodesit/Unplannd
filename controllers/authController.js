@@ -26,9 +26,9 @@ const renderRegisterPage = (req, res) => {
 // This function expects req.body and req.file to be populated by Multer before it runs.
 const registerUser = async (req, res) => {
     const User = mongoose.model('User');
-    const Glimmer = mongoose.model('Glimmer');
-    const Review = mongoose.model('Review');
-    const Request = mongoose.model('Request');
+    const Glimmer = mongoose.model('Glimmer'); // Needed for User model population in Aura
+    const Review = mongoose.model('Review');   // Needed for User model population in Aura
+    const Request = mongoose.model('Request'); // Needed for User model population in Aura
 
     if (req.fileValidationError) {
         req.flash('error_msg', req.fileValidationError);
@@ -36,7 +36,11 @@ const registerUser = async (req, res) => {
     }
 
     const { name, username, email, password, passwordConfirm } = req.body;
-    const avatarUrl = req.file ? `/uploads/avatars/${req.file.filename}` : undefined;
+    // FIX: Use req.file.path which contains the Cloudinary URL
+    const avatarUrl = req.file ? req.file.path : undefined; 
+
+    const lowercasedUsername = username.toLowerCase();
+    const lowercasedEmail = email.toLowerCase();
 
     let errors = [];
     if (!name || !username || !email || !password || !passwordConfirm) { errors.push({ msg: 'Please enter all fields.' }); }
@@ -52,12 +56,13 @@ const registerUser = async (req, res) => {
     }
 
     try {
-        let existingUserByEmail = await User.findOne({ email: email });
+        let existingUserByEmail = await User.findOne({ email: lowercasedEmail });
         if (existingUserByEmail) { errors.push({ msg: 'Email is already registered.' }); return res.render('auth/register', { title: 'Sign Up', errors, oldInput: { name, username, email, password, passwordConfirm } }); }
-        let existingUserByUsername = await User.findOne({ username: username });
+        
+        let existingUserByUsername = await User.findOne({ username: lowercasedUsername });
         if (existingUserByUsername) { errors.push({ msg: 'Username is already taken.' }); return res.render('auth/register', { title: 'Sign Up', errors, oldInput: { name, username, email, password, passwordConfirm } }); }
 
-        const newUser = new User({ name, username, email });
+        const newUser = new User({ name, username: lowercasedUsername, email: lowercasedEmail });
         if (avatarUrl) { newUser.avatarUrl = avatarUrl; }
 
         const registeredUser = await User.register(newUser, password);
@@ -70,15 +75,18 @@ const registerUser = async (req, res) => {
 
     } catch (dbErr) {
         console.error("Database Error during registration:", dbErr);
-        errors.push({ msg: 'A server error occurred during registration. Please try again.' });
+        let msg = 'A server error occurred during registration. Please try again.';
+        if (dbErr.code === 11000) { // Duplicate key error
+            if (dbErr.keyPattern && dbErr.keyPattern.email) { msg = 'That email is already registered to another account.'; }
+            else if (dbErr.keyPattern && dbErr.keyPattern.username) { msg = 'That username is already taken.'; }
+        }
+        errors.push({ msg: msg });
         return res.render('auth/register', { title: 'Sign Up', errors, oldInput: { name, username, email, password, passwordConfirm } });
     }
 };
 
 // --- Login User ---
 const loginUser = (req, res, next) => {
-    const User = mongoose.model('User');
-
     passport.authenticate('local', (err, user, info) => {
         if (err) { console.error("Passport authentication error:", err); req.flash('error_msg', 'An authentication error occurred.'); return res.redirect('/login'); }
         if (!user) { req.flash('error_msg', info.message || 'Invalid username or password.'); return res.redirect('/login'); }
@@ -150,15 +158,18 @@ const updateProfile = async (req, res) => {
     }
 
     const { name, username, email } = req.body;
-    const avatarUrl = req.file ? `/uploads/avatars/${req.file.filename}` : undefined;
+    // FIX: Use req.file.path for avatarUrl, which contains the Cloudinary URL
+    const avatarUrl = req.file ? req.file.path : undefined; 
+
+    const lowercasedUsername = username.toLowerCase();
+    const lowercasedEmail = email.toLowerCase();
 
     let errors = [];
     if (!name || !username || !email) { errors.push({ msg: 'Name, Username, and Email are required.' }); }
     const emailRegex = /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/;
     if (!emailRegex.test(email)) { errors.push({ msg: 'Please enter a valid email address.' }); }
-    const usernameRegex = /^[a-zA-Z0-9_]{3,20}$/; // Corrected regex to handle only basic alphanumeric + underscore
+    const usernameRegex = /^[a-zA-Z0-9_]{3,20}$/;
     if (!usernameRegex.test(username)) { errors.push({ msg: 'Username can only contain letters, numbers, and underscores, and be 3-20 characters long.' }); }
-
 
     if (errors.length > 0) {
         req.flash('error_msg', 'Please correct the errors.');
@@ -168,20 +179,24 @@ const updateProfile = async (req, res) => {
     try {
         const user = await User.findById(req.user._id);
         if (!user) { req.flash('error_msg', 'User not found.'); return res.redirect('/hub'); }
-        if (email !== user.email) {
-            const existingUserWithEmail = await User.findOne({ email: email });
+        
+        if (lowercasedEmail !== user.email) {
+            const existingUserWithEmail = await User.findOne({ email: lowercasedEmail });
             if (existingUserWithEmail && existingUserWithEmail._id.toString() !== user._id.toString()) { errors.push({ msg: 'That email is already registered to another account.' }); }
         }
-        if (username !== user.username) {
-            const existingUserWithUsername = await User.findOne({ username: username });
+        if (lowercasedUsername !== user.username) {
+            const existingUserWithUsername = await User.findOne({ username: lowercasedUsername });
             if (existingUserWithUsername && existingUserWithUsername._id.toString() !== user._id.toString()) { errors.push({ msg: 'That username is already taken.' }); }
         }
+        
         if (errors.length > 0) {
             req.flash('error_msg', 'Please correct the errors.');
             return res.render('profile/edit', { title: 'Edit Profile', user: { ...req.user.toObject(), name, username, email }, errors });
         }
 
-        user.name = name; user.username = username; user.email = email;
+        user.name = name;
+        user.username = lowercasedUsername;
+        user.email = lowercasedEmail;
         if (avatarUrl) { user.avatarUrl = avatarUrl; }
         await user.save();
         req.flash('success_msg', 'Profile updated successfully!');
@@ -205,7 +220,7 @@ const renderChangePasswordPage = (req, res) => {
 
 // --- Change Password ---
 const changePassword = async (req, res) => {
-    const User = mongoose.model('User'); // Get model dynamically
+    const User = mongoose.model('User'); 
 
     const { currentPassword, newPassword, newPassword2 } = req.body;
     let errors = [];

@@ -102,8 +102,8 @@ module.exports.createGlimmer = async (req, res) => {
             geometry: { type: 'Point', coordinates: [parseFloat(longitude), parseFloat(latitude)] },
             startDate: combinedDateTime, creator: req.user._id, status: 'Open'
         });
-        // FIX: Store relative URL instead of absolute path
-        newGlimmer.image = req.files.slice(0, 5).map(f => ({ url: `/uploads/glimmers/${f.filename}`, filename: f.filename }));
+        // FIX: Store Cloudinary URL (f.path) directly from Multer-Cloudinary
+        newGlimmer.image = req.files.slice(0, 5).map(f => ({ url: f.path, filename: f.filename }));
         
         await newGlimmer.save();
         await User.findByIdAndUpdate(req.user._id, { $push: { hostedGlimmers: newGlimmer._id } });
@@ -137,6 +137,7 @@ module.exports.showGlimmer = async (req, res) => {
         let showActualLocation = false;
         let hasSentRequest = false; 
         let requestStatus = null;   
+        let hasReviewed = false; 
 
         if (req.user) {
             if (glimmer.creator && req.user._id.equals(glimmer.creator._id)) {
@@ -154,6 +155,8 @@ module.exports.showGlimmer = async (req, res) => {
                         showActualLocation = true;
                     }
                 }
+
+                hasReviewed = glimmer.reviews.some(review => review.reviewer.equals(req.user._id));
             }
         }
         
@@ -169,7 +172,8 @@ module.exports.showGlimmer = async (req, res) => {
             displayLongitude: displayLocation.longitude,
             showActualLocation: showActualLocation, 
             hasSentRequest: hasSentRequest,
-            requestStatus: requestStatus     
+            requestStatus: requestStatus,
+            hasReviewed: hasReviewed 
         });
     } catch (err) {
         console.error("Error fetching single glimmer:", err);
@@ -232,8 +236,8 @@ module.exports.updateGlimmer = async (req, res) => {
         glimmer.geometry = { type: 'Point', coordinates: [parseFloat(longitude), parseFloat(latitude)] };
         glimmer.startDate = newCombinedDateTime;
         if (req.files && req.files.length > 0) { 
-            // FIX: Store relative URL instead of absolute path for updates
-            glimmer.image = req.files.slice(0, 5).map(f => ({ url: `/uploads/glimmers/${f.filename}`, filename: f.filename }));
+            // FIX: Store Cloudinary URL (f.path) directly for updates
+            glimmer.image = req.files.slice(0, 5).map(f => ({ url: f.path, filename: f.filename }));
         } else if (!glimmer.image || glimmer.image.length === 0) {
             glimmer.image = [{ url: '/images/default-glimmer.png', filename: 'default-glimmer.png' }];
         }

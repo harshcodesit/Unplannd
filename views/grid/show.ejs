@@ -278,103 +278,199 @@
         color: var(--retro-text);
     }
 
-    /* Responsive Adjustments */
-    @media (max-width: 992px) {
-        .glimmer-detail-container {
-            padding: 2em;
-            margin: 1.5rem auto;
-        }
-        .glimmer-detail-container h1 {
-            font-size: 2em;
-        }
-        .glimmer-image-gallery img {
-            width: 200px;
-            height: 150px;
-        }
-        .glimmer-info-section {
-            padding: 1.2em;
-        }
-        .glimmer-info-section p, .glimmer-info-section ul li {
-            font-size: 0.9em;
-        }
-        .glimmer-map-section h2 {
-            font-size: 1.3em;
-        }
-        .glimmer-action-button {
-            font-size: 0.9em;
-            padding: 0.7em 1.2em;
-        }
+    /* --- Reviews Section --- */
+    .reviews-section {
+        background-color: var(--retro-secondary-light);
+        padding: 1.5em;
+        border-radius: 10px;
+        border: 2px solid var(--retro-shadow-dark);
+        box-shadow: 0.3em 0.3em 0 rgba(0, 0, 0, 0.2);
+        margin-top: 2em;
     }
 
+    .reviews-section h2 {
+        font-family: var(--font-heading-retro);
+        color: var(--retro-text);
+        text-align: center;
+        margin-bottom: 1em;
+        font-size: 1.8em;
+        text-shadow: 2px 2px 0 rgba(0, 0, 0, 0.4);
+        padding-bottom: 0.5em;
+        border-bottom: 2px dashed rgba(0, 0, 0, 0.2);
+    }
+
+    .review-form-retro .form-group-retro {
+        margin-bottom: 1.2em;
+    }
+
+    .review-form-retro .form-label-retro {
+        color: var(--retro-text);
+        font-family: var(--font-primary);
+        font-size: 0.9em;
+        text-shadow: none;
+    }
+
+    .review-form-retro .form-control-retro {
+        background-color: var(--retro-bg);
+        border: 2px solid var(--retro-shadow-dark);
+        border-radius: 8px;
+        padding: 0.6em 1em;
+        color: var(--retro-text);
+        font-family: var(--font-primary);
+        font-size: 0.9em;
+        width: 100%;
+        box-sizing: border-box;
+        box-shadow: 0.1em 0.1em 0 var(--retro-shadow-dark);
+    }
+
+    .review-form-retro .form-control-retro:focus {
+        border-color: var(--retro-accent-red);
+        box-shadow: 0 0 0 2px rgba(209, 69, 30, 0.5);
+    }
+
+    .rating-stars {
+        display: flex;
+        justify-content: center;
+        margin-bottom: 1em;
+        gap: 0.5em;
+    }
+
+    .rating-stars input[type="radio"] {
+        display: none;
+    }
+
+    .rating-stars label {
+        font-size: 2em;
+        color: #ccc; /* Default star color */
+        cursor: pointer;
+        transition: color 0.2s ease;
+        text-shadow: none; /* Remove text shadow for stars */
+    }
+
+    .rating-stars label:hover,
+    .rating-stars label:hover ~ label,
+    .rating-stars input[type="radio"]:checked ~ label {
+        color: var(--retro-accent-yellow); /* Filled star color */
+    }
+
+    .review-list {
+        list-style: none;
+        padding: 0;
+        margin-top: 2em;
+    }
+
+    .review-item {
+        background-color: var(--retro-primary-teal);
+        padding: 1em 1.5em;
+        border-radius: 8px;
+        border: 2px solid var(--retro-shadow-dark);
+        box-shadow: 0.2em 0.2em 0 rgba(0, 0, 0, 0.2);
+        margin-bottom: 1.2em;
+        color: var(--retro-secondary-light);
+        position: relative;
+    }
+
+    .review-item strong {
+        font-family: var(--font-heading-retro);
+        color: var(--retro-accent-yellow);
+        font-size: 1em;
+        text-shadow: 1px 1px 0 rgba(0, 0, 0, 0.3);
+    }
+
+    .review-item p {
+        font-family: var(--font-primary);
+        font-size: 0.9em;
+        margin: 0.5em 0;
+        line-height: 1.5;
+        text-shadow: none;
+    }
+
+    .review-rating-display {
+        color: var(--retro-accent-yellow);
+        font-size: 1.2em;
+        margin-bottom: 0.5em;
+        text-shadow: 1px 1px 0 rgba(0, 0, 0, 0.3);
+    }
+
+    .review-delete-form {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+    }
+
+    .review-delete-button {
+        background-color: var(--retro-accent-red);
+        color: var(--retro-secondary-light);
+        border: 1px solid var(--retro-shadow-dark);
+        border-radius: 5px;
+        font-size: 0.7em;
+        padding: 0.3em 0.6em;
+        cursor: pointer;
+        transition: background-color 0.2s ease;
+        text-shadow: 1px 1px 0 rgba(0, 0, 0, 0.3);
+    }
+
+    .review-delete-button:hover {
+        background-color: var(--retro-shadow-dark);
+    }
+
+    .no-reviews-message {
+        color: var(--retro-text);
+        text-align: center;
+        padding: 1rem;
+        font-style: italic;
+        font-family: var(--font-primary);
+        font-size: 1em;
+        text-shadow: none;
+        background-color: var(--retro-bg);
+        border: 1px dashed var(--retro-shadow-dark);
+        border-radius: 5px;
+    }
+
+    /* Responsive Adjustments */
     @media (max-width: 768px) {
-        body {
-            align-items: flex-start;
+        .reviews-section h2 {
+            font-size: 1.5em;
         }
-        .glimmer-detail-container {
-            width: 95%;
-            padding: 1.5em;
-            margin: 1rem auto;
-            box-shadow:
-                0 0 0 0.1em var(--retro-shadow-dark),
-                0 0 0 0.2em var(--retro-secondary-light),
-                0 0 0 0.3em var(--retro-shadow-dark),
-                0 0.4em 0 0 var(--retro-accent-red),
-                0 0.4em 0 0.1em var(--retro-shadow-dark);
-        }
-        .glimmer-detail-container h1 {
-            font-size: 1.8em;
-        }
-        .glimmer-image-gallery {
-            flex-wrap: wrap; /* Allow images to wrap */
-            justify-content: center;
-        }
-        .glimmer-image-gallery img {
-            width: 180px;
-            height: 130px;
-        }
-        .glimmer-info-section {
-            padding: 1em;
-        }
-        .glimmer-info-section p, .glimmer-info-section ul li {
+        .review-form-retro .form-control-retro {
             font-size: 0.85em;
         }
-        .glimmer-map-section h2 {
-            font-size: 1.1em;
+        .rating-stars label {
+            font-size: 1.8em;
         }
-        .glimmer-action-button {
+        .review-item {
+            padding: 0.8em 1em;
+        }
+        .review-item p {
             font-size: 0.8em;
-            padding: 0.6em 1em;
         }
-        .glimmer-actions {
-            flex-direction: column; /* Stack buttons vertically */
-            gap: 1em;
+        .review-rating-display {
+            font-size: 1em;
         }
-        .glimmer-action-button {
-            width: 100%; /* Full width when stacked */
+        .review-delete-button {
+            font-size: 0.6em;
+            padding: 0.2em 0.5em;
         }
     }
 
     @media (max-width: 480px) {
-        .glimmer-detail-container {
-            padding: 1em;
-            margin: 0.5rem auto;
+        .reviews-section h2 {
+            font-size: 1.3em;
         }
-        .glimmer-detail-container h1 {
-            font-size: 1.5em;
-        }
-        .glimmer-image-gallery img {
-            width: 150px;
-            height: 100px;
-        }
-        .glimmer-info-section p, .glimmer-info-section ul li {
+        .review-form-retro .form-control-retro {
             font-size: 0.8em;
         }
-        .glimmer-map-section h2 {
-            font-size: 1em;
+        .rating-stars label {
+            font-size: 1.5em;
         }
-        .glimmer-action-button {
+        .review-item {
+            padding: 0.6em 0.8em;
+        }
+        .review-item p {
             font-size: 0.75em;
-            padding: 0.5em 0.8em;
+        }
+        .review-rating-display {
+            font-size: 0.9em;
         }
     }
 </style>
@@ -475,8 +571,8 @@
                 %>
                 <% if (isParticipant) { %>
                     <button type="button" class="glimmer-action-button" disabled>YOU ARE PARTICIPATING</button>
-                <% } else if (hasSentRequest) { %>
-                    <button type="button" class="glimmer-action-button" disabled>REQUEST PENDING</button>
+                <% } else if (hasSentRequest) { %> <%-- Changed from hasPendingRequest --%>
+                    <button type="button" class="glimmer-action-button" disabled>REQUEST <%= requestStatus.toUpperCase() %></button> <%-- Display actual status --%>
                 <% } else { %>
                     <form action="/glimmers/<%= glimmer._id %>/requests" method="POST" style="display:inline;">
                         <button type="submit" class="glimmer-action-button">REQUEST TO JOIN</button>
@@ -487,5 +583,67 @@
                 <a href="/login" class="glimmer-action-button">LOGIN TO JOIN</a>
             <% } %>
         </div>
+
+        <!-- Reviews Section -->
+        <div class="reviews-section">
+            <h2>REVIEWS</h2>
+            <% if (user && user._id && glimmer.participants.some(p => p.equals(user._id)) && !hasReviewed) { %>
+                <!-- Review Form for Participants who haven't reviewed -->
+                <form action="/glimmers/<%= glimmer._id %>/reviews" method="POST" class="review-form-retro needs-validation" novalidate>
+                    <div class="form-group-retro">
+                        <label for="rating">Your Rating:</label>
+                        <div class="rating-stars">
+                            <input type="radio" id="star5" name="review[rating]" value="5" required><label for="star5">★</label>
+                            <input type="radio" id="star4" name="review[rating]" value="4"><label for="star4">★</label>
+                            <input type="radio" id="star3" name="review[rating]" value="3"><label for="star3">★</label>
+                            <input type="radio" id="star2" name="review[rating]" value="2"><label for="star2">★</label>
+                            <input type="radio" id="star1" name="review[rating]" value="1"><label for="star1">★</label>
+                        </div>
+                        <div class="invalid-feedback-retro">
+                            Please provide a rating.
+                        </div>
+                    </div>
+                    <div class="form-group-retro">
+                        <label for="comment">Your Comment:</label>
+                        <textarea id="comment" name="review[comment]" rows="3" class="form-control-retro" required></textarea>
+                        <div class="invalid-feedback-retro">
+                            Please provide a comment.
+                        </div>
+                    </div>
+                    <button type="submit" class="btn-retro-submit">SUBMIT REVIEW</button>
+                </form>
+            <% } else if (user && hasReviewed) { %>
+                <p class="no-reviews-message" style="color: var(--retro-primary-teal);">You have already reviewed this Glimmer.</p>
+            <% } else if (user && !user._id.equals(glimmer.creator._id) && !glimmer.participants.some(p => p.equals(user._id))) { %>
+                <p class="no-reviews-message">Join this Glimmer to leave a review!</p>
+            <% } else if (!user) { %>
+                <p class="no-reviews-message">Login to leave a review!</p>
+            <% } %>
+
+            <% if (glimmer.reviews && glimmer.reviews.length > 0) { %>
+                <ul class="review-list">
+                    <% glimmer.reviews.forEach(review => { %>
+                        <li class="review-item">
+                            <% if (user && review.reviewer && user._id.equals(review.reviewer._id)) { %>
+                                <form action="/glimmers/<%= glimmer._id %>/reviews/<%= review._id %>?_method=DELETE" method="POST" class="review-delete-form">
+                                    <button type="submit" class="review-delete-button" onclick="return confirm('Are you sure you want to delete your review?');">DELETE</button>
+                                </form>
+                            <% } %>
+                            <p><strong><%= review.reviewer ? review.reviewer.username.toUpperCase() : 'Anonymous' %></strong></p>
+                            <div class="review-rating-display">
+                                <% for(let i = 0; i < review.rating; i++) { %>★<% } %>
+                            </div>
+                            <p><%= review.comment %></p>
+                        </li>
+                    <% }) %>
+                </ul>
+            <% } else { %>
+                <p class="no-reviews-message">No reviews yet for this Glimmer.</p>
+            <% } %>
+        </div>
     </div>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script>
+        lucide.createIcons(); // Initialize Lucide icons
+    </script>
 </body>
