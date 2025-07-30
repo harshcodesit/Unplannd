@@ -56,7 +56,7 @@
             0 0 0 0.45em var(--retro-shadow-dark),
             0 0.6em 0 0 var(--retro-accent-red),
             0 0.6em 0 0.15em var(--retro-shadow-dark);
-        margin: 2rem auto;
+        margin: 2rem 35%;
         box-sizing: border-box;
         text-shadow: 1px 1px 0 rgba(0, 0, 0, 0.3);
         animation: detailEntry 0.8s ease-out;
@@ -475,7 +475,7 @@
                 %>
                 <% if (isParticipant) { %>
                     <button type="button" class="glimmer-action-button" disabled>YOU ARE PARTICIPATING</button>
-                <% } else if (hasPendingRequest) { %>
+                <% } else if (hasSentRequest) { %>
                     <button type="button" class="glimmer-action-button" disabled>REQUEST PENDING</button>
                 <% } else { %>
                     <form action="/glimmers/<%= glimmer._id %>/requests" method="POST" style="display:inline;">
