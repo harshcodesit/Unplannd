@@ -1,11 +1,21 @@
 <%- layout('layouts/boilerplate') %>
 
 <style>
+    /*
+    IMPORTANT: For best practice and maintainability,
+    COPY ALL CSS RULES BELOW THIS COMMENT BLOCK
+    and PASTE THEM into your main glimmergrid-mvp/public/css/style.css file.
+    Then, you can remove this <style> tag from this EJS file.
+    This ensures all your styles are centralized and avoids potential issues
+    with browser caching or style conflicts.
+    */
+
     /* General Form Styling (can be moved to style.css) */
     .form-container-retro {
         display: flex;
         justify-content: center;
-        align-items: center;
+        /* FIX: Align to flex-start to prevent content overflow on very tall forms */
+        align-items: flex-start;
         min-height: calc(100vh - var(--navbar-height, 80px) - var(--footer-height, 60px));
         padding: 20px;
         background-color: var(--retro-bg);
@@ -214,270 +224,364 @@
         box-shadow: 0.2em 0.2em 0 var(--retro-shadow-dark);
     }
     .map-preview-container iframe {
+        position: absolute;
+        top: 0;
+        left: 0;
         width: 100%;
         height: 100%;
         border: none;
     }
+
+    .location-preview-message {
+        font-family: var(--font-primary);
+        font-size: 0.9em;
+        color: var(--retro-text);
+        margin-top: 1em;
+        text-shadow: none;
+        font-weight: 600;
+    }
 </style>
 
-<div class="form-container-retro">
-    <div class="form-card-retro">
-        <div class="form-content">
-            <h1 class="form-title-retro">EDIT GLIMMER</h1>
-            <form action="/glimmers/<%= glimmer._id %>?_method=PUT" method="POST" class="needs-validation" novalidate enctype="multipart/form-data">
-                <div class="mb-3">
-                    <label for="title" class="form-label-retro">GLIMMER TITLE</label>
-                    <input type="text" class="form-control-retro" id="title" name="glimmer[title]" value="<%= glimmer.title %>" required>
-                    <div class="invalid-feedback-retro">
-                        Please provide a title for your Glimmer.
+<body>
+    <div class="form-container-retro">
+        <div class="form-card-retro">
+            <div class="form-content">
+                <h1 class="form-title-retro">EDIT GLIMMER</h1>
+                <form action="/glimmers/<%= glimmer._id %>?_method=PUT" method="POST" class="needs-validation" novalidate enctype="multipart/form-data">
+                    <div class="mb-3">
+                        <label for="title" class="form-label-retro">GLIMMER TITLE</label>
+                        <input type="text" class="form-control-retro" id="title" name="glimmer[title]" value="<%= glimmer.title %>" required>
+                        <div class="invalid-feedback-retro">
+                            Please provide a title for your Glimmer.
+                        </div>
                     </div>
-                </div>
 
-                <div class="mb-3">
-                    <label for="description" class="form-label-retro">DESCRIPTION</label>
-                    <textarea class="form-control-retro" id="description" name="glimmer[description]" rows="5" required><%= glimmer.description %></textarea>
-                    <div class="invalid-feedback-retro">
-                        Please provide a detailed description.
+                    <div class="mb-3">
+                        <label for="description" class="form-label-retro">DESCRIPTION</label>
+                        <textarea class="form-control-retro" id="description" name="glimmer[description]" rows="5" required><%= glimmer.description %></textarea>
+                        <div class="invalid-feedback-retro">
+                            Please provide a detailed description.
+                        </div>
                     </div>
-                </div>
 
-                <div class="mb-3">
-                    <label for="locationName" class="form-label-retro">LOCATION NAME</label>
-                    <input type="text" class="form-control-retro" id="locationName" name="glimmer[locationName]" value="<%= glimmer.locationName %>" required>
-                    <div class="invalid-feedback-retro">
-                        Where will this Glimmer take place?
+                    <div class="mb-3">
+                        <label for="locationName" class="form-label-retro">LOCATION NAME</label>
+                        <input type="text" class="form-control-retro" id="locationName" name="glimmer[locationName]" value="<%= glimmer.locationName %>" required>
+                        <div class="invalid-feedback-retro">
+                            Where will this Glimmer take place?
+                        </div>
                     </div>
-                </div>
 
-                <div class="mb-3">
-                    <label for="latitude" class="form-label-retro">LATITUDE</label>
-                    <input type="number" step="any" class="form-control-retro" id="latitude" name="glimmer[latitude]" value="<%= glimmer.geometry.coordinates[1] %>" required>
-                    <div class="invalid-feedback-retro">
-                        Please provide the latitude.
+                    <div class="mb-3">
+                        <label for="latitude" class="form-label-retro">LATITUDE</label>
+                        <input type="number" step="any" class="form-control-retro" id="latitude" name="glimmer[latitude]" value="<%= glimmer.geometry.coordinates[1] %>" required>
+                        <div class="invalid-feedback-retro">
+                            Please provide the latitude.
+                        </div>
                     </div>
-                </div>
-                <div class="mb-3">
-                    <label for="longitude" class="form-label-retro">LONGITUDE</label>
-                    <input type="number" step="any" class="form-control-retro" id="longitude" name="glimmer[longitude]" value="<%= glimmer.geometry.coordinates[0] %>" required>
-                    <div class="invalid-feedback-retro">
-                        Please provide the longitude.
+                    <div class="mb-3">
+                        <label for="longitude" class="form-label-retro">LONGITUDE</label>
+                        <input type="number" step="any" class="form-control-retro" id="longitude" name="glimmer[longitude]" value="<%= glimmer.geometry.coordinates[0] %>" required>
+                        <div class="invalid-feedback-retro">
+                            Please provide the longitude.
+                        </div>
                     </div>
-                </div>
-                <div class="map-preview-container">
+                    <div class="map">
+                        <% 
+                            const mapLat = glimmer.geometry.coordinates[1];
+                            const mapLon = glimmer.geometry.coordinates[0];
+                            const googleMapsApiKey = 'YOUR_Maps_API_KEY'; // Replace with your actual API key
+                            const mapSrc = `https://www.google.com/maps/embed/v1/place?key=${googleMapsApiKey}&q=${mapLat},${mapLon}&zoom=15`;
+                        %>
+                        <iframe id="mapPreview" width="600" height="450" style="border:0" loading="lazy" allowfullscreen src="<%= mapSrc %>"></iframe>
+                    </div>
+                    <p class="image-upload-feedback">Adjust latitude/longitude to update map preview.</p>
+
                     <% 
-                        const mapLat = glimmer.geometry.coordinates[1];
-                        const mapLon = glimmer.geometry.coordinates[0];
-                        const googleMapsApiKey = 'YOUR_Maps_API_KEY'; // Replace with your actual API key
-                        const mapSrc = `https://www.google.com/maps/embed/v1/place?key=${googleMapsApiKey}&q=${mapLat},${mapLon}&zoom=15`;
+                        // Format date and time for input fields
+                        const glimmerStartDate = new Date(glimmer.startDate);
+                        const formattedDate = glimmerStartDate.toISOString().split('T')[0];
+                        const formattedTime = glimmerStartDate.toTimeString().split(' ')[0].substring(0, 5); // HH:MM
                     %>
-                    <iframe id="mapPreview" width="600" height="450" style="border:0" loading="lazy" allowfullscreen src="<%= mapSrc %>"></iframe>
-                </div>
-                <p class="image-upload-feedback">Adjust latitude/longitude to update map preview.</p>
 
-                <% 
-                    // Format date and time for input fields
-                    const glimmerStartDate = new Date(glimmer.startDate);
-                    const formattedDate = glimmerStartDate.toISOString().split('T')[0];
-                    const formattedTime = glimmerStartDate.toTimeString().split(' ')[0].substring(0, 5); // HH:MM
-                %>
-
-                <div class="mb-3">
-                    <label for="startDate" class="form-label-retro">START DATE</label>
-                    <input type="date" class="form-control-retro" id="startDate" name="glimmer[eventDate]" value="<%= formattedDate %>" required>
-                    <div class="invalid-feedback-retro">
-                        When does this Glimmer start?
+                    <div class="mb-3">
+                        <label for="startDate" class="form-label-retro">START DATE</label>
+                        <input type="date" class="form-control-retro" id="startDate" name="glimmer[eventDate]" value="<%= formattedDate %>" required>
+                        <div class="invalid-feedback-retro">
+                            When does this Glimmer start?
+                        </div>
                     </div>
-                </div>
 
-                <div class="mb-3">
-                    <label for="startTime" class="form-label-retro">START TIME</label>
-                    <input type="time" class="form-control-retro" id="startTime" name="glimmer[eventTime]" value="<%= formattedTime %>" required>
-                    <div class="invalid-feedback-retro">
-                        What time does this Glimmer start?
+                    <div class="mb-3">
+                        <label for="startTime" class="form-label-retro">START TIME</label>
+                        <input type="time" class="form-control-retro" id="startTime" name="glimmer[eventTime]" value="<%= formattedTime %>" required>
+                        <div class="invalid-feedback-retro">
+                            What time does this Glimmer start?
+                        </div>
                     </div>
-                </div>
 
-                <div class="mb-3">
-                    <label for="images" class="form-label-retro">UPLOAD NEW GLIMMER IMAGES (MAX 5)</label>
-                    <input type="file" class="form-control-retro" id="images" name="image" accept="image/*" multiple> <div class="invalid-feedback-retro">
-                        Please upload at least one image for your Glimmer.
+                    <div class="mb-3">
+                        <label for="images" class="form-label-retro">UPLOAD NEW GLIMMER IMAGES (MAX 5)</label>
+                        <input type="file" class="form-control-retro" id="images" name="image" accept="image/*" multiple>
+                        <div class="invalid-feedback-retro">
+                            Please upload at least one image for your Glimmer.
+                        </div>
+                        <p class="image-upload-feedback" id="imageUploadFeedback">Existing images will be replaced by new uploads.</p>
                     </div>
-                    <p class="image-upload-feedback" id="imageUploadFeedback">Existing images will be replaced by new uploads.</p>
+
+                    <% if (glimmer.image && glimmer.image.length > 0) { %>
+                        <div class="image-preview-container" id="currentImagesPreview">
+                            <% glimmer.image.forEach((img, index) => { %>
+                                <div class="image-preview-item" data-filename="<%= img.filename %>" data-original-url="<%= img.url %>" data-index="<%= index %>">
+                                    <img src="<%= img.url %>" alt="<%= glimmer.title %> Image">
+                                    <button type="button" class="remove-image-btn" data-type="existing" data-index="<%= index %>">×</button>
+                                </div>
+                            <% }) %>
+                        </div>
+                        <input type="hidden" name="glimmer[existingImages]" id="existingImagesInput" value="">
+                        <p class="image-upload-feedback">Current Images (click '×' to remove, upload new images to replace all)</p>
+                    <% } %>
+                    
+                    <button type="submit" class="btn-retro-submit">UPDATE GLIMMER</button>
+                </form>
+
+                <div class="back-link-section">
+                    <p>GO BACK TO GLIMMER DETAILS?</p>
+                    <a href="/glimmers/<%= glimmer._id %>">VIEW GLIMMER</a>
+                    <p class="mt-3">GO BACK TO YOUR HOSTED GLIMMERS?</p>
+                    <a href="/trail/sparks">VIEW SPARKS</a>
                 </div>
-
-                <% if (glimmer.image && glimmer.image.length > 0) { %>
-                    <div class="image-preview-container" id="currentImagesPreview">
-                        <% glimmer.image.forEach(img => { %>
-                            <div class="image-preview-item">
-                                <img src="<%= img.url %>" alt="Current Glimmer Image">
-                                <button type="button" class="remove-image-btn" data-image-url="<%= img.url %>" data-image-filename="<%= img.filename %>">×</button>
-                            </div>
-                        <% }) %>
-                    </div>
-                    <p class="image-upload-feedback">Current Images (will be replaced if new images are uploaded)</p>
-                <% } %>
-                
-                <button type="submit" class="btn-retro-submit">UPDATE GLIMMER</button>
-            </form>
-
-            <div class="back-link-section">
-                <p>GO BACK TO GLIMMER DETAILS?</p>
-                <a href="/glimmers/<%= glimmer._id %>">VIEW GLIMMER</a>
-                <p class="mt-3">GO BACK TO YOUR HOSTED GLIMMERS?</p>
-                <a href="/trail/sparks">VIEW SPARKS</a>
             </div>
         </div>
     </div>
-</div>
 
-<script>
-    // IMPORTANT: Replace 'YOUR_Maps_API_KEY' with your actual Google Maps Embed API Key
-    const Maps_API_KEY = 'YOUR_Maps_API_KEY'; 
-    const MAX_IMAGES = 5; // Define maximum number of images
+    <script>
+        // IMPORTANT: Replace 'YOUR_Maps_API_KEY' with your actual Google Maps Embed API Key
+        const Maps_API_KEY = 'YOUR_Maps_API_KEY'; 
+        const MAX_IMAGES = 5; // Define maximum number of images
 
-    // Function to update the map preview
-    const updateMapPreview = () => {
-        const latitudeInput = document.getElementById('latitude');
-        const longitudeInput = document.getElementById('longitude');
-        const mapPreview = document.getElementById('mapPreview');
-        const lat = parseFloat(latitudeInput.value);
-        const lon = parseFloat(longitudeInput.value);
+        // Global variables for image and location management
+        let filesToUpload = []; // Array to store newly selected files
+        let existingImagesToKeep = []; // Array to store existing image filenames to keep
+        let locationObtained = false; // Track if location has been obtained
 
-        if (!isNaN(lat) && !isNaN(lon) && googleMapsApiKey) {
-            const mapSrc = `https://www.google.com/maps/embed/v1/place?key=${googleMapsApiKey}&q=${lat},${lon}&zoom=15`;
-            mapPreview.src = mapSrc;
-        } else {
-            mapPreview.src = ""; // Clear map if coordinates are invalid or no API key
-        }
-    };
+        // Populate existing images on load
+        <% if (glimmer.image && glimmer.image.length > 0) { %>
+            existingImagesToKeep = <%= JSON.stringify(glimmer.image.map(img => ({ url: img.url, filename: img.filename }))) %>;
+            updateExistingImagesInput(); // Call this to set initial value of hidden input
+        <% } %>
 
-    // Client-side validation for the form
-    (function () {
-        'use strict';
 
-        var forms = document.querySelectorAll('.needs-validation');
-        const latitudeInput = document.getElementById('latitude');
-        const longitudeInput = document.getElementById('longitude');
-        const imageInput = document.getElementById('images'); // Corrected ID to 'image'
-        const imageUploadFeedback = document.getElementById('imageUploadFeedback');
-        const customFileUploadLabel = document.querySelector('.custom-file-upload');
-        const uploadedFiles = new DataTransfer(); // To manage files programmatically
+        // Function to update the map preview
+        const updateMapPreview = () => {
+            const latitudeInput = document.getElementById('latitude');
+            const longitudeInput = document.getElementById('longitude');
+            const mapPreview = document.getElementById('mapPreview');
+            const lat = parseFloat(latitudeInput.value);
+            const lon = parseFloat(longitudeInput.value);
 
-        // Add event listeners for coordinate changes
-        latitudeInput.addEventListener('input', updateMapPreview);
-        longitudeInput.addEventListener('input', updateMapPreview);
+            if (!isNaN(lat) && !isNaN(lon) && Maps_API_KEY) {
+                const mapSrc = `https://www.google.com/maps/embed/v1/place?key=${Maps_API_KEY}&q=${lat},${lon}&zoom=15`;
+                mapPreview.src = mapSrc;
+            } else {
+                mapPreview.src = ""; // Clear map if coordinates are invalid or no API key
+            }
+        };
 
-        // Initial map load
-        updateMapPreview();
-
-        // Populate uploadedFiles with existing images on load
-        // This is crucial for the image count logic to work correctly on edit.
-        const currentImagesPreview = document.getElementById('currentImagesPreview');
-        if (currentImagesPreview) {
-            const existingImageElements = currentImagesPreview.querySelectorAll('img');
-            existingImageElements.forEach((imgElement, index) => {
-                // Create a dummy File object for existing images.
-                // This is a simplification; a more robust solution might involve
-                // passing original file metadata from the backend.
-                // For now, we just need to count them for the MAX_IMAGES limit.
-                const dummyFile = new File([], `existing-image-${index}.png`, { type: 'image/png' });
-                uploadedFiles.items.add(dummyFile);
-            });
-            updateFileInputAndButton(); // Update button state based on existing images
+        // Function to update the hidden input with existing images to keep
+        function updateExistingImagesInput() {
+            const existingImagesInput = document.getElementById('existingImagesInput');
+            existingImagesInput.value = JSON.stringify(existingImagesToKeep);
         }
 
-
-        // Function to update the file input and the upload button's enabled/disabled state
+        // Function to update the file input's FileList and the upload button's enabled/disabled state
         function updateFileInputAndButton() {
-            // imageInput.files = uploadedFiles.files; // No longer needed directly for single file input
-            if (uploadedFiles.items.length >= MAX_IMAGES) {
+            const imageInput = document.getElementById('images');
+            const customFileUploadLabel = document.querySelector('.custom-file-upload');
+            const imageUploadFeedback = document.getElementById('image-upload-feedback');
+
+            // Rebuild the FileList for the actual input element from our 'filesToUpload' array
+            const dataTransfer = new DataTransfer();
+            filesToUpload.forEach(file => dataTransfer.items.add(file));
+            imageInput.files = dataTransfer.files; // Assign the new FileList to the input
+
+            const totalImages = filesToUpload.length + existingImagesToKeep.length;
+
+            // Update button disabled state and feedback message
+            if (totalImages >= MAX_IMAGES) {
                 imageInput.disabled = true; // Disable the file input
-                customFileUploadLabel.classList.add('disabled'); // Add disabled style to label
+                if (customFileUploadLabel) {
+                    customFileUploadLabel.classList.add('disabled'); // Add disabled style to label
+                }
                 imageUploadFeedback.textContent = `Maximum of ${MAX_IMAGES} images reached. Remove some to upload more.`;
                 imageUploadFeedback.style.display = 'block';
+                imageUploadFeedback.style.color = 'var(--retro-accent-red)';
             } else {
                 imageInput.disabled = false; // Enable the file input
-                customFileUploadLabel.classList.remove('disabled'); // Remove disabled style
-                imageUploadFeedback.style.display = 'none'; // Hide feedback if below limit
+                if (customFileUploadLabel) {
+                    customFileUploadLabel.classList.remove('disabled'); // Remove disabled style
+                }
+                if (totalImages === 0) {
+                    imageUploadFeedback.textContent = "At least one image is required.";
+                    imageUploadFeedback.style.display = 'block';
+                    imageUploadFeedback.style.color = 'var(--retro-accent-red)';
+                } else {
+                    imageUploadFeedback.textContent = `${totalImages} image(s) total selected. You can upload up to ${MAX_IMAGES} images.`;
+                    imageUploadFeedback.style.display = 'block';
+                    imageUploadFeedback.style.color = 'var(--retro-text)'; // Use default text color for info
+                }
             }
         }
 
-        imageInput.addEventListener('change', function(event) {
-            const files = event.target.files;
+        // Function to remove an image from the preview and files array
+        // Handles both new files and existing files
+        function removeImage(type, index) {
+            if (type === 'new') {
+                filesToUpload.splice(index, 1);
+            } else if (type === 'existing') {
+                existingImagesToKeep.splice(index, 1);
+                updateExistingImagesInput(); // Update hidden input for existing images
+            }
             
-            for (let i = 0; i < files.length; i++) {
-                const file = files[i];
-                // Only add if it's an image and we haven't reached the max limit
-                if (file.type.startsWith('image/') && uploadedFiles.items.length < MAX_IMAGES) {
-                    uploadedFiles.items.add(file); // Add to our managed list
+            // Re-render ALL image previews (both new and remaining existing) to reflect the change and update data-index
+            const imagePreviewContainer = document.getElementById('currentImagesPreview') || document.getElementById('image-preview-container');
+            imagePreviewContainer.innerHTML = ''; // Clear current previews
 
-                    const reader = new FileReader();
-                    reader.onload = function(e) {
-                        const previewItem = document.createElement('div');
-                        previewItem.className = 'image-preview-item';
-                        previewItem.dataset.name = file.name; // Store original file name for removal
+            // Add existing images back to preview
+            existingImagesToKeep.forEach((img, idx) => {
+                const previewItem = document.createElement('div');
+                previewItem.className = 'image-preview-item';
+                previewItem.dataset.index = idx; // Assign index in existingImagesToKeep array
+                previewItem.dataset.filename = img.filename;
+                previewItem.dataset.originalUrl = img.url;
 
-                        previewItem.innerHTML = `
-                            <img src="${e.target.result}" alt="Image Preview">
-                            <button type="button" class="remove-image-btn" data-image-url="<%= img.url %>" data-image-filename="${file.name}">×</button>
-                        `;
-                        imagePreviewContainer.appendChild(previewItem);
-                    };
-                    reader.readAsDataURL(file);
-                } else if (uploadedFiles.items.length >= MAX_IMAGES) {
-                    // If trying to add more than allowed, show feedback and stop
+                previewItem.innerHTML = `
+                    <img src="${img.url}" alt="Existing Image">
+                    <button type="button" class="remove-image-btn" data-type="existing" data-index="${idx}">×</button>
+                `;
+                imagePreviewContainer.appendChild(previewItem);
+            });
+
+            // Add new files to preview
+            filesToUpload.forEach((file, idx) => {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const previewItem = document.createElement('div');
+                    previewItem.className = 'image-preview-item';
+                    previewItem.dataset.index = idx; // Assign index in filesToUpload array
+                    previewItem.dataset.name = file.name;
+                    previewItem.dataset.type = 'new'; // Mark as new for click handler
+
+                    previewItem.innerHTML = `
+                        <img src="${e.target.result}" alt="New Image Preview">
+                        <button type="button" class="remove-image-btn" data-type="new" data-index="${idx}">×</button>
+                    `;
+                    imagePreviewContainer.appendChild(previewItem);
+                };
+                reader.readAsDataURL(file);
+            });
+            
+            // Update input and button state after removal
+            updateFileInputAndButton();
+        }
+
+
+        // Client-side validation for the form
+        (function () {
+            'use strict';
+            const form = document.querySelector('.needs-validation');
+
+            // Initial map load
+            updateMapPreview();
+
+            // Add event listeners for coordinate changes
+            const latitudeInput = document.getElementById('latitude');
+            const longitudeInput = document.getElementById('longitude');
+            latitudeInput.addEventListener('input', updateMapPreview);
+            longitudeInput.addEventListener('input', updateMapPreview);
+
+            form.addEventListener('submit', function (event) {
+                const locationCoordsFeedback = document.getElementById('location-coords-feedback');
+                const imageUploadFeedback = document.getElementById('image-upload-feedback');
+
+                let hasErrors = false;
+
+                // Check if coordinates are populated before allowing form submission
+                if (!latitudeInput.value || !longitudeInput.value) { // Don't check locationObtained for edit, as user might manually enter coords
+                    event.preventDefault();
+                    event.stopPropagation();
+                    locationCoordsFeedback.textContent = "Location coordinates are required.";
+                    locationCoordsFeedback.style.display = 'block';
+                    hasErrors = true;
+                } else {
+                    locationCoordsFeedback.style.display = 'none';
+                }
+
+                const totalImages = filesToUpload.length + existingImagesToKeep.length;
+
+                // Check image count before submission
+                if (totalImages === 0) {
+                    event.preventDefault();
+                    event.stopPropagation();
+                    imageUploadFeedback.textContent = "At least one image is required.";
+                    imageUploadFeedback.style.display = 'block';
+                    imageUploadFeedback.style.color = 'var(--retro-accent-red)';
+                    hasErrors = true;
+                } else if (totalImages > MAX_IMAGES) {
+                    event.preventDefault();
+                    event.stopPropagation();
                     imageUploadFeedback.textContent = `You can upload a maximum of ${MAX_IMAGES} images.`;
                     imageUploadFeedback.style.display = 'block';
-                    break; // Stop processing further files from this selection
+                    imageUploadFeedback.style.color = 'var(--retro-accent-red)';
+                    hasErrors = true;
+                } else {
+                    imageUploadFeedback.style.display = 'none';
+                }
+
+                if (!form.checkValidity() || hasErrors) {
+                    event.preventDefault();
+                    event.stopPropagation();
+                }
+                form.classList.add('was-validated');
+            }, false);
+        })();
+
+        // Event listener for adding new images
+        const imageInput = document.getElementById('images');
+        const imagePreviewContainer = document.getElementById('currentImagesPreview') || document.getElementById('image-preview-container');
+        // filesToUpload and existingImagesToKeep are globally declared at the top of the script.
+
+        imageInput.addEventListener('change', function(event) {
+            const newFiles = Array.from(event.target.files);
+            
+            for (const file of newFiles) {
+                const totalCurrentImages = filesToUpload.length + existingImagesToKeep.length;
+                if (file.type.startsWith('image/') && totalCurrentImages < MAX_IMAGES) {
+                    filesToUpload.push(file);
+                } else if (totalCurrentImages >= MAX_IMAGES) {
+                    break; 
                 }
             }
-            updateFileInputAndButton(); // Update input and button state after adding files
-            event.target.value = ''; // Clear the original file input value
+            updateFileInputAndButton();
+            event.target.value = ''; 
         });
 
-        imagePreviewContainer.addEventListener('click', function(event) {
-            if (event.target.classList.contains('remove-image-btn')) { // Corrected class name
-                const itemToRemove = event.target.closest('.image-preview-item');
-                const fileName = itemToRemove.dataset.name;
+        // Universal click listener for remove buttons in the preview containers
+        const primaryImagePreviewContainer = document.getElementById('currentImagesPreview') || document.getElementById('image-preview-container');
+        if (primaryImagePreviewContainer) {
+            primaryImagePreviewContainer.addEventListener('click', function(event) {
+                if (event.target.classList.contains('remove-image-btn')) {
+                    const button = event.target;
+                    const type = button.dataset.type; // 'new' or 'existing'
+                    const index = parseInt(button.dataset.index);
 
-                // Remove from DataTransfer object
-                for (let i = 0; i < uploadedFiles.items.length; i++) {
-                    if (uploadedFiles.items[i].name === fileName) {
-                        uploadedFiles.items.remove(i);
-                        break;
-                    }
+                    // Call the global removeImage function
+                    removeImage(type, index);
                 }
-                
-                itemToRemove.remove(); // Remove from DOM
-                updateFileInputAndButton(); // Update input and button state after removal
-            }
-        });
-
-
-        Array.prototype.slice.call(forms)
-            .forEach(function (form) {
-                form.addEventListener('submit', function (event) {
-                    // Client-side validation for image count on submit
-                    if (uploadedFiles.items.length === 0) {
-                        event.preventDefault();
-                        event.stopPropagation();
-                        imageUploadFeedback.textContent = "At least one image is required.";
-                        imageUploadFeedback.style.display = 'block';
-                    } else if (uploadedFiles.items.length > MAX_IMAGES) {
-                        event.preventDefault();
-                        event.stopPropagation();
-                        imageUploadFeedback.textContent = `You can upload a maximum of ${MAX_IMAGES} images.`;
-                        imageUploadFeedback.style.display = 'block';
-                    } else {
-                        imageUploadFeedback.style.display = 'none';
-                    }
-
-                    if (!form.checkValidity()) {
-                        event.preventDefault();
-                        event.stopPropagation();
-                    }
-                    form.classList.add('was-validated');
-                }, false);
             });
-    })();
-</script>
+        }
+        
+        // Initialize button state and previews on page load
+        updateFileInputAndButton();
+    </script>
+</body>
